@@ -91,3 +91,12 @@ describe 'MathUtil', ->
       expect(MathUtil.getAngleToTarget(0, 0, 5, 5)).toBe(135)
       expect(MathUtil.getAngleToTarget(0, 0, 5, 0)).toBe(90)
 
+  describe 'getRotationDirectionToTarget()', ->
+    it 'Should return the direction of the shortest rotation to reach a destination angle', ->
+      expect(MathUtil.getRotationDirectionToTarget(90,180)).toBe(1)
+      expect(MathUtil.getRotationDirectionToTarget(90,0)).toBe(-1)
+      expect(MathUtil.getRotationDirectionToTarget(270,5)).toBe(1)
+      expect(MathUtil.getRotationDirectionToTarget(10,300)).toBe(-1)
+
+
+

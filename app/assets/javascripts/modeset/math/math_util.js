@@ -193,4 +193,20 @@ MathUtil.getAngleToTarget = function( x1, y1, x2, y2 ) {
   return MathUtil.constrainAngle( -Math.atan2( x1 - x2, y1 - y2 ) * 180 / Math.PI );
 };
 
-
+/**
+ *  Figures out which way to rotate, for the shortest path from current to target angle
+ *  @param    curAngle    starting angle
+ *  @param    targetAngle destination angle
+ *  @return   +1 fo clockwise, -1 for counter-clockwise
+ *  @use      {@code var direction = MathUtil.rotationDirectionToTarget( 90, 180 );}
+ */
+MathUtil.getRotationDirectionToTarget = function( curAngle, targetAngle ) {
+  // calculate the difference between the current angle and destination angle
+  var angleDifference = Math.abs( curAngle - targetAngle );
+  // turn left or right to get to the target
+  if( curAngle > targetAngle ){
+    return (angleDifference < 180) ? -1 : 1;
+  } else {
+    return (angleDifference < 180) ? 1 : -1;
+  }
+};
