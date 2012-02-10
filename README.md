@@ -1,7 +1,4 @@
-# README
-
-
-## Mode Set .js library
+## Mode Set JavaScript library
 
 A repository for reusable codes.
 
