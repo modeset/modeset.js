@@ -79,3 +79,15 @@ describe 'MathUtil', ->
     it 'Should return a distance via pythagorean theorem, given two cartesian coordinates', ->
       dist = MathUtil.getDistance(10, 20, 50, 100)
       expect(dist).toBeCloseTo(89.4, 1)
+
+  describe 'constrainAngle()', ->
+    it 'Should return a number between 0-360', ->
+      expect(MathUtil.constrainAngle(0)).toBe(0)
+      expect(MathUtil.constrainAngle(540)).toBe(180)
+      expect(MathUtil.constrainAngle(720)).toBe(360)
+
+  describe 'getAngleToTarget()', ->
+    it 'Should return the angle from one cartesian coordinate to another', ->
+      expect(MathUtil.getAngleToTarget(0, 0, 5, 5)).toBe(135)
+      expect(MathUtil.getAngleToTarget(0, 0, 5, 0)).toBe(90)
+

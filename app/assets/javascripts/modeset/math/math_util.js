@@ -168,3 +168,29 @@ MathUtil.getDistance = function ( x1, y1, x2, y2 ) {
   return Math.abs( Math.sqrt(a*a + b*b) );
 };
 
+/**
+ *  Keep an angle between 0-360
+ *  @param    angle the angle to constrain
+ *  @return   The normalized angle
+ *  @use      {@code var angle = MathUtil.constrainAngle( 540 );}
+ */
+MathUtil.constrainAngle = function( angle ) {
+  if( angle < 0 ) return angle + 360;
+  if( angle > 360 ) return angle - 360;
+  return angle;
+};
+
+/**
+ *  Get the angle fron current coordinate to target coordinate
+ *  @param    x1  first point's x position
+ *  @param    y1  first point's y position
+ *  @param    x2  second point's x position
+ *  @param    y2  second point's y position
+ *  @return   The angle from point 1 and 2
+ *  @use      {@code var angle = MathUtil.getAngleToTarget( 0, 0, 5, 5 );}
+ */
+MathUtil.getAngleToTarget = function( x1, y1, x2, y2 ) {
+  return MathUtil.constrainAngle( -Math.atan2( x1 - x2, y1 - y2 ) * 180 / Math.PI );
+};
+
+
