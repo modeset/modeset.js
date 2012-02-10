@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+curl -L -o ./app/assets/javascripts/vendor/jquery-1.7.1.min.js http://code.jquery.com/jquery-1.7.1.min.js
+curl -L -o ./app/assets/javascripts/vendor/underscore.js http://documentcloud.github.com/underscore/underscore.js
+

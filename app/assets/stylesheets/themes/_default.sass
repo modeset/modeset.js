@@ -1,0 +1,265 @@
+
+// fonts
+/* ----------------------------------------------------------------------------
+$sans_norm: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif
+$sans_heavy: "Helvetica Neue CE 85 Heavy", "Helvetica Neue LT 85 Heavy", "Helvetica Neue 85 Heavy", "HelveticaNeue-Heavy", "Helvetica Neue Heavy", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif
+$sans_lite: "Helvetica Neue CE 45 Light", "Helvetica Neue LT 45 Light", "Helvetica Neue 45 Light", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif
+$serif: "Georgia", "Times New Roman", "Times", serif
+$code: monospace, monospace
+
+
+// colors
+/* ----------------------------------------------------------------------------
+$black: #000
+$grey1: #111
+$grey2: #222
+$grey3: #3a3a3a
+$grey4: #494949
+$grey5: #555
+$grey6: #656565
+$grey7: #777
+$grey8: #888
+$grey9: #999
+$greyA: #a8a8a8
+$greyB: #bbb
+$greyC: #ccc
+$greyD: #d9d8d8
+$greyE: #eee
+$white: #fff
+
+// Common colors
+$blue10: #e1f2fb
+$blue20: #c4e9fe
+$blue30: #4fb0e8
+$blue40: #0182cc
+$blue50: #1d72d3
+$blue60: #004065
+$green10: #cefe5d
+$green30: #8cc504
+$grey: $grey6
+
+// mc roy g biv
+$magenta: #ff00ff
+$cyan: #00ffff
+$red: #b22222
+$orange: #f26522
+$yellow: #ffc40d
+$green: $green30
+$blue: $blue40
+$indigo: #4b0082
+$violet: #ee82ee
+
+$standard: $greyA
+$notice: $grey3
+$important: $blue
+$success: $green
+$warning: $yellow
+$alert: $orange
+$error: $red
+$danger: $error
+
+$border_std: 1px solid $grey6
+$border_dot: 1px dotted $grey6
+
+$disabled_color: $greyB
+$disabled_bg: $greyE
+$disabled_border: $greyC
+
+// shadows
+/* ----------------------------------------------------------------------------
+$focus_shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.8)
+$focus_error_shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(178, 34, 34, 0.8)
+$focus_border: rgba(82, 168, 236, 0.8)
+$text_shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+$text_shadow_vert: 0 -1px 0 rgba(0, 0, 0, 0.25)
+$box_shadow: rgba(0, 0, 0, 0.25) 1px 0px 6px
+$promo_shadow: rgba(0, 0, 0, 0.25) 1px 0px 6px
+
+
+// grid mixin
+/* ----------------------------------------------------------------------------
+$page-width: 1002px
+$column-width: 159px
+$gutter-width: 8px
+$columns: 6
+$_gridsystem-width: $column-width * $columns + $gutter-width * $columns
+
+// Set $total-width to 100% for a fluid layout
+$total-width: $_gridsystem-width
+// $total-width: 100%
+
+
+
+// sprites
+/* ----------------------------------------------------------------------------
+$icon_sprite_img: transparent url(/images/icon-sprites.png) no-repeat 0 0
+$social_sprite_img: transparent url(/images/social-sprites.png) no-repeat 0 0
+$icons_small_sprite_img: transparent url(/images/icons-small-sprites.png) no-repeat 0 0
+$icons_resnav_sprite_img: transparent url(/images/icons-residence-nav-sprites.png) no-repeat 0 0
+
+$sprite_icon-rate: 0 -16px
+$sprite_icon-map:  0 -32px
+$sprite_icon-prev: 0 -48px
+$sprite_icon-next: 0 -69px
+$sprite_icon-small-prev: 0 -90px
+$sprite_icon-small-next: 0 -105px
+$sprite_icon-dl-static: 0 -120px
+$sprite_icon-dl-hover: 0 -144px
+$sprite_icon-plus: 0 -168px
+$sprite_icon-minus: 0 -187px
+$sprite_icon-star-on: 0 -206px
+$sprite_icon-star-off: 0 -218px
+
+$sprite_social-facebook: 0 0
+$sprite_social-twitter: 0 -24px
+
+$icons_small_sprite_money: 0 0
+$icons_small_sprite_home: 0 -50px
+$icons_small_sprite_doc: 0 -100px
+$icons_small_sprite_star: 0 -150px
+$icons_small_sprite_list: 0 -200px
+$icons_small_sprite_talk: 0 -250px
+$icons_small_sprite_couple: 0 -300px
+$icons_small_sprite_group: 0 -350px
+$icons_small_sprite_plane: 0 -400px
+$icons_small_sprite_download: 0 -450px
+
+$icons_resnav_sprite_features: 0 0
+$icons_resnav_sprite_floorplan: -42px 0
+$icons_resnav_sprite_location: -94px 0
+$icons_resnav_sprite_dates: -127px 0
+$icons_resnav_sprite_pricing: -168px 0
+$icons_resnav_sprite_features_active: 0 -46px
+$icons_resnav_sprite_floorplan_active: -42px -46px
+$icons_resnav_sprite_location_active: -94px -46px
+$icons_resnav_sprite_dates_active: -127px -46px
+$icons_resnav_sprite_pricing_active: -168px -46px
+
+
+// base.scss
+/* ----------------------------------------------------------------------------
+$body_bg_color: $white
+$body_bg: $white url(/images/body-bg.png) repeat-x top left
+$body_color: $grey
+
+$select_bg: $blue
+$select_color: $white
+
+$link_normal: $blue
+$link_hover: $grey
+$link_active: $grey
+$link_visited: $blue
+$link_focus: $blue
+$link_highlight: $blue
+$tap_highlight: $blue
+
+// typography.scss
+/* ----------------------------------------------------------------------------
+$heading_norm_color: #2b6db9
+$mark_bg: $yellow
+
+// elements.scss
+/* ----------------------------------------------------------------------------
+// @see mixins/_buttons.scss
+$btn_bg: $greyD
+$btn_gradient: $white, $white 25%, $greyD
+$btn_color: $grey
+
+$action_bg: $greyD
+$action_color: $grey
+
+$dotted-border-grey: 1px dotted $grey9
+
+// tables.scss
+/* ----------------------------------------------------------------------------
+$table_bg: none
+$table_primary_color: $grey4
+$thead_border: $greyA
+$table_border_std: $greyC
+$tfoot_border: $greyA
+$thead_link_normal: $blue
+$thead_link_hover: $table_primary_color
+
+$zebra_odd: $white
+$zebra_even: $greyE
+
+$thead_bg: $greyD
+$tfoot_bg: $greyD
+
+// forms.scss
+/* ----------------------------------------------------------------------------
+$fieldset_border: $border_dot
+$form_hr: $border_dot
+$hint_color: $grey
+$label_color: $grey
+$collection_label_color: $grey4
+$placeholder: $greyB
+
+$input_color: $grey4
+$input_bg: $white
+$input_border: $greyA
+$input_shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2), 0 1px 0px rgba(255, 255, 255, 0.4)
+$input_file_bg: $white
+
+$input_focus_color: $black
+$input_focus_bg: $greyE
+
+
+// components/*.scss
+/* ----------------------------------------------------------------------------
+$breadcrumb_color: $grey
+$breadcrumb_normal: $grey
+$breadcrumb_hover: $blue
+$breadcrumb_active: $blue
+$breadcrumb_visited: $grey
+$breadcrumb_focus: $blue
+
+$paginate_bg: $white
+$paginate_border: $greyC
+$paginate_color: $grey
+$paginate_hover_bg: $blue
+$paginate_hover_border: darken($blue, 10%)
+$paginate_hover_color: $white
+$paginate_disabled: $disabled_color
+
+$tabs_bg: $greyE
+$tabs_border: $greyC
+$tabs_normal_color: lighten($grey6, 30%)
+$tabs_hover_bg: $blue
+$tabs_hover_border: darken($blue, 10%)
+$tabs_hover_color: $white
+$tabs_active_bg: $white
+$tabs_active_border: $white
+$tabs_active_color: $grey
+
+$pills_bg: $white
+$pills_border: $greyC
+$pills_normal_color: $grey
+$pills_hover_bg: $blue
+$pills_hover_border: darken($blue, 10%)
+$pills_hover_color: $white
+$pills_active_bg: $blue
+$pills_active_border: darken($blue, 10%)
+$pills_active_color: $white
+
+$tipsy_bg: $black
+$tipsy_color: $white
+
+$pop_bg: $white
+$pop_color: $grey
+$pop_border: $grey
+$pop_header_bg: $greyE
+$pop_header_border: $greyA
+
+$messaging_color: $white
+
+$cal_month_color: $grey
+$cal_month_normal: $grey
+$cal_month_hover: $blue
+$cal_month_active: $blue
+$cal_month_visited: $grey
+$cal_month_focus: $blue
+
+// layouts/*.scss
+/* ----------------------------------------------------------------------------
+

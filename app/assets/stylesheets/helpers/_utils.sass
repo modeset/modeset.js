@@ -1,0 +1,63 @@
+
+// Utilizes the pseudo elements for clearing floats
+._clearfixer, .clearfixer
+  +clearfixer
+
+// Uses the Compass clearfix of `overflow:hidden`
+._clearfix, .clearfix
+  +clearfix
+
+// Image replacement
+.ir
+  display: block
+  text-indent: -999em
+  overflow: hidden
+  background-repeat: no-repeat
+  text-align: left
+  direction: ltr
+  br
+    display: none
+
+// Totally hidden
+.hidden
+  display: none
+  visibility: hidden
+
+// Only visually hidden
+.visuallyhidden
+  border: 0
+  clip: rect(0 0 0 0)
+  height: 1px
+  margin: -1px
+  overflow: hidden
+  padding: 0
+  position: absolute
+  width: 1px
+  &.focusable:active,
+  &.focusable:focus
+    clip: auto
+    height: auto
+    margin: 0
+    overflow: visible
+    position: static
+    width: auto
+
+// Visually invisible, content remains in the DOM
+.invisible
+  visibility: hidden
+
+// Extra CSS help for custom cursors in IE - they need an absolute path
+.ie_hand
+  cursor: url(/images/cursors/openhand.cur), default !important
+
+.ie_hand_grab
+  cursor: url(/images/cursors/closedhand.cur), default !important
+
+// Useful for viewing the size of containers
+@mixin _text_is($wv, $hv)
+  font-weight: bold
+  line-height: $hv
+  text-align: center
+  &:after
+    content: "#{$wv} x #{$hv}"
+

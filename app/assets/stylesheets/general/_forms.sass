@@ -1,0 +1,188 @@
+
+// Containers
+form, form fieldset,
+form ol, form ul,
+form li,
+form p
+  +no-bullet
+  margin: 0
+  padding: 0
+
+form
+  +clearfixer
+
+form fieldset,
+form fieldset.bordered
+  border: none
+  display: block
+  padding: 10px 2px
+
+form fieldset.bordered
+  border: $fieldset_border
+  padding: 10px
+
+form ol li
+  display: block
+  margin-bottom: 10px
+  &:last-child
+    margin-bottom: 0
+
+// Description Elements
+form abbr[title]
+  border: none
+
+form hr
+  border-top: $form_hr
+
+label
+  font-size: 11px
+
+legend
+  border: 0
+  *margin-left: -7px
+
+form fieldset legend
+  display: none
+
+form label,
+form .inline-hints,
+form .inline-errors,
+form .hint
+  color: $label_color
+  display: block
+  margin-left: 3px
+  &.error
+    color: $error
+  &.disabled
+    color: $disabled_color
+
+form .inline-hints,
+form .hint
+  color: $hint_color
+  font-size: 11px
+
+form .inline-errors
+  color: $error
+  font-size: 11px
+
+.search label
+  display: none
+
+.radiogroup label,
+.checkgroup label
+  +inline-block
+  color: $collection_label_color
+  font-size: 14px
+  margin: -4px 10px 0 0
+
+\:-moz-placeholder
+  color: $placeholder
+
+\::-webkit-input-placeholder
+  color: $placeholder
+
+// Input Elements
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="number"],
+input[type="color"],
+input[type="search"],
+select, textarea
+  +inline-block
+  +border-radius(3px)
+  +box-shadow($input_shadow)
+  background: $input_bg
+  border: 1px solid $input_border
+  color: $input_color
+  padding: 6px 4px
+  width: auto
+  &:focus
+    +box-shadow($focus_shadow)
+    border-color: $focus_border
+    outline: 0
+  &:focus, &:hover
+    +transition(all 0.25s)
+    background-color: $input_focus_bg
+    color: $input_focus_color
+  &.error
+    border: 2px solid $error
+    &:focus
+      +box-shadow($focus_error_shadow)
+      outline: 0
+  &.disabled, &[disabled], &[readonly]
+    +box-shadow(none)
+    cursor: not-allowed
+    background-color: $disabled_bg
+    border-color: 1px solid $disabled_border
+    color: $disabled_color
+
+select
+  font-size: 16px
+
+select[multiple]
+  font-size: 14px
+
+// Search
+input[type="search"]
+  +border-radius(12px)
+  padding: 4px 0 4px 10px
+
+// Form Buttons
+// `input[type="button"]`, `input[type="reset"]`, `input[type="submit"]` should be attached to a class like `.btn`
+
+input[type="file"],
+input[type="image"]
+  +transition(all 0.25s)
+  margin-left: 2px
+  &:focus
+    +box-shadow($focus_shadow)
+    outline: 1px solid $focus_border
+
+input[type="file"]
+  background: $input_file_bg
+  margin-left: 0
+
+// Checks and Radios
+input[type="checkbox"],
+input[type="radio"]
+  box-sizing: border-box
+  cursor: pointer
+  line-height: normal
+  margin: 0 4px 0 0
+  *margin-top: 0
+  width: auto
+  height: auto
+  &.disabled, &[disabled], &[readonly]
+    cursor: not-allowed
+
+// Formtastic States
+form ol li.error
+  label, .hint, .inline-hints,
+  input, textarea, select
+    color: $error
+
+  input[type], textarea, select
+    border: 1px solid $error
+    &:focus
+      +box-shadow($focus_error_shadow)
+      outline: 0
+
+  input[type="checkbox"], input[type="radio"]
+    &:focus
+      outline: 5px auto $error
+
+form ol li.disabled label,
+form ol li.disabled .inline-hints,
+form ol li.disabled .hint
+  color: $disabled_color
+

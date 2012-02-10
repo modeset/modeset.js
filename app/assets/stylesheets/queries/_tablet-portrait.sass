@@ -1,0 +1,16 @@
+
+// Tablet portrait
+@media (min-device-width:1024px) and (max-width:960px),(min-device-width:768px) and (max-device-width:1024px) and (orientation:portrait)
+  .container
+    width: $page-width
+
+  section#slide_container
+    width: 1000px
+    section#gallery
+      a.next,
+      a.prev
+        +opacity(1)
+
+  hr.divider
+    width: 1000px
+

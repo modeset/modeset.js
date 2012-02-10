@@ -1,0 +1,200 @@
+
+// Typography
+abbr[title], acronym[title], dfn[title]
+  border-bottom: 1px dotted
+  font-style: italic
+
+b, strong
+  font-style: bold
+
+i, em
+  font-style: italic
+
+code, kbd, samp
+  background-color: #f8f8ff
+  border: 1px solid $greyD
+  font-size: 0.95em
+  padding: 0 .2em
+
+pre
+  background-color: $greyE
+  border: 1px solid $greyD
+  font-size: 0.95em
+  margin: 1em 0
+  padding: 5px
+  white-space: pre
+  white-space: pre-wrap
+  word-wrap: break-word
+  code
+    background: none
+
+pre, code
+  // For use with prettify
+  &.prettyprint
+    +box-shadow(0 1px 2px rgba(0,0,0,.1))
+    /* .pln, .pun, .opn, .clo
+      color: #222
+    .com
+      color: #93a1a1
+    .lit
+      color: #195f91
+    .fun
+      color: #cb4b15
+    .kwd, .tag
+      color: #258ad2
+    .str, .atv
+      color: #859900
+    .atn, .type, .dec, .var
+      color: #d33682
+
+
+blockquote
+  margin: 1em 40px
+
+blockquote
+  font-style: italic
+  quotes: "\201C" "\201D"
+  &:before, &:after
+    content: open-quote
+    font-weight: bold
+    font-style: normal
+  &:after
+    content: close-quote
+
+q
+  quotes: none
+
+q:before,
+q:after
+  content: ""
+  content: none
+
+mark
+  background: $mark_bg
+
+big
+  font-size: 115%
+
+small, cite, figure figcaption
+  font-size: 85%
+
+sub, sup
+  font-size: 75%
+  line-height: 0
+  position: relative
+  vertical-align: baseline
+
+sup
+  top: -0.5em
+
+sub
+  bottom: -0.25em
+
+address
+  font-style: normal
+
+details
+  margin: 10px 0
+  summary
+  p
+    margin: 0 10px 20px
+
+// Base Text
+h1, h2, h3, h4, h5, h6
+  color: $blue60
+  font-family: $sans_heavy
+  font-weight: bold
+  letter-spacing: -0.05em
+  line-height: 0.75em
+  margin-bottom: 0.2em
+  &.thin
+    color: $blue
+    font-family: $sans_lite
+    font-weight: normal
+    &.alt
+      color: $grey4
+  &.serif
+    color: $grey4
+    font-family: $serif
+    font-style: italic
+    font-weight: normal
+    letter-spacing: -1px
+    &.alt
+      color: $blue
+
+h1
+  font-size: 114px
+  &.serif
+    font-size: 40px
+  &.thin
+    font-size: 42px
+h2
+  font-size: 91px
+  &.serif
+    font-size: 40px
+  &.thin
+    font-size: 38px
+h3
+  font-size: 55px
+  &.serif
+    font-size: 30px
+  &.thin
+    font-size: 28px
+h4
+  font-size: 35px
+  &.serif
+    font-size: 28px
+  &.thin
+    font-size: 22px
+h5
+  font-size: 28px
+  &.serif
+    font-size: 24px
+  &.thin
+    font-size: 20px
+h6
+  font-size: 24px
+  &.serif
+    font-size: 22px
+  &.thin
+    font-size: 18px
+
+p
+  font-style: normal
+
+// Ordered and Unordered Lists
+ul
+  list-style: disc inside
+
+ol
+  list-style: decimal-leading-zero inside
+
+ul li, ol li
+  margin-left: 0.75em
+
+ul ul li, ul ol li,
+ol ul li, ol ol li
+  margin-left: 1.75em
+
+// Navigation Lists
+nav ul, nav ol
+  +no-bullet
+  ul li, ol li, li
+    margin-left: 0
+
+// Definition Lists
+dl
+  dt
+    font-size: 12px
+    font-weight: bold
+    height: 20px
+    margin-bottom: -21px
+    margin-top: 10px
+    width: 100%
+    &:after
+      content: ":"
+  dd
+    font-style: normal
+    margin-left: 20%
+    width: 80%
+

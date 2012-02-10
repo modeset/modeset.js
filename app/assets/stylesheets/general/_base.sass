@@ -1,0 +1,76 @@
+
+// Top level base elements and styles
+html
+  font-size: 100%
+  overflow-y: scroll
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+  -webkit-font-smoothing: antialiased
+  -webkit-text-size-adjust: 100%
+  -ms-text-size-adjust: 100%
+
+body, button, input, select, textarea
+  color: $body_color
+  font-family: $sans_norm
+  font-size: 13px
+
+body
+  background: $body_bg
+
+hr
+  display: block
+  height: 1px
+  border: 0
+  border-top: $border_std
+  &.dotted
+    border-top-style: dotted
+  &.dashed
+    border-top-style: dashed
+
+::-moz-selection
+  background: $select_bg
+  color: $select_color
+  text-shadow: none
+
+::selection
+  background: $select_bg
+  color: $select_color
+  text-shadow: none
+
+// Links
+a
+  +transition(all 0.25s)
+  color: $link_normal
+  text-decoration: none
+
+a:visited
+  color: $link_visited
+  text-decoration: none
+
+a:focus
+  outline: thin dotted
+
+a:hover, a:active
+  outline: 0
+  text-decoration: none
+
+a:hover
+  +transition(all 0.25s)
+  color: $link_hover
+
+a:active
+  color: $link_active
+
+a:link
+  -webkit-tap-highlight-color: $tap_highlight
+
+// Used in development for pixel precision
+.guider
+  background: none
+  outline: 1px dotted magenta
+  position: absolute
+  display: none
+  left: 0
+  top: 20px
+  width: 100%
+  height: 20px
+

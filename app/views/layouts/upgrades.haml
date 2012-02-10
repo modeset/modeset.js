@@ -1,0 +1,24 @@
+
+- browser_links = '<a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="http://www.apple.com/safari/download/">Apple Safari</a>, or <a href="http://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>'
+- ie_message = 'We recommend you upgrade to the <a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie-9/worldwide-languages">latest version</a> or use one of the browsers listed below.'
+#upgrade_messages
+  #no_js.upgrade-icon.danger
+    .upgrade-message
+      %p For full functionality of this site it is necessary to enable JavaScript.
+      %br
+      %p Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions</a> to enable JavaScript in your web browser.
+  #ie6.upgrade-icon.danger
+    .upgrade-message
+      %p We've noticed you are using Internet Explorer 6. This browser is not supported by this site.
+      %br
+      %p= ie_message
+      %br
+      %p= browser_links
+  #ie7.upgrade-icon.danger
+    .upgrade-message
+      %p We've noticed you are using Internet Explorer 7. This browser is not supported by this site.
+      %br
+      %p= ie_message
+      %br
+      %p= browser_links
+

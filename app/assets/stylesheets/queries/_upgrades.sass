@@ -1,0 +1,72 @@
+
+// Hook for coloring icons and containers
+@mixin _upgrade-coloring($color)
+  background-color: $color
+  border: 1px solid darken($color, 10%)
+  .upgrade-message
+    background: $color
+    border: 1px solid darken($color, 10%)
+    &:before
+      border-bottom-color: $color
+
+// Show the upgrade container if a condition is met
+html.no-js div#upgrade_messages,
+html.ie6 div#upgrade_messages,
+html.ie7 div#upgrade_messages
+  display: block
+
+// Show the message if a condition is met
+html.no-js div#upgrade_messages #no_js,
+html.ie6 div#upgrade_messages #ie6,
+html.ie7 div#upgrade_messages #ie7
+  +inline-block
+
+div#upgrade_messages
+  display: none
+  position: absolute
+  top: 10px
+  left: 10px
+  z-index: 99999
+  .upgrade-icon
+    +border-radius(20px)
+    cursor: pointer
+    color: $messaging_color
+    display: none
+    font-size: 19px
+    font-weight: bold
+    line-height: 1
+    text-align: center
+    width: 20px
+    height: 20px
+    &:before
+      content: "!"
+    .upgrade-message
+      +border-radius(4px)
+      cursor: default
+      font-size: 12px
+      text-align: left
+      margin-top: 5px
+      padding: 10px
+      display: none
+      position: relative
+      top: 0
+      left: 0
+      width: 200px
+      a, a:visited
+        color: ($messaging_color)
+        text-decoration: underline
+      &:before
+        position: absolute
+        content: ""
+        top: -5px
+        left: 9px
+    &.warning
+      +_upgrade-coloring($warning)
+    &.alert
+      +_upgrade-coloring($alert)
+    &.danger
+      +_upgrade-coloring($danger)
+    &:hover
+      .upgrade-message
+        display: block
+

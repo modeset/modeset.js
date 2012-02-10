@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+	<!-- from: http://media.chikuyonok.ru/canvas-blending/ -->
+	<meta charset="UTF-8" />
+	<title>Blending mode demo</title>
+	<style type="text/css">
+		body {
+			padding: 40px 10px;
+			font-family: arial, sans-serif;
+			font-size: 12px;
+		}
+
+		.blending-demo {
+			margin-top: 5em;
+			white-space: nowrap;
+		}
+
+		section {
+			position: relative;
+			display: inline-block;
+		}
+
+		section:after {
+			font-weight: bold;
+			font-size: 60px;
+			position:absolute;
+			top: 50%;
+			margin-left: 0.15em;
+			left: 100%;
+			margin-top: -0.6em;
+			line-height: 1.2;
+		}
+
+		.image1, .image2 {
+			margin-right: 4em;
+		}
+
+		.image1:after {
+			content: '+';
+		}
+
+		.image2:after {
+			content: '=';
+		}
+
+		.controls {
+			position: absolute;
+			bottom: 100%;
+			padding-bottom: 1em;
+		}
+
+		select[name=blending] {
+			margin-bottom: 1em;
+		}
+
+		label {
+			display: inline-block;
+			line-height: 1.5;
+			vertical-align: middle;
+			margin-right: 1em;
+			width: 7em;
+		}
+
+		input[name=opacity] {
+			vertical-align: middle;
+		}
+	</style>
+</head>
+<body>
+
+<div class="blending-demo">
+	<section class="image1">
+		<canvas id="canvas1" width="300" height="300"></canvas>
+	</section>
+	<section class="image2">
+		<div class="controls">
+			<div class="blending-mode">
+				<label for="fld-blending">Blend mode</label>
+				<select name="blending" id="fld-blending"></select>
+			</div>
+			<div class="opacity">
+				<label for="fld-opacity">Opacity</label>
+				<input type="range" name="opacity" id="fld-opacity" min="0" max="100" value="100" />
+			</div>
+		</div>
+		<canvas id="canvas2" width="300" height="300"></canvas>
+	</section>
+	<section class="result">
+		<canvas id="result" width="300" height="300"></canvas>
+	</section>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+/**
+ * JavaScript implementation of common blending modes, based on
+ * http://stackoverflow.com/questions/5919663/how-does-photoshop-blend-two-images-together
+ *
+ * Note that I'm not using <code>this</code> to reference current object
+ * for faster execution
+ */
+var blendingModes = {
+	normal: function(a, b) {
+		return a;
+	},
+
+	lighten: function(a, b) {
+		return (b > a) ? b : a;
+	},
+
+	darken: function(a, b) {
+		return (b > a) ? a : b;
+	},
+
+	multiply: function(a, b) {
+		return (a * b) / 255;
+	},
+
+	average: function(a, b) {
+		return (a + b) / 2;
+	},
+
+	add: function(a, b) {
+		return Math.min(255, a + b);
+	},
+
+	substract: function(a, b) {
+		return (a + b < 255) ? 0 : a + b - 255;
+	},
+
+	difference: function(a, b) {
+		return Math.abs(a - b);
+	},
+
+	negation: function(a, b) {
+		return 255 - Math.abs(255 - a - b);
+	},
+
+	screen: function(a, b) {
+		return 255 - (((255 - a) * (255 - b)) >> 8);
+	},
+
+	exclusion: function(a, b) {
+		return a + b - 2 * a * b / 255;
+	},
+
+	overlay: function(a, b) {
+		return b < 128
+			? (2 * a * b / 255)
+			: (255 - 2 * (255 - a) * (255 - b) / 255);
+	},
+
+	softLight: function(a, b) {
+		return b < 128
+			? (2 * ((a >> 1) + 64)) * (b / 255)
+			: 255 - (2 * (255 - (( a >> 1) + 64)) * (255 - b) / 255);
+	},
+
+	hardLight: function(a, b) {
+		return blendingModes.overlay(b, a);
+	},
+
+	colorDodge: function(a, b) {
+		return b == 255 ? b : Math.min(255, ((a << 8 ) / (255 - b)));
+	},
+
+	colorBurn: function(a, b) {
+		return b == 0 ? b : Math.max(0, (255 - ((255 - a) << 8 ) / b));
+	},
+
+	linearDodge: function(a, b) {
+		return blendingModes.add(a, b);
+	},
+
+	linearBurn: function(a, b) {
+		return blendingModes.substract(a, b);
+	},
+
+	linearLight: function(a, b) {
+		return b < 128
+			? blendingModes.linearBurn(a, 2 * b)
+			: blendingModes.linearDodge(a, (2 * (b - 128)));
+	},
+
+	vividLight: function(a, b) {
+		return b < 128
+			? blendingModes.colorBurn(a, 2 * b)
+			: blendingModes.colorDodge(a, (2 * (b - 128)));
+	},
+
+	pinLight: function(a, b) {
+		return b < 128
+			? blendingModes.darken(a, 2 * b)
+			: blendingModes.lighten(a, (2 * (b - 128)));
+	},
+
+	hardMix: function(a, b) {
+		return blendingModes.vividLight(a, b) < 128 ? 0 : 255;
+	},
+
+	reflect: function(a, b) {
+		return b == 255 ? b : Math.min(255, (a * a / (255 - b)));
+	},
+
+	glow: function(a, b) {
+		return blendingModes.reflect(b, a);
+	},
+
+	phoenix: function(a, b) {
+		return Math.min(a, b) - Math.max(a, b) + 255;
+	}
+};
+
+/** @type CanvasRenderingContext2D */
+var ctx1 = null;
+
+/** @type CanvasRenderingContext2D */
+var ctx2 = null;
+
+/** @type CanvasRenderingContext2D */
+var ctx3 = null;
+
+/** Current blending mode */
+var mode = 'normal';
+
+/** Current blending opacity */
+var alpha = 1;
+
+var totalImages = 2;
+var img1 = new Image();
+var img2 = new Image();
+
+img1.onload = img2.onload = imageReady;
+
+function imageReady() {
+	if (--totalImages == 0) {
+		setupScene();
+	}
+}
+
+function setupScene() {
+	ctx1 = document.getElementById('canvas1').getContext('2d');
+	ctx2 = document.getElementById('canvas2').getContext('2d');
+	ctx3 = document.getElementById('result').getContext('2d');
+
+	drawImage(img1, ctx1);
+	drawImage(img2, ctx2);
+	drawImage(img1, ctx3);
+}
+
+/**
+ * Draw image on specified canvas context
+ * @param {Image} img
+ * @param {CanvasRenderingContext2D} ctx
+ */
+function drawImage(img, ctx) {
+	ctx.canvas.width = img.width;
+	ctx.canvas.height = img.height;
+	ctx.drawImage(img, 0, 0);
+	updateScene();
+}
+
+function updateScene() {
+	// create rect for smallest image
+	var width =  Math.min(ctx1.canvas.width, ctx2.canvas.width);
+	var height = Math.min(ctx1.canvas.height, ctx2.canvas.height);
+
+	var imageData1 = ctx1.getImageData(0, 0, width, height);
+	var imageData2 = ctx2.getImageData(0, 0, width, height);
+
+	/** @type Array */
+	var pixels1 = imageData1.data;
+	/** @type Array */
+	var pixels2 = imageData2.data;
+
+	var r, g, b, oR, oG, oB, alpha1 = 1 - alpha;
+
+	var blendingMode = blendingModes[mode];
+
+	// blend images
+	for (var i = 0, il = pixels1.length; i < il; i += 4) {
+		oR = pixels1[i];
+		oG = pixels1[i + 1];
+		oB = pixels1[i + 2];
+
+		// calculate blended color
+		r = blendingMode(pixels2[i], oR);
+		g = blendingMode(pixels2[i + 1], oG);
+		b = blendingMode(pixels2[i + 2], oB);
+
+		// alpha compositing
+		pixels1[i] =     r * alpha + oR * alpha1;
+		pixels1[i + 1] = g * alpha + oG * alpha1;
+		pixels1[i + 2] = b * alpha + oB * alpha1;
+	}
+
+	ctx3.putImageData(imageData1, 0, 0);
+}
+
+/**
+ * @param {String} name
+ */
+function humanizeName(name) {
+	return name.charAt(0).toUpperCase() + name.substring(1).replace(/[A-Z]/g, function(s) {
+		return ' ' + s.toLowerCase();
+	});
+}
+
+$(function() {
+	// setup page:
+
+	// fill blending mode select box
+	var options = [];
+	for (var name in blendingModes) if (blendingModes.hasOwnProperty(name)) {
+		options.push('<option value="' + name + '">' + humanizeName(name) + '</option>');
+	}
+
+	$('select[name=blending]').html(options.join('')).change(function() {
+		mode = $(this).val();
+		if (!totalImages)
+			updateScene();
+	});
+
+	$('input[name=opacity]').bind('change keyup keypress', function() {
+		var value = parseInt($(this).val(), 10);
+		if ($(this).data('prev-value') != value) {
+			$(this).data('prev-value', value);
+			alpha = Math.min(1, Math.max(0, value / 100));
+
+			if (!totalImages)
+				updateScene();
+		}
+	}).val(Math.floor(alpha * 100));
+
+	// load images
+	img1.src = 'bt-crest.png';
+	img2.src = 'oxford.png';
+});
+
+</script>
+</body>
+</html>

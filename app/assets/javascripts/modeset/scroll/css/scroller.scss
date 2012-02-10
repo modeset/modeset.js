@@ -1,0 +1,106 @@
+/* Main scroll containers */
+.scroll_outer {
+	position:relative;
+	overflow:hidden;
+}
+
+/* Base scroll styles */
+.scroll_inner {
+	position:relative;
+	left:0px;
+	top:0px;
+	width:320px;
+	float:left;
+}
+
+.scroll_outer.vertical .scroll_inner {
+}
+
+.scroll_page {
+	float:left;
+}
+
+
+/* Scroll bar indicator */
+.scroll_outer div.scroll_bar {
+	height:5px;
+	left:0px;
+	right:auto;
+	top:auto;
+	position:absolute;
+	overflow:hidden;
+	z-index:10;
+}
+
+.scroll_outer div.scroll_bar_pill {
+	height:5px;
+	left:0px;
+	top:0px;
+	display:none;
+	position:absolute;
+	background-color:black;
+	opacity:0.5;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+
+  -webkit-transition: opacity 0.2s ease-in-out;
+	-o-transition: opacity 0.2s ease-in-out;
+	-moz-transition: opacity 0.2s ease-in-out;
+	transition: opacity 0.2s ease-in-out;
+}
+
+.scroll_outer.vertical div.scroll_bar {
+	width:5px;
+	left:auto;
+	top:auto;
+	right:0px;
+	bottom:0px;
+}
+
+.scroll_outer.vertical div.scroll_bar_pill {
+	width:5px;
+}
+
+
+
+/* Custom scroll styles */
+.scroll_outer {
+	width:320px;
+	margin:0 auto;
+}
+
+.scroll_inner {}
+
+.scroll_outer.vertical .scroll_inner {
+	width:320px;
+}
+
+.scroll_page {
+	width:320px;
+	height:320px;
+}
+
+/* Custom scroll bar styles */
+.scroll_outer .scroll_bar {
+	right:auto;
+	bottom:4px;
+	padding:0 4px;
+}
+
+.scroll_outer.vertical div.scroll_bar {
+	right:4px;
+	bottom:auto;
+	padding:4px 0;
+}
+
+.scroll_outer div.scroll_bar_pill {
+}
+
+.scroll_outer.vertical div.scroll_bar_pill {
+	background-color:white;
+}
+
+.force_redraw {
+	opacity:0.99;
+}
