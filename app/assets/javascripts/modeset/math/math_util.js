@@ -72,7 +72,7 @@ MathUtil.degreesToRadians = function( d ) {
 /**
  *  Convert a number from Radians to Degrees.
  *  @param    r radians (3.14..., 1.57...)
- *  @return     degrees (45°, 90°)
+ *  @return   degrees (45°, 90°)
  *  @use      {@code var vDegrees = MathUtil.radiansToDegrees( 3.14 );}
  */
 MathUtil.radiansToDegrees = function( r ) {
@@ -81,28 +81,28 @@ MathUtil.radiansToDegrees = function( r ) {
 
 /**
  *  Convert a number from a Percentage to Degrees (based on 360°).
- *  @param  n   percentage (1, .5)
- *  @return degrees (360°, 180°)
+ *  @param    n percentage (1, .5)
+ *  @return   degrees (360°, 180°)
  *  @use      {@code var vDegreesPercent = MathUtil.percentToDegrees( 50 );}
  */
 MathUtil.percentToDegrees = function( n ) {
-  return ( ( Math.abs( n / 100 ) ) * 360 ) * 100;   
+  return Math.abs( n ) * 360;
 };
 
 /**
  *  Convert a number from Degrees to a Percentage (based on 360°).
- *  @param  n degrees (360°, 180°)
+ *  @param    n degrees (360°, 180°)
  *  @return   percentage (1, .5)
- *  @use    {@code var vPercentDegrees = MathUtil.degreesToPercent( 180 );}
+ *  @use      {@code var vPercentDegrees = MathUtil.degreesToPercent( 180 );}
  */
 MathUtil.degreesToPercent = function( n ) {
-  return ( Math.abs( n / 360 ) );   
+  return Math.abs( n / 360 );
 };
 
 /**
  *  Rips through an indexed array of numbers adding the total of all values.
- *  @param  nums  an indexed array of numbers.
- *  @return     the sum of all numbers.
+ *  @param    nums  an indexed array of numbers.
+ *  @return   the sum of all numbers.
  *  @use      {@code var vSums = MathUtil.sums( [ 12, 20, 7 ] );}
  */
 MathUtil.sums = function( nums ) {
@@ -124,7 +124,7 @@ MathUtil.sums = function( nums ) {
  *  @use      {@code var vAverage = MathUtil.average( [ 12, 20, 7 ] );}
  */
 MathUtil.average = function( nums ) {
-  return sums( nums ) / nums.length;
+  return MathUtil.sums( nums ) / nums.length;
 }
 
 /**
@@ -132,7 +132,7 @@ MathUtil.average = function( nums ) {
  *  @param    lower first value (-1.0, 43.6)
  *  @param    upper second value (-100.0, 3.1415)
  *  @param    n point between values (0.0, 1.0)
- *  @return     number (12.3, 44.555)
+ *  @return   number (12.3, 44.555)
  *  @use      {@code var value = MathUtil.interp( 10, 20, .5 );  //returns 15}
  */
 MathUtil.interp = function( lower, upper, n ) {
@@ -146,12 +146,11 @@ MathUtil.interp = function( lower, upper, n ) {
  *  @param    upper1 Upper bound of the value's current range
  *  @param    lower2 Lower bound of the value's target range
  *  @param    upper2 Upper bound of the value's target range
- *  @return     number (12.3, 44.555)
+ *  @return   number (12.3, 44.555)
  *  @use      {@code var value = MathUtil.remap( 10, 0, 20, 1, 2 );  //returns 1.5}
  */
-MathUtil.remap = function( value, lower1, upper1, lower2, upper2 ) 
-{
-  return MathUtil.interp(lower2,upper2, MathUtil.getPercentWithinRange(lower1,upper1,value)/100.);
+MathUtil.remap = function( value, lower1, upper1, lower2, upper2 ) {
+  return MathUtil.interp(lower2,upper2, MathUtil.getPercentWithinRange(lower1,upper1,value));
 }
 
 /**
