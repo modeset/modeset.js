@@ -1,10 +1,10 @@
-// displacement properties
-var _range = _size / 4;
-var _fric = .65;
-var _accel = .4;
 
-// displacement point class
 var Point = function( x, y ) {
+	// displacement properties
+	var _range = _size / 4;
+	var _fric = .65;
+	var _accel = .4;
+
 	var self = this;
 
 	// base location
@@ -42,4 +42,4 @@ var Point = function( x, y ) {
 		self.displaceAmount = Math.abs( self.curX - self.x ) + Math.abs( self.curY - self.y );
 		self.displaceDir = ( self.curX - self.x ) + ( self.curY - self.y );
 	};
-}
+};
