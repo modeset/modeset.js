@@ -6,5 +6,8 @@
 /* MATH */
 //= require modeset/math/math_util
 
+/* STRING */
+//= require modeset/string/string_util
+
 /* APPLICATION ASSETS */
 /* require_tree ./components*/
