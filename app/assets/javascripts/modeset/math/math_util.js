@@ -1,4 +1,4 @@
-function MathUtil() {}
+var MathUtil = MathUtil || {};
 
 /**
  *  Calculates a random number within a minimum and maximum range.

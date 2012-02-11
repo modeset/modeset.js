@@ -1,7 +1,5 @@
 describe 'MathUtil', ->
 
-  num = null
-
   beforeEach ->
 
   afterEach ->
