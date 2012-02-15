@@ -48,6 +48,18 @@ MathUtil.getPercentWithinRange = function( bottomRange, topRange, valueInRange )
 };
 
 /**
+ *  Returns a percentage of a value in between 2 other numbers.
+ *  @param  inputNum   The number to round.
+ *  @param  numPoints  Number of decimal points to round to.
+ *  @return The rounded number.
+ *  @use    {@code var roundedNum = MathUtil.roundToDecimal( 10.3333, 1 );  // displays 10.3 }
+ */
+MathUtil.roundToDecimal = function( inputNum, numPoints ) {
+  var multiplier = Math.pow( 10, numPoints );
+  return Math.round( inputNum * multiplier ) / multiplier;
+};
+
+/**
  *  Ease a number towards a target.
  *  @param  current     number (0)
  *  @param  target      number (100)

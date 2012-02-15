@@ -5,7 +5,6 @@ describe 'MathUtil', ->
   afterEach ->
 
   describe 'randRange()', ->
-
     it 'Should return a random integer between min and max', ->
       min = 2
       max = 5
@@ -14,7 +13,6 @@ describe 'MathUtil', ->
       expect(randInt).toBeGreaterThan(min - 1)
 
   describe 'randRangeDecimel()', ->
-
     it 'Should return a random number between min and max', ->
       min = 2
       max = 5
@@ -23,13 +21,18 @@ describe 'MathUtil', ->
       expect(randFloat).toBeGreaterThan(min - 1)
 
   describe 'getPercentWithinRange()', ->
-
     it 'Should return a percentage, given a min, max and value for a numeric range', ->
       bottom = 100
       top = 500
       value = 300
       percent = MathUtil.getPercentWithinRange(bottom,top,value)
       expect(percent).toBe(0.5)
+
+  describe 'roundToDecimal()', ->
+    it 'Should return a number rounded to a specific number of decimal points', ->
+      expect(MathUtil.roundToDecimal(10.333333,1)).toBe(10.3)
+      expect(MathUtil.roundToDecimal(5,3)).toBe(5)
+      expect(MathUtil.roundToDecimal(1.789,2)).toBe(1.79)
 
   describe 'easeTo()', ->
     it 'Should return a number that eases towards a target from a starting value', ->
