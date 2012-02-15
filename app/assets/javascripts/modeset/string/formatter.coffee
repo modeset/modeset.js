@@ -43,4 +43,40 @@ class Formatter
     return x1 + x2;
   }
 
+  /**
+ *  Removes html tags from a string with markup.
+ *  @param  str The string to strip.
+ *  @return A string without html tags.
+ *  @use    {@code var escapedStr = StringUtil.stripTags( '<div>Hello World</div>' );}
+ */
+StringUtil.convertTime = function( milliSeconds ) {
+   var secs = Math.floor(milliSeconds/1000);
+   var mins = Math.floor(secs/60);
+   secs %= 60;
+   
+   var secsStr = secs + '';
+   var minsStr = mins + '';
+   
+   if ( secs < 10 ) secsStr = "0"+secs; 
+   if ( mins < 10)  minsStr = "0"+mins;
+   
+   // don't return if NaN
+   if( minsStr == 'NaN' || secsStr == 'NaN' ) {
+     return( '' );
+   } else {
+     return( minsStr + ":" + secsStr );
+   }
+};
+
+  // formats a number of seconds to a nice string
+  var formatDuration = function( seconds ) {
+    var h = Math.floor(seconds / 3600);
+    var m = Math.floor(seconds % 3600 / 60);
+    var s = Math.floor(seconds % 3600 % 60);
+    var hStr = (h < 10 ? "0" : "") + h;
+    var mStr = (m < 10 ? "0" : "") + m;
+    var sStr = (s < 10 ? "0" : "") + s;
+    return hStr + ':' + mStr + ':' +sStr;
+  }
+
 @Formatter = Formatter

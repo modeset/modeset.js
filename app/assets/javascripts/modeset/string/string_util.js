@@ -13,29 +13,6 @@ StringUtil.escapeHTML = function(str) {
 
 StringUtil.stripTags = function(str) {
   return str.replace(/<\/?[^>]+>/igm,'');
-};
-
-StringUtil.convertTime = function( milliSeconds ) {
-   var secs = Math.floor(milliSeconds/1000);
-   var mins = Math.floor(secs/60);
-   secs %= 60;
-   
-   var secsStr = secs + '';
-   var minsStr = mins + '';
-   
-   if ( secs < 10 ) secsStr = "0"+secs; 
-   if ( mins < 10)  minsStr = "0"+mins;
-   
-   // don't return if NaN
-   if( minsStr == 'NaN' || secsStr == 'NaN' ) {
-     return( '' );
-   } else {
-     return( minsStr + ":" + secsStr );
-   }
-};
-   
-   
-   
 
 /**
 * Returns everything after the first occurrence of the provided character in the string.
