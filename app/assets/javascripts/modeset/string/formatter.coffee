@@ -43,6 +43,23 @@ class Formatter
     return x1 + x2;
   }
 
+      /**
+     * Puts commas in between every 3rd number
+     */
+    public static function formatNumber(number:Number):String
+    {
+      var nStr:String = number.toString();
+      var x:Array = nStr.split('.');
+      var x1:String = x[0];
+      var x2:String = ( x.length > 1 ) ? '.' + x[1] : '';
+      var rgx:RegExp = /(\d+)(\d{3})/;
+      while ( rgx.test(x1) )
+      {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+      return x1 + x2;
+    }
+
   /**
  *  Removes html tags from a string with markup.
  *  @param  str The string to strip.
