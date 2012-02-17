@@ -1,5 +1,15 @@
 var StringUtil = StringUtil || {};
 
+/* **************************************************************** */
+/*  String manipulation methods                                     */
+/* **************************************************************** */
+
+/**
+ *  Converts an underscored or dashed lowercase string to a traditional snake-cased class name format.
+ *  @param  str The string to convert.
+ *  @return A traditional class name formatted string.
+ *  @use    {@code var klass = StringUtil.toClassName( 'class_name' );}
+ */
 StringUtil.toClassName = function(str) {
   var words = [];
   var arr = str.replace(/[_|\-]/gi, ' ').replace(/\s+/gi, ' ').split(' ');
@@ -7,246 +17,424 @@ StringUtil.toClassName = function(str) {
   return words.join('');
 };
 
+/**
+ *  Escapes a limited set of common html characters: &amp;, &lt;, &gt;, &quot;.
+ *  @param  str The string to escape.
+ *  @return An html-escaped string.
+ *  @use    {@code var escapedStr = StringUtil.escapeHTML( '<div>Hello & World</div>' );}
+ */
 StringUtil.escapeHTML = function(str) {
   return str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/igm,'&quot;');
 };
 
+/**
+ *  Removes html tags from a string with markup.
+ *  @param  str The string to strip.
+ *  @return A string without html tags.
+ *  @use    {@code var escapedStr = StringUtil.stripTags( '<div>Hello World</div>' );}
+ */
 StringUtil.stripTags = function(str) {
+  if (str == null) { return ''; }
   return str.replace(/<\/?[^>]+>/igm,'');
+};   
 
 /**
-* Returns everything after the first occurrence of the provided character in the string.
-*
-* @param p_string The string.
-*
-* @param p_begin The character or sub-string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.afterFirst = function(p_string, p_char) {
-  if (p_string == null) { return ''; }
-  var idx = p_string.indexOf(p_char);
+ *  Capitalizes the first word in a string or all words.
+ *  @param  str The input string.
+ *  @param  all Optional boolean value indicating if we should capitalize all words or only the first.
+ *  @return A formatted string.
+ *  @use    {@code var capsStr = StringUtil.capitalize( 'these are some words.', true );}
+ */
+StringUtil.capitalize = function(str, all) {
+  var str = StringUtil.trimLeft(str);
+  if (all === true) {
+    return str.replace(/^.|\s+(.)/g, StringUtil.upperCase);
+  } else {
+    return str.replace(/(^\w)/, StringUtil.upperCase); 
+  }
+};
+
+/**
+ *  Utility method to return an uppercase version of a string - used in StringUtil.capitalize()'s String.replace() call.
+ *  @param  str The input string.
+ *  @return The input string, capitalized.
+ *  @use    {@code var uppercaseStr = StringUtil.upperCase( 'yes' );}
+ */
+StringUtil.upperCase = function(str) {
+  return str.toUpperCase();
+};
+
+/**
+ *  Pads str with specified character to a specified length from the left.
+ *  @param  str     The source string.
+ *  @param  char    Character to pad with.
+ *  @param  length  Length to pad to.
+ *  @return Padded string.
+ *  @use    {@code var padded = StringUtil.padLeft( '10:10', '#', 7 );}
+ */
+StringUtil.padLeft = function(str, padChar, length) {
+  var s = str;
+  while (s.length < length) { s = padChar + s; }
+  return s;
+};
+
+/**
+ *  Pads str with specified character to a specified length from the right.
+ *  @param  str     The source string.
+ *  @param  char    Character to pad with.
+ *  @param  length  Length to pad to.
+ *  @return Padded string.
+ *  @use    {@code var padded = StringUtil.padRight( '10:10', '#', 7 );}
+ */
+StringUtil.padRight = function(str, padChar, length) {
+  var s = str;
+  while (s.length < length) { s += padChar; }
+  return s;
+};
+
+/**
+ *  Removes whitespace from the front and the end of the input string.
+ *  @param  str The source string.
+ *  @return Trimmed string.
+ *  @use    {@code var trimmed = StringUtil.trim( '   Oh hai.   ' );}
+ */
+StringUtil.trim = function(str) {
+  if (str == null) { return ''; }
+  return str.replace(/^\s+|\s+$/g, '');
+};
+
+/**
+ *  Removes whitespace from the front of the specified string.
+ *  @param  str The source string.
+ *  @return Left-trimmed string.
+ *  @use    {@code var trimmed = StringUtil.trimLeft( '   Oh hai.   ' );}
+ */
+StringUtil.trimLeft = function(str) {
+  if (str == null) { return ''; }
+  return str.replace(/^\s+/, '');
+};
+
+/**
+ *  Removes whitespace from the end of the specified string.
+ *  @param  str The source string.
+ *  @return Right-trimmed string.
+ *  @use    {@code var trimmed = StringUtil.trimRight( '   Oh hai.   ' );}
+ */
+StringUtil.trimRight = function(str) {
+  if (str == null) { return ''; }
+  return str.replace(/\s+$/, '');
+};
+
+/**
+ *  Returns a string truncated to a specified length with optional suffix.
+ *  @param  str     The source string.
+ *  @param  len     The length the string should be shortend to, including the suffix.
+ *  @param  suffix  The string to append to the end of the truncated string.
+ *  @return Truncated string.
+ *  @use    {@code var trimmed = StringUtil.truncate( 'This is a long sentence, kind of.' );}
+ */
+StringUtil.truncate = function(str, len, suffix) {
+  len = len || -1;
+  suffix = suffix || "...";
+  if (str == null) { return ''; }
+  if (len == -1) { len = str.length; }
+  len -= suffix.length;
+  var trunc = str;
+  if (trunc.length > len) {
+    trunc = trunc.substr(0, len);
+    if (/[^\s]/.test(str.charAt(len))) {
+      trunc = StringUtil.trimRight(trunc.replace(/\w+$|\s+$/, ''));
+    }
+    trunc += suffix;
+  }
+  return trunc;
+};
+
+/**
+ *  Removes extraneous whitespace (extra spaces, tabs, line breaks, etc) from the specified string.
+ *  @param  str The source string.
+ *  @return String with whitespace removed.
+ *  @use    {@code var cleaned = StringUtil.removeExtraWhitespace( '   Oh hai.   ' );}
+ */
+StringUtil.removeExtraWhitespace = function(str) {
+  if (str == null) { return ''; }
+  var str = StringUtil.trim(str);
+  return str.replace(/\s+/g, ' ');
+};
+
+/**
+ *  Removes all instances of the remove string in the input string.
+ *  @param  str   The source string.
+ *  @param  char  The string that will be removed from the input string.
+ *  @param  caseSensitive A boolean flag to indicate whether the search is case sensitive.
+ *  @return Edited string.
+ *  @use    {@code var edited = StringUtil.remove( '1:2:3:4:5', ':', false );}
+ */
+StringUtil.remove = function(str, remove, caseSensitive) {
+  if (str == null) { return ''; }
+  var flags = (!caseSensitive) ? 'ig' : 'g';
+  return str.replace(new RegExp(remove, flags), '');
+};
+
+/**
+ *  Returns the specified string in reverse character order.
+ *  @param  str The source string.
+ *  @return A reversed string.
+ *  @use    {@code var reversed = StringUtil.reverse( 'abcdefg' );}
+ */
+StringUtil.reverse = function(str) {
+  if (str == null) { return ''; }
+  return str.split('').reverse().join('');
+};
+
+/**
+ *  Returns the specified string in reverse word order.
+ *  @param  str The source string.
+ *  @return A reversed-word string.
+ *  @use    {@code var reversed = StringUtil.reverseWords( 'this is a string' );}
+ */
+StringUtil.reverseWords = function(str) {
+  if (str == null) { return ''; }
+  return str.split(/\s+/).reverse().join(' ');
+};
+
+/**
+ *  Swaps the casing of a string.
+ *  @param  str The source string.
+ *  @return A string with swapped case
+ *  @use    {@code var swappedCaseStr = StringUtil.swapCase( 'Oh hey' );}
+ */
+StringUtil.swapCase = function(str) {
+  if (str == null) { return ''; }
+  return str.replace(/(\w)/g, StringUtil.swapCharacterCase);
+};
+
+/**
+ *  Swaps the casing of a single character.
+ *  @param  str The source character.
+ *  @return A string with swapped case
+ *  @use    {@code var swappedCaseChar = StringUtil.swapCharacterCase( 'O' );}
+ */
+StringUtil.swapCharacterCase = function(char) {
+  var lowChar = char.toLowerCase();
+  var upChar = char.toUpperCase();
+  switch (char) {
+    case lowChar:
+      return upChar;
+    case upChar:
+      return lowChar;
+    default:
+      return char;
+  }
+};
+
+/* **************************************************************** */
+/*  Substring retrieval methods                                     */
+/* **************************************************************** */
+
+/**
+ *  Returns everything after the first occurrence of the provided character in the string.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string.
+ *  @return A substring of the first - everything after the first instance of the specified character.
+ *  @use    {@code var afterStr = StringUtil.afterFirst( 'This is a sentence - broken by a hyphen.', ' - ');}
+ */
+StringUtil.afterFirst = function(str, char) {
+  if (str == null) { return ''; }
+  var idx = str.indexOf(char);
   if (idx == -1) { return ''; }
-  idx += p_char.length;
-  return p_string.substr(idx);
+  idx += char.length;
+  return str.substr(idx);
 };
 
 /**
-* Returns everything after the last occurence of the provided character in p_string.
-*
-* @param p_string The string.
-*
-* @param p_char The character or sub-string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.afterLast = function(p_string, p_char) {
-  if (p_string == null) { return ''; }
-  var idx = p_string.lastIndexOf(p_char);
+ *  Returns everything after the last occurence of the provided character in str.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string to split on.
+ *  @return A substring of the input - everything after the last instance of the specified character.
+ *  @use    {@code var afterStr = StringUtil.afterLast( 'This is a sentence - broken by a hyphen.', 'e');}
+ */
+StringUtil.afterLast = function(str, char) {
+  if (str == null) { return ''; }
+  var idx = str.lastIndexOf(char);
   if (idx == -1) { return ''; }
-  idx += p_char.length;
-  return p_string.substr(idx);
+  idx += char.length;
+  return str.substr(idx);
 };
 
 /**
-* Determines whether the specified string begins with the specified prefix.
-*
-* @param p_string The string that the prefix will be checked against.
-*
-* @param p_begin The prefix that will be tested against the string.
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-StringUtil.beginsWith = function(p_string, p_begin) {
-  if (p_string == null) { return false; }
-  return new RegExp("^"+p_begin).test(p_string);
-};
-
-/**
-* Returns everything before the first occurrence of the provided character in the string.
-*
-* @param p_string The string.
-*
-* @param p_begin The character or sub-string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.beforeFirst = function(p_string, p_char) {
-  if (p_string == null) { return ''; }
-  var idx = p_string.indexOf(p_char);
+ *  Returns everything before the first occurrence of the provided character in the string.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string to split on.
+ *  @return A substring of the input - everything before the first instance of the specified character.
+ *  @use    {@code var beforeStr = StringUtil.beforeFirst( 'This is a sentence - broken by a hyphen.', 'a' );}
+ */
+StringUtil.beforeFirst = function(str, char) {
+  if (str == null) { return ''; }
+  var idx = str.indexOf(char);
   if (idx == -1) { return ''; }
-  return p_string.substr(0, idx);
+  return str.substr(0, idx);
 };
 
 /**
-* Returns everything before the last occurrence of the provided character in the string.
-*
-* @param p_string The string.
-*
-* @param p_begin The character or sub-string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.beforeLast = function(p_string, p_char) {
-  if (p_string == null) { return ''; }
-  var idx = p_string.lastIndexOf(p_char);
+ *  Returns everything before the last occurrence of the provided character in the string.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string to split on.
+ *  @return A substring of the input - everything before the last instance of the specified character.
+ *  @use    {@code var beforeStr = StringUtil.beforeLast( 'This is a sentence - broken by a hyphen.', 'a' );}
+ */
+StringUtil.beforeLast = function(str, char) {
+  if (str == null) { return ''; }
+  var idx = str.lastIndexOf(char);
   if (idx == -1) { return ''; }
-  return p_string.substr(0, idx);
+  return str.substr(0, idx);
 };
 
 /**
-* Returns everything after the first occurance of p_start and before
-* the first occurrence of p_end in p_string.
-*
-* @param p_string The string.
-*
-* @param p_start The character or sub-string to use as the start index.
-*
-* @param p_end The character or sub-string to use as the end index.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.between = function(p_string, p_start, p_end) {
-  var str = '';
-  if (p_string == null) { return str; }
-  var startIdx = p_string.indexOf(p_start);
+ *  Returns everything after the first occurance of start and before the first occurrence of end in str.
+ *  @param  str   The input string.
+ *  @param  start The character or sub-string to use as the start index.
+ *  @param  end   The character or sub-string to use as the end index.
+ *  @return A substring of the input - everything before the last instance of the specified character.
+ *  @use    {@code var betweenStr = StringUtil.between( 'This is a sentence - broken by a hyphen.', 'This is', 'by' );}
+ */
+StringUtil.between = function(str, start, end) {
+  if (str == null) { return str; }
+  var startIdx = str.indexOf(start);
   if (startIdx != -1) {
-    startIdx += p_start.length; // RM: should we support multiple chars? (or ++startIdx);
-    var endIdx = p_string.indexOf(p_end, startIdx);
-    if (endIdx != -1) { str = p_string.substr(startIdx, endIdx-startIdx); }
+    startIdx += start.length;
+    var endIdx = str.indexOf(end, startIdx);
+    if (endIdx != -1) { 
+      str = str.substr(startIdx, endIdx-startIdx); 
+    }
   }
   return str;
 };
 
+/* **************************************************************** */
+/*  String analysis methods                                         */
+/* **************************************************************** */
+
 /**
-* Description, Utility method that intelligently breaks up your string,
-* allowing you to create blocks of readable text.
-* This method returns you the closest possible match to the p_delim paramater,
-* while keeping the text length within the p_len paramter.
-* If a match can't be found in your specified length an  '...' is added to that block,
-* and the blocking continues untill all the text is broken apart.
-*
-* @param p_string The string to break up.
-*
-* @param p_len Maximum length of each block of text.
-*
-* @param p_delim delimter to end text blocks on
-*
-* @returns Array
-*
-* @tiptext
-*/
-StringUtil.block = function(p_string, p_len, p_delim) {
-  p_delim = p_delim || '.';
-  var arr = new Array();
-  if (p_string == null || !contains(p_string, p_delim)) { return arr; }
-  var chrIndex = 0;
-  var strLen = p_string.length;
-  while (chrIndex <  strLen) {
-    var subString = p_string.substr(chrIndex, p_len);
-    if (!contains(subString, p_delim)){
-      arr.push(truncate(subString, subString.length));
-      chrIndex += subString.length;
-    }
-    subString = subString.replace(new RegExp("[^"+p_delim+"]+$"), '');
-    arr.push(subString);
-    chrIndex += subString.length;
+ *  Determines whether the specified string begins with the specified prefix.
+ *  @param  str   The string that the prefix will be checked against.
+ *  @param  char  The prefix that will be tested against the string.
+ *  @return A boolean.
+ *  @use    {@code var afterStr = StringUtil.beginsWith('Supercalifragilistic', 'Super');}
+ */
+StringUtil.beginsWith = function(str, begin) {
+  if (str == null) { return false; }
+  return new RegExp("^"+begin).test(str);
+};
+
+/**
+ *  Determines whether the specified string ends with the specified prefix.
+ *  @param  str   The string that the suffix will be checked against.
+ *  @param  char  The suffix that will be tested against the string.
+ *  @return A boolean.
+ *  @use    {@code var doesEndWithBro = StringUtil.endsWith('Cool story, bro', 'bro');}
+ */
+StringUtil.endsWith = function(str, end) {
+  return new RegExp(end+"$").test(str);
+};
+
+/**
+ *  Determines whether the specified string contains text.
+ *  @param  str The string to check.
+ *  @return A boolean.
+ *  @use    {@code var hasText = StringUtil.hasText('this is text');}
+ */
+StringUtil.hasText = function(str) {
+  var str = StringUtil.removeExtraWhitespace(str);
+  return !!str.length;
+};
+
+/**
+ *  Determines whether the specified string is an empty string.
+ *  @param  str The string to check.
+ *  @return A boolean.
+ *  @use    {@code var isEmpty = StringUtil.isEmpty('this is text');}
+ */
+ StringUtil.isEmpty = function(str) {
+  if (str == null || typeof str === 'undefined') { return true; }
+  return !str.length;
+};
+
+/**
+ *  Determines whether the specified string is numeric.
+ *  @param  str The string to check.
+ *  @return A boolean.
+ *  @use    {@code var isNumeric = StringUtil.isNumeric('757');}
+ */
+StringUtil.isNumeric = function(str) {
+ if (str == null) { return false; }
+ var regx = /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/;
+ return regx.test(str);
+};
+
+/**
+ *  Determines whether the specified string contains any instances of char.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string we are looking for.
+ *  @return Boolean contains flag.
+ *  @use    {@code var doesContain = StringUtil.contains( 'these are some words.', 'words' );}
+ */
+StringUtil.contains = function(haystack, needle) {
+  if (haystack == null) { return false; }
+  return haystack.indexOf(needle) != -1;
+};
+
+/**
+ *  Determines the number of times a charactor or sub-string appears within the string.
+ *  @param  str   The input string.
+ *  @param  char  The character or sub-string to count.
+ *  @param  caseSensitive A boolean flag to indicate whether the search is case sensitive.
+ *  @return Number of instances.
+ *  @use    {@code var charCount = StringUtil.countOf( 'these are some words.', 'words', false );}
+ */
+StringUtil.countOf = function(haystack, needle, caseSensitive) {
+  if (haystack == null || needle == null) { return 0; }
+  var flags = (!caseSensitive) ? 'ig' : 'g';
+  var regx = new RegExp(needle, flags);
+  var result = haystack.match(regx);
+  if(result) {
+    return result.length;
+  } else {
+    return 0;
   }
-  return arr;
 };
 
 /**
-* Capitallizes the first word in a string or all words..
-*
-* @param p_string The string.
-*
-* @param p_all (optional) Boolean value indicating if we should
-* capitalize all words or only the first.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.capitalize = function(p_string, p_all) {
-  var str = StringUtil.trimLeft(p_string);
-  if (p_all === true) { return str.replace(/^.|\s+(.)/, StringUtil._upperCase);}
-  else { return str.replace(/(^\w)/, StringUtil._upperCase); }
+ *  Returns the number of words in a string.
+ *  @param  str The source string.
+ *  @return Number of words
+ *  @use    {@code var wordCount = StringUtil.wordCount( 'this is a string' );}
+ */
+StringUtil.wordCount = function(str) {
+  if (str == null) { return 0; }
+  return str.match(/\b\w+\b/g).length;
 };
 
 /**
-* Determines whether the specified string contains any instances of p_char.
-*
-* @param p_string The string.
-*
-* @param p_char The character or sub-string we are looking for.
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-StringUtil.contains = function(p_string, p_char) {
-  if (p_string == null) { return false; }
-  return p_string.indexOf(p_char) != -1;
-};
-
-/**
-* Determines the number of times a charactor or sub-string appears within the string.
-*
-* @param p_string The string.
-*
-* @param p_char The character or sub-string to count.
-*
-* @param p_caseSensitive A boolean flag to indicate if the search is case sensitive.
-*
-* @returns uint
-*
-* @tiptext
-*/
-StringUtil.countOf = function(p_string, p_char, p_caseSensitive) {
-  if (p_string == null) { return 0; }
-  var char = StringUtil.escapePattern(p_char);
-  var flags = (!p_caseSensitive) ? 'ig' : 'g';
-  return p_string.match(new RegExp(char, flags)).length;
-};
-
-/**
-* Levenshtein distance (editDistance) is a measure of the similarity between two strings,
-* The distance is the number of deletions, insertions, or substitutions required to
-* transform p_source into p_target.
-*
-* @param p_source The source string.
-*
-* @param p_target The target string.
-*
-* @returns uint
-*
-* @tiptext
-*/
-StringUtil.editDistance = function(p_source, p_target) {
+ *  Levenshtein distance (editDistance) is a measure of the similarity between two strings. The distance is the number of deletions, insertions, or substitutions required to transform source into target.
+ *  @param  str   The source string.
+ *  @param  char  The target string.
+ *  @return Number of edits.
+ *  @use    {@code var distance = StringUtil.editDistance( 'these are some words.', 'These Are Some Words.' );}
+ */
+StringUtil.editDistance = function(source, target) {
   var i;
   var j;
 
-  if (p_source == null) { p_source = ''; }
-  if (p_target == null) { p_target = ''; }
+  if (source == null) { source = ''; }
+  if (target == null) { target = ''; }
 
-  if (p_source == p_target) { return 0; }
+  if (source == target) { return 0; }
 
   var d = new Array();
   var cost;
-  var n = p_source.length;
-  var m = p_target.length;
+  var n = source.length;
+  var m = target.length;
 
   if (n == 0) { return m; }
   if (m == 0) { return n; }
@@ -257,345 +445,91 @@ StringUtil.editDistance = function(p_source, p_target) {
 
   for (i=1; i<=n; i++) {
 
-    var s_i = p_source.charAt(i-1);
+    var s_i = source.charAt(i-1);
     for (j=1; j<=m; j++) {
 
-      var t_j = p_target.charAt(j-1);
+      var t_j = target.charAt(j-1);
 
       if (s_i == t_j) { cost = 0; }
       else { cost = 1; }
 
-      d[i][j] = StringUtil._minimum(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
+      d[i][j] = StringUtil.minimum(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
     }
   }
   return d[n][m];
 };
 
 /**
-* Determines whether the specified string ends with the specified suffix.
-*
-* @param p_string The string that the suffic will be checked against.
-*
-* @param p_end The suffix that will be tested against the string.
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-StringUtil.endsWith = function(p_string, p_end) {
-  return new RegExp(p_end+"$").test(p_string);
-};
-
-/**
-* Determines whether the specified string contains text.
-*
-* @param p_string The string to check.
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-StringUtil.hasText = function(p_string) {
-  var str = removeExtraWhitespace(p_string);
-  return !!str.length;
-};
-
-/**
-* Determines whether the specified string contains any characters.
-*
-* @param p_string The string to check
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-StringUtil.isEmpty = function(p_string) {
-  if (p_string == null || typeof p_string === 'undefined') { return true; }
-  return !p_string.length;
-};
-
-/**
-* Determines whether the specified string is numeric.
-*
-* @param p_string The string.
-*
-* @returns Boolean
-*
-* @tiptext
-*/
-// StringUtil.isNumeric = function(p_string) {
-//  if (p_string == null) { return false; }
-//  var regx:RegExp = /^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$/;
-//  return regx.test(p_string);
-// };
-
-/**
-* Pads p_string with specified character to a specified length from the left.
-*
-* @param p_string String to pad
-*
-* @param p_padChar Character for pad.
-*
-* @param p_length Length to pad to.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.padLeft = function(p_string, p_padChar, p_length) {
-  var s = p_string;
-  while (s.length < p_length) { s = p_padChar + s; }
-  return s;
-};
-
-/**
-* Pads p_string with specified character to a specified length from the right.
-*
-* @param p_string String to pad
-*
-* @param p_padChar Character for pad.
-*
-* @param p_length Length to pad to.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.padRight = function(p_string, p_padChar, p_length) {
-  var s = p_string;
-  while (s.length < p_length) { s += p_padChar; }
-  return s;
-};
-
-/**
-* Removes all instances of the remove string in the input string.
-*
-* @param p_string The string that will be checked for instances of remove
-* string
-*
-* @param p_remove The string that will be removed from the input string.
-*
-* @param p_caseSensitive An optional boolean indicating if the replace is case sensitive. Default is true.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.remove = function(p_string, p_remove, p_caseSensitive) {
-  if (p_string == null) { return ''; }
-  var rem = StringUtil.escapePattern(p_remove);
-  var flags = (!p_caseSensitive) ? 'ig' : 'g';
-  return p_string.replace(new RegExp(rem, flags), '');
-};
-
-/**
-* Removes extraneous whitespace (extra spaces, tabs, line breaks, etc) from the
-* specified string.
-*
-* @param p_string The String whose extraneous whitespace will be removed.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.removeExtraWhitespace = function(p_string) {
-  if (p_string == null) { return ''; }
-  var str = StringUtil.trim(p_string);
-  return str.replace(/\s+/g, ' ');
-};
-
-/**
-* Returns the specified string in reverse character order.
-*
-* @param p_string The String that will be reversed.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.reverse = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.split('').reverse().join('');
-};
-
-/**
-* Returns the specified string in reverse word order.
-*
-* @param p_string The String that will be reversed.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.reverseWords = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.split(/\s+/).reverse().join('');
-};
-
-/**
-* Determines the percentage of similiarity, based on editDistance
-*
-* @param p_source The source string.
-*
-* @param p_target The target string.
-*
-* @returns Number
-*
-* @tiptext
-*/
-StringUtil.similarity = function(p_source, p_target) {
-  var ed = editDistance(p_source, p_target);
-  var maxLen = Math.max(p_source.length, p_target.length);
+ *  Determines the percentage of similiarity, based on StringUtil.editDistance().
+ *  @param  source  The source string.
+ *  @param  target  The target string.
+ *  @return Percentage of similarity between the source and target strings.
+ *  @use    {@code var similarity = StringUtil.similarity( 'this is a string', 'This is a String' );}
+ */
+StringUtil.similarity = function(source, target) {
+  var ed = StringUtil.editDistance(source, target);
+  var maxLen = Math.max(source.length, target.length);
   if (maxLen == 0) { return 100; }
   else { return (1 - ed/maxLen) * 100; }
 };
 
-/**
-* Escapes all of the characters in a string to create a friendly "quotable" sting
-*
-* @param p_string The string that will be checked for instances of remove
-* string
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.quote = function(p_string) {
-  var regx = new RegExp(/[\\"\r\n]/g);
-  return '"'+ p_string.replace(regx, StringUtil._quote) +'"';
-};
-
-/**
-* Remove's all < and > based tags from a string
-*
-* @param p_string The source string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.stripTags = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.replace(/<\/?[^>]+>/igm, '');
-};
-
-
-/**
-* Removes whitespace from the front and the end of the specified
-* string.
-*
-* @param p_string The String whose beginning and ending whitespace will
-* will be removed.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.trim = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.replace(/^\s+|\s+$/g, '');
-};
-
-/**
-* Swaps the casing of a string.
-*
-* @param p_string The source string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.swapCase = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.replace(/(\w)/, StringUtil._swapCase);
-};
-
-/**
-* Removes whitespace from the front (left-side) of the specified string.
-*
-* @param p_string The String whose beginning whitespace will be removed.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.trimLeft = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.replace(/^\s+/, '');
-};
-
-/**
-* Removes whitespace from the end (right-side) of the specified string.
-*
-* @param p_string The String whose ending whitespace will be removed.
-*
-* @returns String .
-*
-* @tiptext
-*/
-StringUtil.trimRight = function(p_string) {
-  if (p_string == null) { return ''; }
-  return p_string.replace(/\s+$/, '');
-};
-
-/**
-* Determins the number of words in a string.
-*
-* @param p_string The string.
-*
-* @returns uint
-*
-* @tiptext
-*/
-StringUtil.wordCount = function(p_string) {
-  if (p_string == null) { return 0; }
-  return p_string.match(/\b\w+\b/g).length;
-};
-
-/**
-* Returns a string truncated to a specified length with optional suffix
-*
-* @param p_string The string.
-*
-* @param p_len The length the string should be shortend to
-*
-* @param p_suffix The string to append to the end of the truncated string.
-*
-* @returns String
-*
-* @tiptext
-*/
-StringUtil.truncate = function(p_string, p_len, p_suffix) {
-  plen = plen || -1;
-  p_suffix = p_suffix || "...";
-  if (p_string == null) { return ''; }
-  if (p_len == -1) { p_len = p_string.length; }
-  p_len -= p_suffix.length;
-  var trunc = p_string;
-  if (trunc.length > p_len) {
-    trunc = trunc.substr(0, p_len);
-    if (/[^\s]/.test(p_string.charAt(p_len))) {
-      trunc = StringUtil.trimRight(trunc.replace(/\w+$|\s+$/, ''));
-    }
-    trunc += p_suffix;
-  }
-
-  return trunc;
-};
 
 /* **************************************************************** */
-/*  These are helper methods used by some of the above methods.   */
+/*  Helper methods used by some of the above methods.   */
 /* **************************************************************** */
-StringUtil.escapePattern = function(p_pattern) {
-  return p_pattern.replace(/(\]|\[|\{|\}|\(|\)|\*|\+|\?|\.|\\)/g, '\\$1');
-};
 
-StringUtil._minimum = function(a, b, c) {
+/**
+ *  Returns the minimum number out of 3
+ *  @param  a  A number to compare.
+ *  @param  b  A number to compare.
+ *  @param  c  A number to compare.
+ *  @return The minimum number of the 3 inputs
+ *  @use    {@code var min = StringUtil.minimum(5, 10, 15);}
+ */
+StringUtil.minimum = function(a, b, c) {
   return Math.min(a, Math.min(b, Math.min(c,a)));
 };
 
-StringUtil._quote = function(p_string) {
-  switch (p_string) {
+
+
+
+/* **************************************************************** */
+/*  Are the following methods even useful? Untested for now         */
+/* **************************************************************** */
+/**
+ *  Utility method that intelligently breaks up your string, allowing you to create blocks of readable text. This method returns you the closest possible match to the delim paramater, while keeping the text length within the len paramter. If a match can't be found in your specified length an  '...' is added to that block, and the blocking continues untill all the text is broken apart.
+ *  @param  str   The string to break up.
+ *  @param  len   Maximum length of each block of text.
+ *  @param  delim Delimter to end text blocks on.
+ *  @return An array of text chunks.
+ *  @use    {@code var betweenStr = StringUtil.between( 'This is a sentence - broken by a hyphen.' );}
+ */
+StringUtil.block = function(str, len, delim) {
+  delim = delim || '.';
+  var arr = new Array();
+  if (str == null || !StringUtil.contains(str, delim)) { return arr; }
+  var chrIndex = 0;
+  var strLen = str.length;
+  while (chrIndex <  strLen) {
+    var subString = str.substr(chrIndex, len);
+    if (!StringUtil.contains(subString, delim)){
+      arr.push(StringUtil.truncate(subString, subString.length));
+      chrIndex += subString.length;
+    }
+    subString = subString.replace(new RegExp("[^"+delim+"]+$"), '');
+    arr.push(subString);
+    chrIndex += subString.length;
+  }
+  return arr;
+};
+
+StringUtil.quote = function(str) {
+  var regx = new RegExp(/[\\"\r\n]/g);
+  return '"'+ str.replace(regx, StringUtil._quote) +'"';
+};
+
+StringUtil._quote = function(str) {
+  switch (str) {
     case "\\":
       return "\\\\";
     case "\r":
@@ -609,19 +543,6 @@ StringUtil._quote = function(p_string) {
   }
 };
 
-StringUtil._upperCase = function(p_char) {
-  return p_char.toUpperCase();
-};
-
-StringUtil._swapCase = function(p_char) {
-  var lowChar = p_char.toLowerCase();
-  var upChar = p_char.toUpperCase();
-  switch (p_char) {
-    case lowChar:
-      return upChar;
-    case upChar:
-      return lowChar;
-    default:
-      return p_char;
-  }
+StringUtil.escapePattern = function(pattern) {
+  return pattern.replace(/(\]|\[|\{|\}|\(|\)|\*|\+|\?|\.|\\)/g, '\\$1');
 };
