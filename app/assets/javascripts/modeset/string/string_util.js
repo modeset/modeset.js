@@ -135,7 +135,7 @@ StringUtil.trimRight = function(str) {
  */
 StringUtil.truncate = function(str, len, suffix) {
   len = len || -1;
-  suffix = suffix || "...";
+  suffix = suffix || "&hellip;";
   if (str == null) { return ''; }
   if (len == -1) { len = str.length; }
   len -= suffix.length;
