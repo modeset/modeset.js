@@ -77,6 +77,18 @@ describe 'StringUtil', ->
     it 'Should return a character with the opposite case of the input character', ->
       expect(StringUtil.swapCharacterCase('O')).toBe('o')
 
+  describe 'parameterize()', ->
+    it 'Should return a string suited for use in a url', ->
+      expect(StringUtil.parameterize('This could be a url')).toBe('this-could-be-a-url')
+
+  describe 'underscore()', ->
+    it 'Should return a string with spaces and dashes replaced with underscores', ->
+      expect(StringUtil.underscore('This could be a url')).toBe('this_could_be_a_url')
+
+  describe 'makeSafe()', ->
+    it 'Should return a string with quotes replaced with underscores', ->
+      expect(StringUtil.makeSafe('"This could be a url"')).toBe('_This could be a url_')
+
   # Substring retrieval -------------------------- 
   describe 'afterFirst()', ->
     it 'Should return the string contents after the first occurrence of the input string/char divider', ->

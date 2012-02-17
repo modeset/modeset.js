@@ -228,6 +228,36 @@ StringUtil.swapCharacterCase = function(char) {
   }
 };
 
+/**
+ *  Replaces periods and spaces with dashes and underscores, respectively.
+ *  @param  str The source string.
+ *  @return A parameterized string.
+ *  @use    {@code var paramString = StringUtil.parameterize( 'This could be a url' );}
+ */
+StringUtil.parameterize = function(str) {
+  return str.toLowerCase().replace(/ /g, '-').replace(/\./g, '_');
+};
+
+/**
+ *  Replaces dashes and spaces with underscores.
+ *  @param  str The source string.
+ *  @return An underscored string.
+ *  @use    {@code var paramString = StringUtil.parameterize( 'This could be a url' );}
+ */
+StringUtil.underscore = function(str) {
+  return str.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+};
+
+/**
+ *  Replaces quotes with underscores.
+ *  @param  str The source string.
+ *  @return An underscored string.
+ *  @use    {@code var paramString = StringUtil.makeSafe( '"This could be a url"' );}
+ */
+StringUtil.makeSafe = function(str) {
+  return str.replace(/"/g, '_').replace(/'/g, '_');
+};
+
 /* **************************************************************** */
 /*  Substring retrieval methods                                     */
 /* **************************************************************** */
