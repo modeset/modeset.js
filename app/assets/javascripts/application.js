@@ -7,6 +7,7 @@
 //= require modeset/math/math_util
 
 /* STRING */
+//= require modeset/string/path_util
 //= require modeset/string/string_util
 
 /* APPLICATION ASSETS */
