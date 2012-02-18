@@ -6,7 +6,7 @@ describe 'Formatter', ->
 
   describe 'formatPhone()', ->
     it 'Should turn most any phone number string into a standardized phone number string', ->
-      expect(Formatter.formatPhone('3035558888')).toBe('(303) 555-8888')
+      expect(Formatter.formatPhone(3035558888)).toBe('(303) 555-8888')
       expect(Formatter.formatPhone('(303)-555-8888')).toBe('(303) 555-8888')
       expect(Formatter.formatPhone('303.555.8888')).toBe('(303) 555-8888')
   
@@ -22,6 +22,7 @@ describe 'Formatter', ->
   describe 'formatNumber()', ->
     it 'Should return a number from a string that may contain non-numeric characters', ->
       expect(Formatter.formatNumber('303.333f')).toBe('303.333')
+      expect(Formatter.formatNumber('$303.33')).toBe('303.33')
   
   describe 'formatDollarsCents()', ->
     it 'Should return a string formatted like a US currency value', ->
