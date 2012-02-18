@@ -12,5 +12,4 @@ describe 'PathUtil', ->
   
   describe 'getUrlVar()', ->
     it 'Should convert url query params into a hash', ->
-      console.log PathUtil.getUrlVar('bar')
       expect(PathUtil.getUrlVar('bar')).toBe('test')
