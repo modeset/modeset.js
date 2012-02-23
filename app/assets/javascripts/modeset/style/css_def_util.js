@@ -53,13 +53,13 @@ CSSDefUtil.getCSSRule = function(ruleName, deleteFlag) {
 
 // Delete a CSS rule
 CSSDefUtil.killCSSRule = function(ruleName) {
-  return getCSSRule(ruleName, 'delete');
+  return CSSDefUtil.getCSSRule(ruleName, 'delete');
 };
 
 // Create a new css rule
 CSSDefUtil.addCSSRule = function(ruleName) {
   if (document.styleSheets) {
-    if (!getCSSRule(ruleName)) {
+    if (!CSSDefUtil.getCSSRule(ruleName)) {
       if (document.styleSheets[0].addRule) {
         document.styleSheets[0].addRule(ruleName, null, 0); // add IE style
       } else {
@@ -69,6 +69,11 @@ CSSDefUtil.addCSSRule = function(ruleName) {
   }
   // return rule we just created.
   return getCSSRule(ruleName);
+};
+
+// sets a style definition's property with a value
+CSSDefUtil.setCSSRule = function(selector, property, value){
+  CSSDefUtil.getCSSRule(selector).style[property] = value;
 };
 
 // lists css definitions for debugging purposes
