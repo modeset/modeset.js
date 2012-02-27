@@ -19,14 +19,12 @@
     %meta(name="apple-mobile-web-app-capable" content="YES")
     %meta(name="apple-mobile-web-app-status-bar-style" content="black")
     %link(rel="apple-touch-startup-image" href="startup.png")
-
     %link(href="/assets/application.css" rel="stylesheet" type="text/css")
-
+    %script(src="/assets/application.js" type="text/javascript" charset="utf-8")
   %body
-    #container
+    #site
       = haml(:"/layouts/header", :layout => false)
       = yield
       = haml(:"/layouts/footer", :layout => false)
 
-    %script(src="/assets/application.js" type="text/javascript" charset="utf-8")
 
