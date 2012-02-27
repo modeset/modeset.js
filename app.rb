@@ -18,22 +18,15 @@ module App
       haml :index, :layout => :"/layouts/layout"
     end
 
-    # get '/styleguide' do
-    #   dir = 'public/images/**/*.{png,jpeg,jpg,gif}'
-    #   @images = Dir[dir].map {|f| f.sub('public','') }
-    #   @page = params[:name]
-    #   haml :"/styleguide/index", :layout => false
-    # end
-
     get '/:name' do
       @page = params[:name]
       haml :"/#{@page}", :layout => :"/layouts/layout"
     end
 
-    # get '/sections/:name' do
-    #   @page = params[:name]
-    #   haml :"/layouts/sections/#{@page}", :layout => :"/layouts/layout"
-    # end
+    get '/demos/:name' do
+      @page = params[:name]
+      haml :"/demos/#{@page}", :layout => :"/layouts/layout"
+    end
 
   end
 end
