@@ -73,7 +73,9 @@ CSSDefUtil.addCSSRule = function(ruleName) {
 
 // sets a style definition's property with a value
 CSSDefUtil.setCSSRule = function(selector, property, value){
-  CSSDefUtil.getCSSRule(selector).style[property] = value;
+  var cssRule = CSSDefUtil.getCSSRule(selector);
+  if(cssRule != null && typeof cssRule != 'undefined' && cssRule.style != null && typeof cssRule.style != 'undefined')
+    cssRule.style[property] = value;
 };
 
 // lists css definitions for debugging purposes
