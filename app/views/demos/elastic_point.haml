@@ -78,7 +78,7 @@
     // frame loop
     var runTimer = function(){
       // update ELasticPoint object and redraw screen
-      _box.updatePosition();
+      _box.update();
       _box_div.css({ top:_box.y()+'px', left:_box.x()+'px' });
       setTimeout(function(){ runTimer(); },30);
     };
