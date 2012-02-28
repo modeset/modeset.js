@@ -1,0 +1,106 @@
+%div.demo_info
+  %h6 DisplacementPoint demo
+  %div Mouse over the box.
+%div.demo_holder
+  %div.container
+    %div.displacement
+%div.demo_controls
+  %h6 Controls
+  %div
+    %span Friction
+    %span#fric_val
+  %input(id="friction" type="number" name="friction" value="75" min="1" max="100")
+  %div
+    %span Accel
+    %span#accel_val
+  %input(id="accel" type="number" name="accel" value="40" min="1" max="100")
+  %div 
+    %button Update
+
+:javascript
+  var Demo = function(){
+    var _touch_tracker = null;
+    var _touch_delegate = null;
+    var _box = null;
+    var _box_div = $('div.displacement');
+    var _box_layer = $('div.container');
+    var _box_base_x = 150;
+    var _box_base_y = 150;
+
+    // set styles on containers to run the demo
+    var prepContainers = function() {
+      $('div.container').css({
+        position:'relative',
+        height:'400px',
+        width:'400px',
+        backgroundColor:'#ff0'
+      });
+      $('div.displacement').css({
+        position:'absolute',
+        height:'100px',
+        width:'100px',
+        backgroundColor:'#f0f'
+      });
+    };
+
+    // init the demo
+    var initDisplacement = function() {
+      createTouchCallback();
+      _touch_tracker = new MouseAndTouchTracker( _box_layer[0], _touch_delegate, false, 'div' );
+      _box = new DisplacementPoint( _box_base_x, _box_base_y, 0.75, 0.4, 100 );
+      setUpInputs();
+      runTimer();
+    };
+
+    // tweak displacement vars
+    var setUpInputs = function(){
+      // update friction
+      var frictionInput = $('input#friction');
+      var frictionVal = $('span#fric_val');
+      frictionInput.bind('change', function(e){
+        var value = frictionInput.val();
+        value *= 0.01;
+        _box.setFriction(value);
+        frictionVal.html(value);
+      });
+      // update acceleration
+      var accelInput = $('input#accel');
+      var accelVal = $('span#accel_val');
+      accelInput.bind('change', function(e){
+        var value = accelInput.val();
+        value *= 0.01;
+        _box.setAccel(value);
+        accelVal.html(value);
+      });
+
+    };
+
+    // frame loop
+    var runTimer = function(){
+      // update ELasticPoint object and redraw screen
+      _box.update( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
+      _box_div.css({ top:_box.y()+'px', left:_box.x()+'px' });
+      setTimeout(function(){ runTimer(); },30);
+    };
+    
+    // track mouse position
+    var createTouchCallback = function(){
+      _touch_delegate = {};
+      _touch_delegate.touchUpdated = function( state, touchEvent ){
+        switch( state ) {
+          case MouseAndTouchTracker.state_move :
+            break;
+          case MouseAndTouchTracker.state_start :
+            break;
+          case MouseAndTouchTracker.state_end :
+            break;
+        }
+      };
+    };
+
+    // set fire up demo
+    $(document).ready(function() {
+      prepContainers();
+      initDisplacement();
+    });
+  }();
