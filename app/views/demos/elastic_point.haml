@@ -1,8 +1,9 @@
 %div.demo_info
   %h6 ElasticPoint demo
   %div Drag the box.
-%div.demo
-  %div.elastic
+%div.demo_holder
+  %div.container
+    %div.elastic
 %div.demo_controls
   %h6 Controls
   %div
@@ -22,13 +23,13 @@
     var _touch_delegate = null;
     var _box = null;
     var _box_div = $('div.elastic');
-    var _box_layer = $('div.demo');
+    var _box_layer = $('div.container');
     var _box_base_x = 150;
     var _box_base_y = 150;
 
     // set styles on containers to run the demo
     var prepContainers = function() {
-      $('div.demo').css({
+      $('div.container').css({
         position:'relative',
         height:'400px',
         width:'400px',
