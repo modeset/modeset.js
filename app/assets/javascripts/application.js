@@ -6,6 +6,7 @@
 /* MATH */
 //= require modeset/math/math_util
 //= require modeset/math/elastic_point
+//= require modeset/math/displacement_point
 
 /* STRING */
 //= require modeset/string/formatter
