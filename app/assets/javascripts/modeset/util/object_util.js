@@ -32,3 +32,10 @@ ObjectUtil.cloneObject = function(obj) {
 
   return obj;
 };
+
+// returns the class name of an object
+ObjectUtil.getName = function(obj) { 
+   var funcNameRegex = /function (.{1,})\(/;
+   var results = (funcNameRegex).exec((obj).constructor.toString());
+   return (results && results.length > 1) ? results[1] : "";
+};
