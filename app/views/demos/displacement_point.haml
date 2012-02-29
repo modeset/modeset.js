@@ -77,10 +77,10 @@
 
     // frame loop
     var runTimer = function(){
-      // update ELasticPoint object and redraw screen
+      // update ElasticPoint object and redraw screen
       _box.update( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
       _box_div.css({ top:_box.y()+'px', left:_box.x()+'px' });
-      setTimeout(function(){ runTimer(); },30);
+      setTimeout(function(){ runTimer(); },33);
     };
     
     // track mouse position

@@ -1,11 +1,11 @@
 /**
  *  An object that moves a point towards a target, with elastic properties.
- *  @param  x       Starting x coordinate.
- *  @param  y       Starting y coordinate.
+ *  @param  x       Base x coordinate.
+ *  @param  y       Base y coordinate.
  *  @param  fric    Friction value [0-1] - lower numbers mean more friction.
  *  @param  accel   Acceleration value [0-1] - lower numbers mean more slower acceleration.
  *  @return The DisplacementPoint public interface.
- *  @use    {@code var _point = new ElasticPoint( 100, 100, 0.75, 0.4 ); }
+ *  @use    {@code var _point = new DisplacementPoint( 100, 100, 0.75, 0.4, 100 ); }
  */
 var DisplacementPoint = function( x, y, fric, accel, range ) {
   // displacement properties
@@ -48,6 +48,7 @@ var DisplacementPoint = function( x, y, fric, accel, range ) {
     var xdiff = _baseX - repelX;
     var ydiff = _baseY - repelY;
     var d = Math.sqrt( xdiff * xdiff + ydiff * ydiff );
+    d = (d == 0) ? 0.00001 : d; // ensure no zero division
     if ( d < _range ) {
       _targetX = _baseX - ( xdiff - _range * ( xdiff / d ) );
       _targetY = _baseY - ( ydiff - _range * ( ydiff / d ) );
