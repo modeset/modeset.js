@@ -4,6 +4,9 @@
 //= require vendor/lib/underscore
 //= require vendor/lib/dat.gui.min
 
+/* ANIM */
+//= require modeset/anim/request_animation_frame
+
 /* MATH */
 //= require modeset/math/math_util
 //= require modeset/math/elastic_point

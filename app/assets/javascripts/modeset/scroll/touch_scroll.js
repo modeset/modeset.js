@@ -4,11 +4,6 @@
  * @requires cursor.js
  * @requires css_helper.js
  */
-/*
-TODO:
-# make it progressively-enhanced - overflow:auto
-# numeric indicator
-*/
 var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPaged, defaultOrientation, scrollerDelegate, disableElements ) {
     // internal positioning & size objects
     var ScrollerSize = function( w, h ) {
@@ -291,8 +286,11 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
                 updateScrollbarPosition( _cur_position.x );
             }
                         
-            // keep timer running
-            setTimeout( function() { runTimer(); }, _timer_fps );
+            // keep timer running - use requestAnimationFrame is available
+            if( window.requestAnimationFrame )
+                window.requestAnimationFrame( runTimer );
+            else
+                setTimeout( function() { runTimer(); }, _timer_fps );
         }
     };
     
