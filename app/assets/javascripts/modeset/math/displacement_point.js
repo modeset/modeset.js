@@ -48,7 +48,7 @@ var DisplacementPoint = function( x, y, fric, accel, range ) {
     var xdiff = _baseX - repelX;
     var ydiff = _baseY - repelY;
     var d = Math.sqrt( xdiff * xdiff + ydiff * ydiff );
-    d = (d == 0) ? 0.00001 : d; // ensure no zero division
+    d = (d == 0) ? 0.00001 : d; // ensure no zero division. TODO: fix this in a more reasonable fashion
     if ( d < _range ) {
       _targetX = _baseX - ( xdiff - _range * ( xdiff / d ) );
       _targetY = _baseY - ( ydiff - _range * ( ydiff / d ) );
