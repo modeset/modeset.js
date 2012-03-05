@@ -22,6 +22,7 @@
 //= require modeset/scroll/css_helper
 //= require modeset/scroll/touch_tracker
 //= require modeset/scroll/touch_scroll
+//= require modeset/scroll/touch_scroller_form_focus
 
 /* APPLICATION ASSETS */
 /* require_tree ./components*/

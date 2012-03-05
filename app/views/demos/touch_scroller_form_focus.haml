@@ -1,0 +1,139 @@
+%div.demo_info
+  %h1 Scroller demo
+  %div For all your scrollable needs.
+%div.demo_holder
+  %div.controls_ui.right_side
+  %div.scroll_outer
+    %div.scroll_inner
+      
+%div.demo_controls
+  %h2 Controls
+  %div.controls_ui.status
+
+
+:javascript
+  var Demo = function(){
+
+    var _scroller = null,
+        _scrollerFormFocus = null,
+        _gui = null;
+
+    // set styles on containers to run the demo
+    var prepContainers = function() {
+      $('div.scroll_outer').css({
+        position:'relative',
+        height:'400px',
+        width:'400px',
+        backgroundColor:'#ccc'
+      });
+      $('div.scroll_inner').css({
+        position:'absolute',
+        height:'800px',
+        width:'800px',
+        background:'#666 url(/images/mode-set-logo.png) repeat'
+      });
+    };
+
+    // init the demo
+    var initDemo = function() {
+      _scroller = new TouchScroller( $('.scroll_outer')[0], $('.scroll_inner')[0], true, new Cursor(), _config.isPaged, _config.orientation, createScrollDelegate(), 'div' );
+      toggleOrientation();
+
+      // add form scroll object
+      _scrollerFormFocus = new TouchScrollerFormFocus( _scroller );
+      _scrollerFormFocus.init();
+
+      runTimer();
+    };
+
+    var createScrollDelegate = function() {
+      return {
+        updatePosition : function( positionX, positionY, isTouching ) {
+          if( _scroller ) _config.scrollOffset = _scroller.getCurScrollPosition();
+          updateControlsStatus();
+        },
+        touchEnd : function() {
+        },
+        handleDestination : function() {
+          if( _scroller ) _config.scrollOffset = _scroller.getCurScrollPosition();
+          updateControlsStatus();
+        },
+        pageChanged : function() {
+          updateControlsStatus();
+        }
+      }
+    };
+
+    var toggleOrientation = function() {
+      _config.orientation = ( _config.orientation == TouchScroller.VERTICAL ) ? TouchScroller.HORIZONTAL : TouchScroller.VERTICAL;
+      _scroller.setOrientation( _config.orientation );
+      updateControlsStatus();
+    };
+
+    var swapPaged = function() {
+      _scroller.setIsPaged( _config.isPaged );
+      updateControlsStatus();
+    };
+
+    var addContent = function() {
+      // TODO: add more form fields here and clean/rebuild listeners
+      $('.scroll_inner').css({ 
+        width: $('.scroll_inner').width() + $('.scroll_outer').width(),
+        height: $('.scroll_inner').height() + $('.scroll_outer').height() 
+      });
+    };
+
+    var dispose = function(){
+      _scroller.dispose();
+      _scrollerFormFocus.dispose();
+    };
+
+    var updateControlsStatus = function(){
+      // var page = _scroller.getPage();
+      // if( page != -1 ) page += 1;
+      // $('.controls_ui.status').html(
+      //   'Orientation = '+_config.orientation+'<br/>'+
+      //   'isPaged = '+_config.isPaged+'<br/>'+
+      //   'Page = '+page+'/'+_scroller.getNumPages()+'<br/>'+
+      //   'Cur scroll position = '+_scroller.getCurScrollPosition()
+      //  );
+    };
+
+    var _config = {
+      isVertical: true,
+      orientation: TouchScroller.HORIZONTAL,
+      isPaged: false,
+      addContent: addContent,
+      dispose: dispose
+   };
+
+    // tweak demo vars
+    var setUpControls = function(){
+      // init DAT_GUI
+      _gui = new dat.GUI({ autoPlace: false });
+      document.getElementsByClassName('controls_ui')[0].appendChild(_gui.domElement);
+      $('.controls_ui .close-button').remove();
+
+      // add global scroll properties
+      var verticalCheck = _gui.add(_config, 'isVertical');
+      verticalCheck.onChange(function(value) { toggleOrientation(); });
+      var pagedCheck = _gui.add(_config, 'isPaged');
+      pagedCheck.onChange(function(value) { swapPaged(); });
+     _gui.add(_config, 'addContent');
+
+    };
+
+    // frame loop
+    var runTimer = function(){
+      setTimeout(function(){ runTimer(); },30);
+    };
+    
+    // fire up demo
+    $(document).ready(function() {
+      prepContainers();
+      initDemo();
+      setUpControls();
+    });
+  }();
+
+
