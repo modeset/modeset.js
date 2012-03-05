@@ -1,0 +1,36 @@
+%html
+  %head
+    %title Jasmine Spec Runner
+    %link{:href => "/assets/jasmine.css", :rel => "stylesheet", :type => "text/css"}
+      / include source files here...
+      %script{:src => "/assets/application.js", :type => "text/javascript"}
+      / include spec files here...
+      %script{:src => "/assets/specs.js", :type => "text/javascript"}
+      :javascript
+        (function() {
+          var jasmineEnv = jasmine.getEnv();
+          jasmineEnv.updateInterval = 1000;
+
+          var trivialReporter = new jasmine.TrivialReporter();
+
+          jasmineEnv.addReporter(trivialReporter);
+
+          jasmineEnv.specFilter = function(spec) {
+            return trivialReporter.specFilter(spec);
+          };
+
+          var currentWindowOnload = window.onload;
+
+          window.onload = function() {
+            if (currentWindowOnload) {
+              currentWindowOnload();
+            }
+            execJasmine();
+          };
+
+          function execJasmine() {
+            jasmineEnv.execute();
+          }
+
+        })();
+    %body

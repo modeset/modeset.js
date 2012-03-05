@@ -18,6 +18,11 @@ module App
       haml :index, :layout => :"/layouts/layout"
     end
 
+    get '/specs' do
+      @page = 'specs'
+      haml :specs, :layout => false
+    end
+
     get '/:name' do
       @page = params[:name]
       haml :"/#{@page}", :layout => :"/layouts/layout"
