@@ -1,6 +1,11 @@
-/* Outer container */
+/* Outer container - progressively enhance */
 .scroll_outer {
   position:relative;
+  overflow:scroll;
+}
+
+.scroll_outer.horizontal,
+.scroll_outer.vertical {
   overflow:hidden;
 }
 
