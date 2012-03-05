@@ -495,6 +495,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _container_size = null;
         _content_size = null;
         _timer_active = false;
+
+        removeElement( _scroll_bar );
+        _scroll_bar = false;
     };
     
     
@@ -636,6 +639,13 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             element.className = curClasses.replace(regExp, ' ');
         }
     };
+
+    var removeElement = function( elem ) {
+        if( elem && elem.parentNode ) {
+            elem.parentNode.removeChild( elem );
+        }
+    };
+
     
     init();
     
