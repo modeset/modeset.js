@@ -26,6 +26,9 @@ var CSSHelper = function() {
 	var update2DPosition = function ( element, x, y ) {
 		if( !element ) return;
 
+		x = roundForCSS( x );
+		y = roundForCSS( y );
+
 		if( !_webkit_css_enabled ) {
 			element.style.left = x + 'px';
 			element.style.top = y + 'px';
@@ -45,6 +48,12 @@ var CSSHelper = function() {
 			element.style.top = '0';
 		}
 	};
+
+    var roundForCSS = function( number ) {
+        var multiplier = Math.pow( 10, 2 );
+        return Math.round( number * multiplier ) / multiplier;
+    };
+
 	
 	var findPos = function(obj) {
 		// get page scroll offset
