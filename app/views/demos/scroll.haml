@@ -39,8 +39,6 @@
     var initDemo = function() {
       _scroller = new TouchScroller( $('.scroll_outer')[0], $('.scroll_inner')[0], true, new Cursor(), _config.isPaged, _config.orientation, createScrollDelegate(), 'div' );
       toggleOrientation();
-
-      runTimer();
     };
 
     var createScrollDelegate = function() {
@@ -113,7 +111,8 @@
       scrollToTop: function() { _scroller.scrollToTop(); },
       scrollToEnd: function() { _scroller.scrollToEnd(); },
       scrollByOffset: function() { _scroller.setOffsetPosition( 100 ); },
-      scrollOffset: 0
+      scrollOffset: 0,
+      dispose: function() { _scroller.dispose(); }
    };
 
     // tweak demo vars
@@ -132,14 +131,11 @@
           _scroller.deactivate();
       });
       var verticalCheck = _gui.add(_config, 'isVertical');
-      verticalCheck.onChange(function(value) {
-        toggleOrientation();
-      });
+      verticalCheck.onChange(function(value) { toggleOrientation(); });
       var pagedCheck = _gui.add(_config, 'isPaged');
-      pagedCheck.onChange(function(value) {
-        swapPaged();
-      });
+      pagedCheck.onChange(function(value) { swapPaged(); });
      _gui.add(_config, 'addContent');
+     _gui.add(_config, 'dispose');
 
       // add paged scroller properties
       _gui_paged = _gui.addFolder('Paged Controls');
@@ -153,16 +149,9 @@
       _gui_free.add(_config, 'scrollByOffset');
       var scrollOffsetVal = _gui_free.add(_config, 'scrollOffset', -400, 0);
       scrollOffsetVal.listen();
-      scrollOffsetVal.onChange(function(value) {
-        _scroller.scrollToPosition(value);
-      });
+      scrollOffsetVal.onChange(function(value) { _scroller.scrollToPosition(value); });
 
       updateGUIFolders();
-    };
-
-    // frame loop
-    var runTimer = function(){
-      setTimeout(function(){ runTimer(); },30);
     };
     
     // fire up demo
