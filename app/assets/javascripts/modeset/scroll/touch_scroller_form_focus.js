@@ -1,145 +1,108 @@
-var TouchScrollerFormFocus = function( scrollerObj, scrollInner ) {
+var TouchScrollerFormFocus = function( scrollerObj, scrollOuter ) {
     
-    // app objects & elements
-    var _scroller;
-    var _focused_element = null;
-    var TARGET_Y_SCROLL = 100;
-    var INPUT_SELECTOR = 'input, select'; // textarea
-    var _windowOffsetInterval = null;
-    var _defeatNativeInputFocusCount = 0;
-    var _isScrolling = false;
+  // app objects & elements
+  var _scroller = scrollerObj,
+      _focused_element = null,
+      IPHONE_SCROLL_TARGET = 56,
+      IPAD_KEYBOARD_HEIGHT = 264,
+      INPUT_SELECTOR = 'input, select', // textarea
+      BLUR_DRAG_DISTANCE = 25,
+      _windowOffsetInterval = null,
+      _defeatNativeInputFocusCount = 0,
+      _isScrolling = false,
+      _isiPhone = navigator.userAgent.match(/iPhone/i),
+      _isiPad = navigator.userAgent.match(/iPad/i);
 
-    var init = function() {
-        enableInputFocusScrolling();
-        document.addEventListener("pause", onDeviceEnteredBackground, false);
-        document.addEventListener("resume", onDeviceEnteredForeground, false);
+  var init = function() {
+    enableInputFocusScrolling();
+    fixWindow();
+  };
 
-        fixWindow();
-    };
-
-    var fixWindow = function() {
-        requestAnimationFrame( fixWindow );
-        forceContainerDefaultPosition();
-    };
-        
-    var createScrollDelegate = function() {
-        return {
-            updatePosition : function( touchMovedX, touchMovedY, isTouching ) {
-                if( isTouching && Math.abs( touchMovedY ) > 25 ) {
-                  if( _focused_element != null ) {
-                    _focused_element = null;
-            removeInputFocus();
-                  }
-                    _scroller.setNonPagedFrictionIsShort( false );
-                }
-            },
-            touchEnd : function() {
-                //removeInputFocus();
-            },
-            handleDestination : function() {
-                if( _focused_element && _isScrolling ) {
-                  _isScrolling = false;
-          // add/remove zero at end of input value to reset the caret position... hacky.
-          var inputEl = $( _focused_element );
-          var inputType = inputEl.attr('type');
-          if( inputType == 'text' || inputType == 'tel' || inputType == 'email' ) {
-            var inputVal = inputEl.val();
-            $( _focused_element ).val( inputVal+'0' );
-            $( _focused_element ).val( inputVal );
-          }
-                }
-            }
-        }
-    };
-    
-    var recalculateDimensions = function() {
-        _scroller.calculateDimensions();
-    };
-    
-    var forceContainerDefaultPosition = function(){
-        // if(window.pageXOffset != 0 || window.pageXOffset != 0)
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        document.body.scrollLeft = 0;
-    };
-    
-    var removeInputFocus = function() {
-        document.activeElement.blur();
-        $( INPUT_SELECTOR ).blur();
-        if( _scroller ) _scroller.setStayInBounds( true );
-        // forceContainerDefaultPosition();
-    };
-    
-    var scrollToElement = function( element ){
-    _scroller.setStayInBounds( false );
-      // find current position, and animate to location by setting scroller velocity
-    var jOffset = $( element ).offset();
-    console.log('element = '+ element+ "  id = "+element.id);
-    console.log('jOffset = '+ jOffset.top);
-    var offset = TARGET_Y_SCROLL - jOffset.top;
-    console.log('offset = '+ offset);
-        _focused_element = element;
-    // if( offset >= 1 ) {
-    if( offset >= 1 ) {
-      _scroller.setNonPagedFrictionIsShort( true );
+  var fixWindow = function() {
+    requestAnimationFrame( fixWindow );
+    forceContainerDefaultPosition();
+  };
+      
+  var forceContainerDefaultPosition = function(){
+    // if(window.pageXOffset != 0 || window.pageXOffset != 0)
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
+  };
+  
+  var removeInputFocus = function( shouldBlur ) {
+    if( shouldBlur ) {
+      document.activeElement.blur();
+      $( INPUT_SELECTOR ).blur();
     }
-    _scroller.setOffsetPosition( -offset );
-        // forceContainerDefaultPosition();
-        _isScrolling = true;
-    };
+    if( _scroller ) _scroller.setNonPagedFrictionIsShort( false );
+    if( _scroller ) _scroller.setStayInBounds( true );
+    forceContainerDefaultPosition();
+  };
+  
+  var scrollToElement = function( element ){
+    _focused_element = element;
 
-  var scrollToEnd = function() {
-    _scroller.scrollToEnd();
+      // find current position, and animate to location by setting scroller velocity
+    var outerOffset = $( scrollOuter ).offset().top;
+    var elemOffset = $( element ).offset().top;
+
+    var targetOffset = 0;
+    if( _isiPhone ) {
+      // iphone always focuses current element in the same spot
+      targetOffset = IPHONE_SCROLL_TARGET - elemOffset + outerOffset;
+    } else {
+      // scroll on larger screens if needed - only scroll if the input is off the screen in either direction
+      var topPad = 15;
+      var bottomPad = 70;
+      bottomPad += ( _isiPad ) ? IPAD_KEYBOARD_HEIGHT : 0;
+      var screenH = $(window).height() - bottomPad - outerOffset;
+      // scroll up if fields would be hidden by soft keyboard when tabbing between fields
+      if( elemOffset > screenH ) targetOffset = screenH - elemOffset;
+      // scroll down if tabbing backwards
+      if( elemOffset < outerOffset + topPad ) targetOffset = outerOffset + topPad;
+    }
+    
+    // if we have to manually scroll, set props to allow fast scrolling to the focused element
+    _scroller.setStayInBounds( false );
+    _scroller.setNonPagedFrictionIsShort( true );
+    _scroller.setOffsetPosition( -targetOffset );
+    _isScrolling = true;
   };
     
-  var scrollToTop = function() {
-    _scroller.scrollToTop();
-  };
-    
-    var fixWindowPosition = function() {
-      _defeatNativeInputFocusCount = 0;
+  var fixWindowPosition = function() {
+    _defeatNativeInputFocusCount = 0;
     fixWindowStep();
-      // TODO: try this instead?
-    // $('html, body').animate({scrollTop:0,scrollLeft:0}, 'slow'); 
-    };
+  };
     
-    var fixWindowStep = function() {
-    // $(_focused_element).closest('.scroll_outer').css({position: 'relative', top: '6px'})
-    // if(2 % _defeatNativeInputFocusCount == 0) {
-    //      $(_focused_element).closest('.scroll_outer').css({left: '1px'})
-    // } else {
-    //      $(_focused_element).closest('.scroll_outer').css({left: '0px'})
-    // }
-
+  var fixWindowStep = function() {
     var parent = $(_focused_element).parent()[0];
     var inner = $(_focused_element).closest('.scroll_inner')[0];
     var body = $('body')[0];
-    // while( parent != body && $(parent).parent().length > 0 ) {
-    //   if( $(parent).parent()[0] != inner ) {
-    //     $(parent).parent().css({ position: 'relative', top: 0, left: 0, '-webkit-transform':'translate3d(0px, 0px, 0px);' })
-    //     $(parent).parent().animate({top: 0, left: 0}, 'slow'); 
-    //     // console.log('parent = '+parent.nodeType);
-    //   }
-    //   parent = $($(parent)[0]).parent()[0];
-    // }
     
-    // $(_focused_element).closest('.scroll_outer').offset({ position: 'relative', top: 0, left: 0 })
-    // $(_focused_element).closest('.scroll_inner').offset({ position: 'relative', top: 0, left: 0 })
-    // $(_focused_element).closest('.article').offset({ position: 'relative', top: 0, left: 0 })
-      
-      if( _defeatNativeInputFocusCount > 100) return;
-      if( _focused_element == null ) return;
-      setTimeout(function(){
-      // forceContainerDefaultPosition();
+    if( _defeatNativeInputFocusCount > 100) return;
+    if( _focused_element == null ) return;
+
+    // use optimal method to animate 60+ fps
+    if( window.requestAnimationFrame ) {
+      window.requestAnimationFrame( fixWindowStep );
+      _defeatNativeInputFocusCount++;
+    }
+    else
+      setTimeout( function() { 
         fixWindowStep();
         _defeatNativeInputFocusCount++;
-      },2);
-    };
-    
-    var enableInputFocusScrolling = function() {
-      // some of this doesn't work perfectly in a browser, but should in iOS
-      // listen to focus, and scroll to the form element
-    $(scrollInner).find( INPUT_SELECTOR ).bind('focus',function(e) {
+      }, 16 );
+  };
+  
+  var enableInputFocusScrolling = function() {
+    // handle the funky native browser scrolling that takes place if display:hidden is on the outer container
+    // the developer will have to use z-indexes and hide the scroll overflow under other elements, like a header and footer.
+    $( scrollOuter ).css({ overflow:'visible' });
+
+    // some of this doesn't work perfectly in a browser, but should in iOS
+    // listen to focus, and scroll to the form element
+    $(scrollOuter).find( INPUT_SELECTOR ).bind('focus',function(e) {
       e.preventDefault();
       e.stopPropagation();
       var element = this;
@@ -150,41 +113,54 @@ var TouchScrollerFormFocus = function( scrollerObj, scrollInner ) {
     });
     
     // clear currently-focused input, but check after a timeout to see if another's been focused. otherwise, set scroller to stay in bounds again
-    $(scrollInner).find( INPUT_SELECTOR ).bind('blur',function() {
+    $(scrollOuter).find( INPUT_SELECTOR ).bind('blur',function() {
       _focused_element = null;
-      removeInputFocus();
+      removeInputFocus( false );
       fixWindowPosition();
     });
-    
-        // forceContainerDefaultPosition();
-    };
-    
-    var onDeviceEnteredBackground = function(e) {
-      _scroller.deactivate();
-    }
-    
-    var onDeviceEnteredForeground = function(e) {
-      _scroller.activate();
-    }
-    
-    var dispose = function() {
-      removeInputFocus();
-        if( _scroller ) _scroller.dispose();
-        _scroller = null;
-        _focused_element = null;
-        _css_helper = null;
-    $(scrollInner).find( INPUT_SELECTOR ).unbind();
-        document.removeEventListener("pause", onDeviceEnteredBackground);
-    document.removeEventListener("resume", onDeviceEnteredForeground);
+  };
+  
+  var dispose = function() {
+    removeInputFocus( true );
+    if( _scroller ) _scroller.dispose();
+    _scroller = null;
+    _focused_element = null;
+    _css_helper = null;
+    $(scrollOuter).find( INPUT_SELECTOR ).unbind();
     clearInterval( _windowOffsetInterval );
-    };
-    
-    return {
-        init : init,
-        scrollToElement : scrollToElement,
-    scrollToEnd : scrollToEnd,
-    scrollToTop : scrollToTop,
-        recalculateDimensions : recalculateDimensions,
-        dispose : dispose
+  };
+
+  // TouchScroller delegate methods ---------------------------------------------------
+  var updatePosition = function( touchMovedX, touchMovedY, isTouching ) {
+    if( isTouching && Math.abs( touchMovedY ) > BLUR_DRAG_DISTANCE ) {
+      if( _focused_element != null ) {
+        _focused_element = null;
+        removeInputFocus( true );
+      }
+      _scroller.setNonPagedFrictionIsShort( false );
     }
+  };
+
+  var handleDestination = function() {
+    if( _focused_element && _isScrolling ) {
+      _isScrolling = false;
+      // add/remove zero at end of input value to reset the caret position... hacky.
+      var inputEl = $( _focused_element );
+      var inputType = inputEl.attr('type');
+      if( inputType == 'text' || inputType == 'tel' || inputType == 'email' ) {
+        var inputVal = inputEl.val();
+        $( _focused_element ).val( inputVal+'0' );
+        $( _focused_element ).val( inputVal );
+      }
+    }
+  };
+  
+  // Public interface ---------------------------------------------------
+  return {
+    init : init,
+    scrollToElement : scrollToElement,
+    updatePosition : updatePosition,
+    handleDestination : handleDestination,
+    dispose : dispose
+  }
 };
