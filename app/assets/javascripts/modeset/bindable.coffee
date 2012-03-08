@@ -5,8 +5,9 @@ class window.Bindable
     @bindables = $('[data-bindable]')
 
   # Find all `data-bindable` elements store and instantiate their respective classes
+  # Usage: new Bindable().constructAll();
   constructAll: ->
-    _.each @bindables, (el) ->
+    for bindable in @bindables
       key = $(el).data('bindable')
       item = Bindable.registry[key]
       item.refs.push(new item.class(el))
