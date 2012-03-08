@@ -287,10 +287,11 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             }
                         
             // keep timer running - use requestAnimationFrame is available
-            if( window.requestAnimationFrame )
+            if( window.requestAnimationFrame ) {
                 window.requestAnimationFrame( runTimer );
-            else
+            } else {
                 setTimeout( function() { runTimer(); }, _timer_fps );
+            }
         }
     };
     
@@ -462,6 +463,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
       if( _stays_in_bounds == true ) {
         onEnd( null );  // make sure we slide back into bounds if we weren't already 
       }
+    };
+
+    var setScrollerDelegate = function( delegate ){
+        _scroller_delegate = delegate;
     };
     
     var deactivate = function() {
@@ -668,6 +673,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         getIsHardwareAcceleratedCSS : getIsHardwareAcceleratedCSS,
         setNonPagedFrictionIsShort : setNonPagedFrictionIsShort,
         setStayInBounds : setStayInBounds,
+        setScrollerDelegate : setScrollerDelegate,
         reset : reset,
         dispose : dispose
     };
