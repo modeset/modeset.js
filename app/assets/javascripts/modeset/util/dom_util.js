@@ -30,7 +30,7 @@ DOMUtil.getWindowSize = function() {
 };
 
 DOMUtil.show = function( elem ) {
-  if( elem ) elem.style.display = 'inline';
+  if( elem ) elem.style.display = 'block';
 };
 
 DOMUtil.hide = function( elem ) {
