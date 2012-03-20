@@ -168,6 +168,25 @@ DOMUtil.recurseDisableElements = function ( elem ) {
   }
 };
 
+// prevent clicking/dragging on children from interfering with container's dragging
+DOMUtil.recurseDisableElements = function ( elem, disabledElements ) {
+	if( elem ) {
+		// disable clicking/dragging on selected element types
+		if( elem.tagName && disabledElements.indexOf( elem.tagName.toLowerCase() ) != -1 ) {  //  console.log('disabling: = '+elem.tagName.toLowerCase());
+			try {
+				elem.onmousedown = function(e){ return false; };  // TODO: remove this if touch events, so we can click inside??
+				elem.onselectstart = function(){ return false; };
+			} catch(err) {}
+		}
+		// loop through children and do the same
+		if( elem.childNodes.length > 0 ){
+			for( var i=0; i < elem.childNodes.length; i++ ) {
+				DOMUtil.recurseDisableElements( elem.childNodes[i], disabledElements );
+			}
+		}
+	}
+};
+
 
 //This is a third party function written by Martin Honnen
 //In comp.lang.javascript
