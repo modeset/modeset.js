@@ -1,3 +1,10 @@
+//check for canvas support
+var hasCanvas = function() {
+    if(!document.createElement('canvas').getContext) {
+        MB_usingCanvas = false;
+    }
+};
+
 // original from Robin W. Spencer (http://scaledinnovation.com)
 function hexToCanvasColor(hexColor,opacity){
     // Convert #AA77CC to rbga() format for Firefox
