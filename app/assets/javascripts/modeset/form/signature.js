@@ -261,7 +261,8 @@ var SignatureCanvas = function( canvasElem, debugging ) {
     _context.fillRect(_canvas_height - 1, _canvas_width - cornerLine, 1, cornerLine);
 	};
 
-  // original from Robin W. Spencer (http://scaledinnovation.com)
+// original from Robin W. Spencer (http://scaledinnovation.com)
+// http://scaledinnovation.com/analytics/splines/aboutSplines.html
 function getControlPoints(x0,y0,x1,y1,x2,y2,t){
     //  x0,y0,x1,y1 are the coordinates of the end (knot) pts of this segment
     //  x2,y2 is the next knot -- not connected here but needed to calculate p2
