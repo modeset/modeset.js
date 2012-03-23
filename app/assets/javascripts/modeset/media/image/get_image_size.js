@@ -1,4 +1,4 @@
-GetImageSize = function( src, callback ) {
+var GetImageSize = function( src, callback ) {
   this.src = src;
   this.callback = callback;
   this.image = new Image();
