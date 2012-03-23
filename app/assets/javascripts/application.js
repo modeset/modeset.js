@@ -12,6 +12,9 @@
 //= require modeset/math/elastic_point
 //= require modeset/math/displacement_point
 
+/* MEDIA */
+//= require modeset/media/image/get_image_size
+
 /* STRING */
 //= require modeset/string/formatter
 //= require modeset/string/path_util

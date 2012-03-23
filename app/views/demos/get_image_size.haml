@@ -1,0 +1,26 @@
+%div.demo_info
+  %h1 GetImageSize demo
+  %div Returns the dimensions of an image.
+%div.demo_holder
+  %img(src="/images/mode-set-logo.png")
+
+%div.demo_controls
+  %h2 Controls
+  %div.controls_ui.status
+
+:javascript
+  var Demo = function(){
+
+    var initDemo = function() {
+      // grab the img and pass its src into the GetImageSize instance
+      var imageInDom = $('div.demo_holder').find('img')[0];
+      new GetImageSize( imageInDom.src, function( w, h ) {
+        $('.controls_ui.status').html( 'Image: ' + imageInDom.src + '<br/>Size: ' + w + ',' + h );
+      });
+    };
+
+    // fire up demo
+    $(document).ready(function() {
+      initDemo();
+    });
+  }();
