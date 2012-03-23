@@ -8,6 +8,14 @@
   %h2 Controls
   %div.controls_ui.status
 
+%div.demo_usage
+  %h2 Example usage:
+  %pre
+    :preserve
+      new GetImageSize( imgSrc, function( w, h ) {
+        console.log( w, h );
+      });
+
 :javascript
   var Demo = function(){
 
