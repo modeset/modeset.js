@@ -1,6 +1,7 @@
 
 require 'sinatra'
 require 'haml'
+require 'coffee-filter'
 
 module App
   class Application < Sinatra::Base
