@@ -29,6 +29,6 @@ FpsTimeFactor.prototype.getMilliseconds = function(){
 FpsTimeFactor.prototype.update = function(){
   this.cur_time = this.getMilliseconds();
   this.actual_fps = 1000 / ( this.cur_time - this.last_time );
-  this.time_factor = this.actual_fps / this.target_fps;
+  this.time_factor = this.target_fps / this.actual_fps;
   this.last_time = this.getMilliseconds();
 };
