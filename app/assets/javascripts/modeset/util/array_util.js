@@ -43,3 +43,14 @@ function eliminateDuplicates(arr) {
   }
   return out;
 }
+
+
+// better remove eliminateDuplicates
+function eliminateDuplicates(arr) {
+  arr.sort();
+  var i = arr.length - 1;
+  while (i > 0) {
+    if (arr[i] === arr[i - 1]) arr.splice(i, 1);
+    i--;
+  }
+}
