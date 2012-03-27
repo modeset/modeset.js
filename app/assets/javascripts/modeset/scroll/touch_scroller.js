@@ -411,14 +411,20 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         return ( _is_paged ) ? _num_pages : -1;
     };
     
-    var prevPage = function ( immediately ) {
-        _page_index = ( _page_index > 0 ) ? _page_index - 1 : 0;
+    var prevPage = function ( loops, immediately ) {
+        if( loops == true && _page_index == 0 ) 
+            _page_index = _num_pages - 1; 
+        else
+            _page_index = ( _page_index > 0 ) ? _page_index - 1 : 0;
         if (immediately) _cur_position[ _axis ] = _page_index * -_container_size[ _length ];
         showScrollbar();
     };
     
-    var nextPage = function ( immediately ) {
-        _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
+    var nextPage = function ( loops, immediately ) {
+        if( loops == true && _page_index == _num_pages - 1 ) 
+            _page_index = 0;
+        else
+            _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
         if (immediately) _cur_position[ _axis ] = _page_index * -_container_size[ _length ];
         showScrollbar();
     };
