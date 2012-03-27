@@ -363,6 +363,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var closestIndexChanged = function() {
         if( _closest_scroll_index < 0 ) _closest_scroll_index = 0;
         if( _closest_scroll_index > _num_pages - 1 ) _closest_scroll_index = _num_pages - 1;
+        if( _scroller_delegate && _scroller_delegate.closestIndexChanged ) _scroller_delegate.closestIndexChanged(_closest_scroll_index);
     };
     
     var handleDestination = function () {
