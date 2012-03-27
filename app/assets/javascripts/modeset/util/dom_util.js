@@ -81,54 +81,24 @@ DOMUtil.getRE = function( regex ) {
   return new RegExp( '\\b' + regex + '\\b', 'g' );
 };
 
-DOMUtil.hasClass = function( el, name ) {
-  return DOMUtil.getRE( name ).test( el.className );
+
+DOMUtil.hasClass = function(inElement, inClassName) {
+  var regExp = new RegExp('(?:^|\\s+)' + inClassName + '(?:\\s+|$)');
+  return regExp.test(inElement.className);
 };
 
-DOMUtil.addClass = function( el, name ) {
-  if( !DOMUtil.hasClass( el, name ) ) {
-    el.className += ' ' + name;
-    el.className = el.className.replace(/ {2,}/g,' ');
+DOMUtil.addClass = function(elem, className) {
+  if (!DOMUtil.hasClass(elem, className))
+    elem.className = [elem.className, className].join(' ');
+};
+
+DOMUtil.removeClass = function(elem, className) {
+  if (DOMUtil.hasClass(elem, className)) {
+    var regExp = new RegExp('(?:^|\\s+)' + className + '(?:\\s+|$)', 'g');
+    var curClasses = elem.className;
+    elem.className = curClasses.replace(regExp, ' ');
   }
 };
-
-DOMUtil.removeClass = function( el, name ) {
-  el.className = el.className.replace( DOMUtil.getRE( ''+name ), '' );
-  el.className = el.className.replace( DOMUtil.getRE( name ), '' );
-};
-
-DOMUtil.toggleClass = function( el, name, on ) {
-  if( on === undefined ) {
-    on = !DOMUtil.hasClass( el, name );
-  }
-  if( on ) {
-    DOMUtil.addClass( el, name );
-  } else {
-    DOMUtil.removeClass( el, name );
-  }
-};
-
-    function hasClassName(inElement, inClassName)
-    {
-        var regExp = new RegExp('(?:^|\\s+)' + inClassName + '(?:\\s+|$)');
-        return regExp.test(inElement.className);
-    }
-
-    function addClassName(inElement, inClassName)
-    {
-        if (!hasClassName(inElement, inClassName))
-            inElement.className = [inElement.className, inClassName].join(' ');
-    }
-
-    function removeClassName(inElement, inClassName)
-    {
-        if (hasClassName(inElement, inClassName)) {
-            var regExp = new RegExp('(?:^|\\s+)' + inClassName + '(?:\\s+|$)', 'g');
-            var curClasses = inElement.className;
-            inElement.className = curClasses.replace(regExp, ' ');
-        }
-    }
-
     function toggleClassName(inElement, inClassName)
     {
         if (hasClassName(inElement, inClassName))
