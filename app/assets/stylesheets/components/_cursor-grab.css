@@ -1,0 +1,21 @@
+.hand {
+  cursor:hand; 
+  cursor:grab; 
+  cursor:-moz-grab; 
+  cursor:-webkit-grab;
+}
+
+.handCursor {
+  cursor: url(/images/cursors/openhand.cur), default !important;
+}
+
+.handGrab {
+  cursor:hand; 
+  cursor:grabbing;
+  cursor:-moz-grabbing;
+  cursor:-webkit-grabbing;
+}
+
+.handGrabCursor {
+  cursor: url(/images/cursors/closedhand.cur), default !important;
+}
