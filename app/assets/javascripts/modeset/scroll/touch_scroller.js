@@ -258,7 +258,11 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var runTimer = function() {
         if( _timer_active ) {
             calculateDimensions();
+            var isDirty = false;
+            var curX = _cur_position.x;
+            var curY = _cur_position.y;
             if( !_touch_tracker.is_touching ) {
+                // update position and set dirty flag if the position has actually moved
                 if( _is_paged == true ) {
                     // ease to the cosest index while not touching
                     easeToIndex();
@@ -266,25 +270,24 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
                     // slide it and apply friction
                     applyInertia();               
                 }
+                if( curX != _cur_position.x || curY != _cur_position.y ) isDirty = true;
                 // hide scrollbar and set speed to zero when it eases close enough
                 if( Math.abs( _speed ) <= 0.01 ) {
                     if( _speed != 0 ) handleDestination();
                     _speed = 0;
                     hideScrollbar();
                 } else {
-                    if( _scroller_delegate && _scroller_delegate.updatePosition ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
+                    if( _scroller_delegate && _scroller_delegate.updatePosition && isDirty ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
                 }
-                _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );  
+                if( isDirty ) {
+                    _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );  
+                    updateScrollbar();
+                }
+            } else {
+                updateScrollbar();
             }
             
             checkForClosestIndex();
-            
-            //  move the indicator
-            if( _orientation == TouchScroller.VERTICAL ) {
-                updateScrollbarPosition( _cur_position.y );
-            } else {
-                updateScrollbarPosition( _cur_position.x );
-            }
                         
             // keep timer running - use requestAnimationFrame is available
             if( window.requestAnimationFrame ) {
@@ -320,6 +323,14 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         // check to see if content is back in bounds after sliding off
         if ( _cur_position[ _axis ] < 0 && _cur_position[ _axis ] > _end_position ) {
             _was_dragged_beyond_bounds = false;
+        }
+    };
+
+    var updateScrollbar = function() {
+        if( _orientation == TouchScroller.VERTICAL ) {
+            updateScrollbarPosition( _cur_position.y );
+        } else {
+            updateScrollbarPosition( _cur_position.x );
         }
     };
     

@@ -40,9 +40,7 @@ var CSSHelper = function() {
             element.style.webkitTransform = '';
             // set new position transform
             var new_transform = "translate3d(" + x + "px, " + y + "px, 0px)";
-            if( element.style.webkitTransform != new_transform ) {
-                element.style.webkitTransform = new_transform; // only apply style if not already in position
-            }
+            element.style.webkitTransform = new_transform;
             // clear native positioning
             element.style.left = '0';
             element.style.top = '0';
