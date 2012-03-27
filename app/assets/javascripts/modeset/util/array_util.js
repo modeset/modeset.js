@@ -54,3 +54,29 @@ function eliminateDuplicates(arr) {
     i--;
   }
 }
+
+var intersectArrays = function(a, b, isDestructive, isPreSorted) {
+  if (isDestructive == null) isDestructive = true;
+  if (isPreSorted == null) isPreSorted = false;
+  // use a copy
+  if (!isDestructive) {
+    a = a.slice();
+    b = b.slice();
+  }
+  if (!isPreSorted) {
+    a.sort();
+    b.sort();
+  }
+  var result = [];
+  while (a.length > 0 && b.length > 0) {
+    if (a[0] < b[0]) {
+      a.shift();
+    } else if (a[0] > b[0]) {
+      b.shift();
+    } else {
+      result.push(a.shift());
+      b.shift();
+    }
+  }
+  return result;
+};
