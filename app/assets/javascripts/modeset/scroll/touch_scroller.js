@@ -110,8 +110,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     
     var onStart = function( touchEvent ) {
         if( _timer_active == false ) return;
-    // touchEvent.stopPropagation();
+        // touchEvent.stopPropagation();
         showScrollbar();
+        if( _scroller_delegate && _scroller_delegate.touchStart ) _scroller_delegate.touchStart();
     };
     
     var onMove = function( touchEvent ) {
