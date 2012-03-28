@@ -171,26 +171,27 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
         // snap to page and constrain page calculation
         if( _is_paged == true ) {
-          var pageChanged = false;
-          // have we swiped far enough to turn the page
-        if( _touch_tracker.touchmoved[ _axis ] > _container_size[ _length ] * PAGE_TURN_RATIO ) {
-            _page_index = ( _page_index == 0 ) ? 0 : _page_index - 1;
-            pageChanged = true;
-        } else if ( _touch_tracker.touchmoved[ _axis ] < -_container_size[ _length ] * PAGE_TURN_RATIO ) {
-            _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
-            pageChanged = true;
-        }
+            var pageChanged = false;
+            // have we swiped far enough to turn the page
+            if( _touch_tracker.touchmoved[ _axis ] > _container_size[ _length ] * PAGE_TURN_RATIO ) {
+                _page_index = ( _page_index == 0 ) ? 0 : _page_index - 1;
+                pageChanged = true;
+            } else if ( _touch_tracker.touchmoved[ _axis ] < -_container_size[ _length ] * PAGE_TURN_RATIO ) {
+                _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
+                pageChanged = true;
+            }
 
-        // checks whether we've gone more than halfway to a page, or allows above code to let us swipe slightly for next/prev pages
-        if( !( prevIndex == _closest_scroll_index && prevIndex != _page_index ) ) {
-            _page_index = _closest_scroll_index;
-            pageChanged = true;
+            // checks whether we've gone more than halfway to a page, or allows above code to let us swipe slightly for next/prev pages
+            if( !( prevIndex == _closest_scroll_index && prevIndex != _page_index ) ) {
+                _page_index = _closest_scroll_index;
+                pageChanged = true;
+            }
+            
+            if( pageChanged == true ) {
+              if( _scroller_delegate && _scroller_delegate.pageChanged ) _scroller_delegate.pageChanged( _page_index );
+            }
         }
-        
-        if( pageChanged == true ) {
-          if( _scroller_delegate && _scroller_delegate.pageChanged ) _scroller_delegate.pageChanged( _page_index );
-        }
-    }
+        if( _scroller_delegate && _scroller_delegate.touchEnd ) _scroller_delegate.touchEnd();
     };
     
     var onEnter = function( touchEvent ) {
