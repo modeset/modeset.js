@@ -203,7 +203,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
     
     var updateCursor = function( state ) {
-        if( _cursor ) {
+        if( _cursor && _timer_active ) {
             switch( state ) {
                 case MouseAndTouchTracker.state_start :
                     _cursor.cursorSetGrabbyHand();
@@ -493,6 +493,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var deactivate = function() {
         _timer_active = false;
         hideScrollbar();
+        _cursor.cursorSetDefault();
     };
 
     var activate = function() {
