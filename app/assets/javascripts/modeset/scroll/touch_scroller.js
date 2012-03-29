@@ -234,6 +234,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _end_position = _container_size[ _length ] - _content_size[ _length ];
         resizeScrollbar();
         _doesnt_need_scroll = ( _container_size[ _length ] > _content_size[ _length ] );
+        if( _page_index > _num_pages - 1 ) _page_index = _num_pages - 1;
     };
     
     // update scroll position
