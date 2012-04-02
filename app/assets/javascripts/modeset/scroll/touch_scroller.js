@@ -566,6 +566,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         if( !_has_scroll_bar ) return;
 
         _scroll_pill_padding = ( _orientation == TouchScroller.VERTICAL ) ? parseInt(getStyle(_scroll_bar,'padding-top')) : parseInt(getStyle(_scroll_bar,'padding-left'));
+        if( isNaN( _scroll_pill_padding ) ) _scroll_pill_padding = 0;
         _container_length = ( _orientation == TouchScroller.VERTICAL ) ? _container_size.h : _container_size.w;
         _container_length -= _scroll_pill_padding * 2;
         _pill_length = ( _orientation == TouchScroller.VERTICAL ) ? ( _container_length / _content_size.h ) * _container_length : ( _container_length / _content_size.w ) * _container_length;
