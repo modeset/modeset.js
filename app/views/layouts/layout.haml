@@ -21,6 +21,15 @@
     %link(rel="apple-touch-startup-image" href="startup.png")
     %link(href="/assets/application.css" rel="stylesheet" type="text/css")
     %script(src="/assets/application.js" type="text/javascript" charset="utf-8")
+    - if @page == "specs"
+      %link{:href => "/assets/jasmine-modified.css", :rel => "stylesheet", :type => "text/css"}
+      %script{:src => "/assets/specs.js", :type => "text/javascript"}
+      %script{:src => "/assets/run-specs.js", :type => "text/javascript"}
+      :javascript
+        // pluck & move jasmine dom element so we don't have to touch thei jasmine library code
+        $(window).load(function(){
+          $('#specs').append( $('.jasmine_reporter') );
+        })
   %body
     #site
       = haml(:"/layouts/header", :layout => false)
