@@ -28,6 +28,12 @@ ArrayUtil.indexOf = function(array, obj) {
   return -1;
 };
 
+ArrayUtil.empty = function(array) {
+  array.splice( 0, array.length - 1 );
+  return array;
+};
+
+
 
 function eliminateDuplicates(arr) {
   var i,
