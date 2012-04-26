@@ -1,14 +1,30 @@
 div#site
   width: 600px
   margin: 0 auto
+  overflow-x: hidden
 
   header
-    padding: 20px 0 0
-    margin: 0 0 20px
-    border-bottom: 1px solid $grey9
+    h3
+      padding: 20px 0 10px
+      border-bottom: 1px solid $grey9
+
+    nav
+      float: left
+      width: 100%
+      display: block
+      padding: 10px 0 20px
+      ul li
+        margin-right: 5px
+        float: left
+      ul li a
+        +border-radius(5px)
+        padding: 10px
+        background-color: $blue60
+        color: $white
 
 
   .demo_info
+    clear: both
     background-color: $greyD
     padding: 20px
 
@@ -44,3 +60,5 @@ div#site
     font-size: 20px
     margin-bottom: 12px
 
+hr
+  clear: both
