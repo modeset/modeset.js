@@ -117,7 +117,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
     var onMove = function( touchEvent ) {
         if( _timer_active == false ) return;
-       if( !_has_decided_a_direction ) {
+        if( !_has_decided_a_direction ) {
             if( Math.abs( _touch_tracker.touchmoved.x ) > DECIDE_DIR_THRESHOLD ) {
                 hasDecidedDirection( TouchScroller.HORIZONTAL );
             } else if( Math.abs( _touch_tracker.touchmoved.y ) > DECIDE_DIR_THRESHOLD ) {
@@ -127,8 +127,14 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             // move it if allowed
             updatePositionFromTouch( ( _touch_tracker.touchmoved.x - _touch_tracker.touchmovedlast.x ), ( _touch_tracker.touchmoved.y - _touch_tracker.touchmovedlast.y ) );
         }
+
+        // prevent page scrolling if we've locked on the opposite axis
+        if( ( _orientation == TouchScroller.VERTICAL && _touch_lock_direction == TouchScroller.VERTICAL ) || ( _orientation == TouchScroller.HORIZONTAL && _touch_lock_direction == TouchScroller.HORIZONTAL ) ) {
+            if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.preventDefault && typeof touchEvent.preventDefault !== 'undefined') touchEvent.preventDefault();
+        }
+
         // disable touch event if allowed
-      if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.stopPropagation && typeof touchEvent.stopPropagation !== 'undefined') touchEvent.stopPropagation();
+        if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.stopPropagation && typeof touchEvent.stopPropagation !== 'undefined') touchEvent.stopPropagation();
     };
 
     var onEnd = function( touchEvent ) {
@@ -226,6 +232,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var calculateDimensions = function() {
+        if( !_timer_active || !_container_size || !_element_outer ) return;
         _container_size.w = _element_outer.offsetWidth;
         _container_size.h = _element_outer.offsetHeight;
         _content_size.w = _element_inner.offsetWidth;
@@ -259,7 +266,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
     // paged scroller methods
     var runTimer = function() {
-        if( _timer_active ) {
+        if( _timer_active && _cur_position ) {
             calculateDimensions();
             var isDirty = false;
             var curX = _cur_position.x;
@@ -403,8 +410,13 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var setPage = function ( index, immediately ) {
+        if( _timer_active == false ) return;
         _page_index = index;
-        if (immediately) _cur_position[ _axis ] = _page_index * -_container_size[ _length ];
+        if (immediately) {
+            calculateDimensions();
+            _cur_position[ _axis ] = _page_index * -_container_size[ _length ];
+            _cur_position[ _axis ] += 1; // makes sure it snaps back to place, given the easing/isDirty check above
+        }
     };
 
     var getPage = function () {
@@ -416,6 +428,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var prevPage = function ( loops, immediately ) {
+        if( _timer_active == false ) return;
         if( loops == true && _page_index == 0 )
             _page_index = _num_pages - 1;
         else
@@ -425,6 +438,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var nextPage = function ( loops, immediately ) {
+        if( _timer_active == false ) return;
         if( loops == true && _page_index == _num_pages - 1 )
             _page_index = 0;
         else
@@ -493,7 +507,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var deactivate = function() {
         _timer_active = false;
         hideScrollbar();
-        _cursor.cursorSetDefault();
+        if( _cursor ) _cursor.cursorSetDefault();
     };
 
     var activate = function() {
@@ -521,7 +535,6 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _cur_position = null;
         _container_size = null;
         _content_size = null;
-        _timer_active = false;
 
         removeElement( _scroll_bar );
         _scroll_bar = false;
@@ -620,7 +633,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var showScrollbar = function() {
-        if( !_has_scroll_bar || _timer_active == false || _is_showing == true ) return;
+        if( !_has_scroll_bar || _timer_active == false || _is_showing == true || !_container_size ) return;
         if( _container_size.h < _content_size.h || _container_size.w < _content_size.w ) {
             _is_showing = true;
             _scroll_bar_pill.style.display = 'block';
