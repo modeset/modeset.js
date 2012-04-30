@@ -1,4 +1,4 @@
-/* 
+/*
  * Adds grabby-hand cursor functionality on-demand, and handles cases for different browsers
  * Absolute paths to .cur files are needed for IE. Chrome likes the cursor files too
  * TODO: IE might only want the .cur style def, and not want the plain css class
@@ -14,7 +14,7 @@ Cursor.prototype.cursorSetDefault = function() {
   if( this.is_chrome || this.is_msie ) {
     this.removeClass( 'hand handCursor' );
     this.removeClass( 'handGrab handGrabCursor' );
-  } else { 
+  } else {
     this.removeClass( 'hand' );
     this.removeClass( 'handGrab' );
   }
