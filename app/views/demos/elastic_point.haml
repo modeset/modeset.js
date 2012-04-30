@@ -14,13 +14,14 @@
     %span Accel
     %span#accel_val
   %input(id="accel" type="number" name="accel" value="40" min="1" max="100")
-  %div 
+  %div
     %button Update
 
 :javascript
   var Demo = function(){
     var _touch_tracker = null;
     var _touch_delegate = null;
+    var _cursor = null;
     var _box = null;
     var _box_div = $('div.elastic');
     var _box_layer = $('div.container');
@@ -47,6 +48,7 @@
     var initElastic = function() {
       createTouchCallback();
       _touch_tracker = new MouseAndTouchTracker( _box_layer[0], _touch_delegate, false, 'div' );
+      _cursor = new Cursor();
       _box = new ElasticPoint( _box_base_x, _box_base_y, 0.75, 0.4 );
       setUpInputs();
       runTimer();
@@ -82,7 +84,7 @@
       _box_div.css({ top:_box.y()+'px', left:_box.x()+'px' });
       setTimeout(function(){ runTimer(); },30);
     };
-    
+
     // track mouse position
     var createTouchCallback = function(){
       _touch_delegate = {};
@@ -92,10 +94,26 @@
             _box.setTarget( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
             break;
           case MouseAndTouchTracker.state_start :
-            
+            _cursor.cursorSetGrabbyHand();
             break;
           case MouseAndTouchTracker.state_end :
             _box.setTarget( _box_base_x, _box_base_y );
+            if( _touch_tracker.touch_is_inside )
+              _cursor.cursorSetHand();
+            else
+              _cursor.cursorSetDefault();
+            break;
+          case MouseAndTouchTracker.state_enter :
+            if( _touch_tracker.is_touching )
+              _cursor.cursorSetGrabbyHand();
+            else
+              _cursor.cursorSetHand();
+            break;
+          case MouseAndTouchTracker.state_leave :
+            if( _touch_tracker.is_touching )
+              _cursor.cursorSetGrabbyHand();
+            else
+              _cursor.cursorSetDefault();
             break;
         }
       };
