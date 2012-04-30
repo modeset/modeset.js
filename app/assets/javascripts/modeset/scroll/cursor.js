@@ -10,7 +10,7 @@ function Cursor( element ){
   this.element = element || document.body;
 }
 
-Cursor.prototype.cursorSetDefault = function() {
+Cursor.prototype.setDefault = function() {
   if( this.is_chrome || this.is_msie ) {
     this.removeClass( 'hand handCursor' );
     this.removeClass( 'handGrab handGrabCursor' );
@@ -20,8 +20,8 @@ Cursor.prototype.cursorSetDefault = function() {
   }
 };
 
-Cursor.prototype.cursorSetHand = function() {
-  this.cursorSetDefault();
+Cursor.prototype.setHand = function() {
+  this.setDefault();
   if( this.is_chrome || this.is_msie ) {
     this.addClass( 'hand handCursor' );
   } else {
@@ -29,8 +29,8 @@ Cursor.prototype.cursorSetHand = function() {
   }
 };
 
-Cursor.prototype.cursorSetGrabbyHand = function() {
-  this.cursorSetDefault();
+Cursor.prototype.setGrabbyHand = function() {
+  this.setDefault();
   if( this.is_chrome || this.is_msie ) {
     this.addClass( 'handGrab handGrabCursor' );
   } else {
@@ -53,7 +53,7 @@ Cursor.prototype.removeClass = function( className ) {
 };
 
 Cursor.prototype.dispose = function(){
-  this.cursorSetDefault();
+  this.setDefault();
   delete this.is_chrome;
   delete this.is_msie;
   delete this.is_iphone;

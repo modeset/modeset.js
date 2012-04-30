@@ -1,33 +1,33 @@
-/* 
+/*
  * Adds grabby-hand cursor functionality on-demand
  * Absolute paths to .cur files are needed for IE
  */
 function Cursor( openHandCursor, closedHandCursor ){
   openHandCursor = openHandCursor || '/images/cursors/openhand.cur';
   closedHandCursor = closedHandCursor || '/images/cursors/closedhand.cur';
-  
+
   this.is_chrome = !!navigator.userAgent.toLowerCase().match(/chrome/i);
   this.is_msie = !!navigator.userAgent.toLowerCase().match(/msie/i);
   this.is_iphone = !!navigator.userAgent.toLowerCase().match(/iphone/i);
   this.element = document.body;
   this.base_inline_css = this.element.getAttribute("style") || '';
-  
+
   this.CSS_HAND = 'cursor:hand; cursor:grab; cursor:-moz-grab; cursor:-webkit-grab;';
 	this.CSS_HAND_CUR = 'cursor: url(' + openHandCursor + '), default !important;';
 	this.CSS_HAND_GRAB = 'cursor:grabbing; cursor:-moz-grabbing; cursor:-webkit-grabbing;';
 	this.CSS_HAND_GRAB_CUR = 'cursor: url(' + closedHandCursor + '), default !important;';
 }
 
-Cursor.prototype.cursorSetDefault = function() {
+Cursor.prototype.setDefault = function() {
   if( !this.is_msie ) {
     this.element.setAttribute('style', this.base_inline_css);
-  } else { 
+  } else {
     DOMUtil.removeClass( this.element, 'ie_hand' );
     DOMUtil.removeClass( this.element, 'ie_hand_grab' );
   }
 };
 
-Cursor.prototype.cursorSetHand = function() {
+Cursor.prototype.setHand = function() {
   if( this.is_chrome ) {
     this.element.setAttribute('style', this.base_inline_css + this.CSS_HAND + this.CSS_HAND_CUR);
   } else if( this.is_msie ) {
@@ -38,7 +38,7 @@ Cursor.prototype.cursorSetHand = function() {
   }
 };
 
-Cursor.prototype.cursorSetGrabbyHand = function() {
+Cursor.prototype.setGrabbyHand = function() {
   if( this.is_chrome ) {
     this.element.setAttribute('style', this.base_inline_css + this.CSS_HAND_GRAB + this.CSS_HAND_GRAB_CUR);
   } else if( this.is_msie ) {
@@ -51,31 +51,31 @@ Cursor.prototype.cursorSetGrabbyHand = function() {
     setTimeout(function(){
       //document.selection.clear()
       //document.execCommand("Unselect");
-      
+
     },50);
-    
+
     //qtfMate();
     // window.blur();
     // window.focus();
-    //window.resizeBy(1,0); window.resizeBy(-1,0);    
+    //window.resizeBy(1,0); window.resizeBy(-1,0);
   } else {
     this.element.setAttribute('style', this.base_inline_css + this.CSS_HAND_GRAB);
   }
 };
 
 Cursor.prototype.dispose = function(){
-  this.cursorSetDefault();
-  
+  this.setDefault();
+
   this.is_chrome = false;
   this.is_msie = false;
   this.is_iphone = false;
   this.element = false;
   this.base_inline_css = false;
-  
+
   this.CSS_HAND = false;
 	this.CSS_HAND_CUR = false;
 	this.CSS_HAND_GRAB = false;
 	this.CSS_HAND_GRAB_CUR = false;
-  
+
 };
 

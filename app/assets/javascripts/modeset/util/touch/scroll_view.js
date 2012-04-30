@@ -49,7 +49,7 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 	scroll_content : false,
 	base_inline_css : false,
 	cursor : false,
-	
+
 	initialize : function( $super, touchObject, scrollElementInner ) {
 		$super( touchObject );
 
@@ -57,13 +57,13 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 		this.container_size = { width:0, height:0 };
 		this.content_size = { width:0, height:0 };
 		this.scroll_content = scrollElementInner;
-		
+
 		this.cursor = new Cursor();
-    
+
     this.platform_helper = ( typeof platform_helper !== 'undefined' ) ? platform_helper : new PlatformHelper(); // check to see if it already exists in global space....
     this.platform_helper.convertPosToWebkitTransform( this.scroll_content );
-		this.platform_helper.update2DPosition( this.scroll_content, 0, 0 );                     
-		
+		this.platform_helper.update2DPosition( this.scroll_content, 0, 0 );
+
 		this.calculateDimensions();
 	},
 	calculateDimensions : function() {
@@ -73,17 +73,17 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 		this.content_size.height = this.scroll_content.offsetHeight;
 	},
 	updatePositionFromTouch : function( moveX, moveY ) {
-		// update container position	    
+		// update container position
 		if( this.scroll_enabled_x ) this.cur_position.x += moveX;
 		if( this.scroll_enabled_y ) this.cur_position.y += moveY;
 		this.updatePositionCSS();
 	},
 	updatePositionCSS : function() {
-	  this.platform_helper.update2DPosition( this.scroll_content, this.cur_position.x, this.cur_position.y );                     
+	  this.platform_helper.update2DPosition( this.scroll_content, this.cur_position.x, this.cur_position.y );
 	},
 	onStart : function($super, touchEvent) {
 		$super( touchEvent );
-    this.cursor.cursorSetGrabbyHand();
+    this.cursor.setGrabbyHand();
 	},
 	onMove : function($super, touchEvent) {
 		$super( touchEvent );
@@ -91,17 +91,17 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 	},
 	onEnd : function($super, touchEvent) {
 		$super( touchEvent );
-		if(this.touch_tracker.touch_is_inside) this.cursor.cursorSetHand();
-		else this.cursor.cursorSetDefault();
+		if(this.touch_tracker.touch_is_inside) this.cursor.setHand();
+		else this.cursor.setDefault();
 	},
 	onEnter : function($super, touchEvent) {
 		$super( touchEvent );
-		if(!this.touch_tracker.is_touching) this.cursor.cursorSetHand();
+		if(!this.touch_tracker.is_touching) this.cursor.setHand();
 	},
 	onLeave : function($super, touchEvent) {
 		$super( touchEvent );
-		if(this.touch_tracker.is_touching) this.cursor.cursorSetGrabbyHand();
-		else this.cursor.cursorSetDefault();
+		if(this.touch_tracker.is_touching) this.cursor.setGrabbyHand();
+		else this.cursor.setDefault();
 	},
 	dispose : function($super) {
 	  this.cursor.dispose();
@@ -122,18 +122,18 @@ var ScrollViewLocksDirection = Class.create(ScrollView, {
 	HORIZONTAL : 'horizontal',
 	VERTICAL : 'vertical',
 	UNLOCKED : 'unlocked',
-	
+
 	decide_threshold : 15,
 	has_decided_a_direction : false,
 	touch_lock_direction : false,
-	
+
 	initialize : function( $super, scrollContainer, scrollContentElement ) {
 		$super( scrollContainer, scrollContentElement );
 
 		this.has_decided_a_direction = false;
 		this.touch_lock_direction = this.UNLOCKED;
 	},
-	onStart : function($super, touchEvent) {   
+	onStart : function($super, touchEvent) {
     // reset state flags until we decide a direction
 		$super( touchEvent );
 	},
@@ -151,7 +151,7 @@ var ScrollViewLocksDirection = Class.create(ScrollView, {
     }
     if( typeof touchEvent.preventDefault !== 'undefined' ) touchEvent.preventDefault();
 	},
-	onEnd : function($super, touchEvent) {   
+	onEnd : function($super, touchEvent) {
 		$super( touchEvent );
 		this.has_decided_a_direction = false;
     this.touch_lock_direction = this.UNLOCKED;

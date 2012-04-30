@@ -41,7 +41,7 @@ function MouseAndTouchTracker ( element, delegate, isMouseUpTracking, disabledEl
 		document.addEventListener( "touchend", this.endDocumentFunction, false );
 	}
 
-	// 
+	//
 	if(!this.is_mouseup_tracking && !navigator.userAgent.match(/Android/i)) this.recurseDisableImages( this.container );
 }
 
@@ -96,9 +96,9 @@ MouseAndTouchTracker.prototype.onStart = function ( touchEvent ) {
 	this.findPos( this.container );
 
 	// check for touch-capability
-	if ( typeof touchEvent.touches !== 'undefined' ) { 
+	if ( typeof touchEvent.touches !== 'undefined' ) {
 		// set flag and remove mouse events
-		this.is_touch_capable = true; 
+		this.is_touch_capable = true;
 		this.disposeMouseListeners();
 	}
 
@@ -144,7 +144,7 @@ MouseAndTouchTracker.prototype.onMove = function ( touchEvent ) {
 
 	// pass on move event if touching, or if we're allowing tracking without needing to touch
 	if( this.is_touching || this.is_mouseup_tracking )  {
-		if( this.delegate ) { 
+		if( this.delegate ) {
 			this.delegate.touchUpdated( MouseAndTouchTracker.state_move, touchEvent );
 		}
 	}
@@ -161,7 +161,7 @@ MouseAndTouchTracker.prototype.onMove = function ( touchEvent ) {
 
 MouseAndTouchTracker.prototype.onEnd = function ( touchEvent ) {
 	// call delegate method before resetting all touch tracking props
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_end, touchEvent ); 
+	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_end, touchEvent );
 
 	// reset tracking vars
 	this.is_touching = false;
@@ -178,11 +178,11 @@ MouseAndTouchTracker.prototype.onEnter = function () {
 	this.touchmoved.y = 0;
 	this.touchstart.x = this.touchcurrent.x;
 	this.touchstart.y = this.touchcurrent.y;
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_enter, null ); 
+	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_enter, null );
 };
 
 MouseAndTouchTracker.prototype.onLeave = function () {
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_leave, null ); 
+	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_leave, null );
 };
 
 MouseAndTouchTracker.prototype.dispose = function () {
@@ -200,7 +200,7 @@ MouseAndTouchTracker.prototype.dispose = function () {
 	this.delegate = false;
 	this.touchstart = false;
 	this.touchmovedlast = false;
-	this.touchmoved = false;  
+	this.touchmoved = false;
 };
 
 MouseAndTouchTracker.prototype.findPos = function(obj) {
@@ -222,7 +222,7 @@ MouseAndTouchTracker.prototype.findPos = function(obj) {
 				var transformXYZArray = obj.parentNode.style.webkitTransform.split('translate3d(')[1].split(')')[0].replace(/ +/g, '').replace(/px+/g, '').split(',');
 				curleft += parseInt( transformXYZArray[0] );
 				curtop += parseInt( transformXYZArray[1] );
-			} 
+			}
 			curleft += obj.offsetLeft;
 			curtop += obj.offsetTop;
 		} while (obj = obj.offsetParent);

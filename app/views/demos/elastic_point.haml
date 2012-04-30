@@ -1,6 +1,10 @@
 %div.demo_info
   %h6 ElasticPoint demo
   %div Drag the box.
+  %p.classes Demos the following classes
+  %div modeset/math/elastic_point.js
+  %div modeset/scroll/cursor.js
+  %div modeset/scroll/touch_tracker.js
 %div.demo_holder
   %div.container
     %div.elastic
@@ -94,26 +98,26 @@
             _box.setTarget( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
             break;
           case MouseAndTouchTracker.state_start :
-            _cursor.cursorSetGrabbyHand();
+            _cursor.setGrabbyHand();
             break;
           case MouseAndTouchTracker.state_end :
             _box.setTarget( _box_base_x, _box_base_y );
             if( _touch_tracker.touch_is_inside )
-              _cursor.cursorSetHand();
+              _cursor.setHand();
             else
-              _cursor.cursorSetDefault();
+              _cursor.setDefault();
             break;
           case MouseAndTouchTracker.state_enter :
             if( _touch_tracker.is_touching )
-              _cursor.cursorSetGrabbyHand();
+              _cursor.setGrabbyHand();
             else
-              _cursor.cursorSetHand();
+              _cursor.setHand();
             break;
           case MouseAndTouchTracker.state_leave :
             if( _touch_tracker.is_touching )
-              _cursor.cursorSetGrabbyHand();
+              _cursor.setGrabbyHand();
             else
-              _cursor.cursorSetDefault();
+              _cursor.setDefault();
             break;
         }
       };

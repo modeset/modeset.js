@@ -212,20 +212,20 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         if( _cursor && _timer_active ) {
             switch( state ) {
                 case MouseAndTouchTracker.state_start :
-                    _cursor.cursorSetGrabbyHand();
+                    _cursor.setGrabbyHand();
                     break;
                 case MouseAndTouchTracker.state_move :
                     break;
                 case MouseAndTouchTracker.state_end :
-                    if( _touch_tracker.touch_is_inside ) _cursor.cursorSetHand();
-                    else _cursor.cursorSetDefault();
+                    if( _touch_tracker.touch_is_inside ) _cursor.setHand();
+                    else _cursor.setDefault();
                     break;
                 case MouseAndTouchTracker.state_enter :
-                    if( !_touch_tracker.is_touching ) _cursor.cursorSetHand();
+                    if( !_touch_tracker.is_touching ) _cursor.setHand();
                     break;
                 case MouseAndTouchTracker.state_leave :
-                    if(_touch_tracker.is_touching) _cursor.cursorSetGrabbyHand();
-                    else _cursor.cursorSetDefault();
+                    if(_touch_tracker.is_touching) _cursor.setGrabbyHand();
+                    else _cursor.setDefault();
                     break;
             }
         }
@@ -507,7 +507,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var deactivate = function() {
         _timer_active = false;
         hideScrollbar();
-        if( _cursor ) _cursor.cursorSetDefault();
+        if( _cursor ) _cursor.setDefault();
     };
 
     var activate = function() {
