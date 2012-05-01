@@ -9,81 +9,61 @@
       %input.form_focus
       %input.form_focus
       %input.form_focus
-      
-%div.demo_controls
-  %h2 Controls
-  %div.controls_ui.status
+
+%div.demo_console
+  %h6 Console
+  %div.status
 
 
-:javascript
-  var Demo = function(){
+:coffeescript
+  Demo = ->
+    _scroller = null
+    _scrollerFormFocus = null
+    _gui = null
+    prepContainers = ->
+      $("div.scroll_outer").css
+        position: "relative"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#ccc"
 
-    var _scroller = null,
-        _scrollerFormFocus = null,
-        _gui = null;
+      $("div.scroll_inner").css
+        position: "absolute"
+        height: "800px"
+        width: "400px"
+        background: "#666 url(/images/mode-set-logo.png) repeat"
 
-    // set styles on containers to run the demo
-    var prepContainers = function() {
-      $('div.scroll_outer').css({
-        position:'relative',
-        height:'400px',
-        width:'400px',
-        backgroundColor:'#ccc'
-      });
-      $('div.scroll_inner').css({
-        position:'absolute',
-        height:'800px',
-        width:'400px',
-        background:'#666 url(/images/mode-set-logo.png) repeat'
-      });
-      $('input.form_focus').css({
-        margin:'100px auto',
-        width:'200px',
-        background:'#ddd'
-      });
-    };
+      $("input.form_focus").css
+        margin: "100px auto"
+        width: "200px"
+        background: "#ddd"
 
-    // init the demo
-    var initDemo = function() {
-      _scroller = new TouchScroller( $('.scroll_outer')[0], $('.scroll_inner')[0], true, new Cursor(), false, TouchScroller.VERTICAL, {}, '' );
-      // add form scroll object and set the delegate
-      _scrollerFormFocus = new TouchScrollerFormFocus( _scroller, $('.scroll_outer')[0] );
-      _scrollerFormFocus.init();
-      _scroller.setScrollerDelegate( _scrollerFormFocus );
+    initDemo = ->
+      _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new Cursor(), false, TouchScroller.VERTICAL, {}, "")
+      _scrollerFormFocus = new TouchScrollerFormFocus(_scroller, $(".scroll_outer")[0])
+      _scrollerFormFocus.init()
+      _scroller.setScrollerDelegate _scrollerFormFocus
+      runTimer()
 
-      runTimer();
-    };
+    dispose = ->
+      _scroller.dispose()
+      _scrollerFormFocus.dispose()
 
-    var dispose = function(){
-      _scroller.dispose();
-      _scrollerFormFocus.dispose();
-    };
+    _config = dispose: dispose
+    setUpControls = ->
+      _gui = new dat.GUI(autoPlace: false)
+      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
+      $(".controls_ui .close-button").remove()
+      _gui.add _config, "dispose"
 
-    var _config = {
-      dispose: dispose
-   };
+    runTimer = ->
+      setTimeout (->
+        runTimer()
+      ), 30
 
-    // tweak demo vars
-    var setUpControls = function(){
-      // init DAT_GUI
-      _gui = new dat.GUI({ autoPlace: false });
-      document.getElementsByClassName('controls_ui')[0].appendChild(_gui.domElement);
-      $('.controls_ui .close-button').remove();
+    $(document).ready ->
+      prepContainers()
+      initDemo()
+      setUpControls()
 
-      // add global scroll properties
-     _gui.add(_config, 'dispose');
-
-    };
-
-    // frame loop
-    var runTimer = function(){
-      setTimeout(function(){ runTimer(); },30);
-    };
-    
-    // fire up demo
-    $(document).ready(function() {
-      prepContainers();
-      initDemo();
-      setUpControls();
-    });
-  }();
+  new Demo()

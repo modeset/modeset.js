@@ -16,19 +16,15 @@
         console.log( w, h );
       });
 
-:javascript
-  var Demo = function(){
+:coffeescript
+  Demo = ->
+    initDemo = ->
+      imageInDom = $("div.demo_holder").find("img")[0]
+      new GetImageSize(imageInDom.src, (w, h) ->
+        $(".status").html "Image: " + imageInDom.src + "<br/>Size: " + w + "," + h
+      )
 
-    var initDemo = function() {
-      // grab the img and pass its src into the GetImageSize instance
-      var imageInDom = $('div.demo_holder').find('img')[0];
-      new GetImageSize( imageInDom.src, function( w, h ) {
-        $('.controls_ui.status').html( 'Image: ' + imageInDom.src + '<br/>Size: ' + w + ',' + h );
-      });
-    };
+    $(document).ready ->
+      initDemo()
 
-    // fire up demo
-    $(document).ready(function() {
-      initDemo();
-    });
-  }();
+  new Demo()
