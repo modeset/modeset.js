@@ -1,0 +1,71 @@
+%div.demo_info
+  %h6 ImageCrop demo
+  %div Crops an image using one of several different methods.
+  %p.classes Demos the following classes
+  %div modeset/media/image/image_crop.js
+  %div modeset/media/image/get_image_size.js
+%div.demo_holder
+  %div.controls_ui.right_side
+  %div.container
+    %div.crop
+      %img(src="/images/demo/haters.jpg")
+
+
+:coffeescript
+  Demo = ->
+    _crop = null
+    _crop_div = $("div.crop")
+    _box_layer = $("div.container")
+    _box_base_x = 150
+    _box_base_y = 0
+
+    _config =
+      containerW: 200
+      containerH: 200
+      cropType: ImageCrop.CROP
+
+    prepContainers = ->
+      $("div.crop").css
+        position: "relative"
+        overflow: "hidden"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#333"
+      $("div.crop img").css
+        position: "absolute"
+
+
+    initCrop = ->
+      new GetImageSize "/images/demo/haters.jpg", (w,h) ->
+        _crop = new ImageCrop( _crop_div[0], _config.containerW, _config.containerH, w, h, _config.cropType )
+        setUpControls()
+
+    setUpControls = ->
+      _gui = new dat.GUI(autoPlace: false)
+      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
+      $(".controls_ui .close-button").remove()
+
+      containerW = _gui.add(_config, "containerW", 50, 400)
+      containerW.listen()
+      containerW.onChange (value) ->
+        _crop_div.css
+          width: value
+        _crop.updateContainerSize _config.containerW, _config.containerH
+
+      containerH = _gui.add(_config, "containerH", 50, 400)
+      containerH.listen()
+      containerH.onChange (value) ->
+        _crop_div.css
+          height: value
+        _crop.updateContainerSize _config.containerW, _config.containerH
+
+      cropType = _gui.add(_config, 'cropType', { CROP: ImageCrop.CROP, CROP_TOP: ImageCrop.CROP_TOP, CROP_BOTTOM: ImageCrop.CROP_BOTTOM, LETTERBOX: ImageCrop.LETTERBOX } );
+      cropType.listen()
+      cropType.onChange (value) ->
+        _crop.setScaleType value
+
+    $(document).ready ->
+      prepContainers()
+      initCrop()
+
+  new Demo()

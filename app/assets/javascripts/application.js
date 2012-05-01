@@ -15,6 +15,7 @@
 //= require modeset/math/displacement_point
 
 /* MEDIA */
+//= require modeset/media/image/image_crop
 //= require modeset/media/image/get_image_size
 
 /* STRING */
