@@ -43,9 +43,9 @@
       document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
       $(".controls_ui .close-button").remove()
 
-      frictionVal = _gui.add(_config, "easeFactor", 2, 20)
-      frictionVal.listen()
-      frictionVal.onChange (value) ->
+      easeFactorVal = _gui.add(_config, "easeFactor", 2, 20)
+      easeFactorVal.listen()
+      easeFactorVal.onChange (value) ->
         _ease.setEaseFactor value
 
       _box_div.css
