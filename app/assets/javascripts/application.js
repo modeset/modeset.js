@@ -10,6 +10,7 @@
 
 /* MATH */
 //= require modeset/math/math_util
+//= require modeset/math/easing_float
 //= require modeset/math/elastic_point
 //= require modeset/math/displacement_point
 
