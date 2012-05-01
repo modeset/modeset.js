@@ -15,7 +15,7 @@
     TARGET_FPS = 30
     FPS_MS = 1000 / TARGET_FPS
     _timeFactor = null
-    _config = 
+    _config =
       targetFps: FPS_MS
       throttling: false
     _animObj = null
@@ -59,7 +59,7 @@
       output = "Target FPS: " + Math.round(1000 / _config.targetFps) + "<br/>"
       output += "Actual FPS: " + _timeFactor.getActualFps() + "<br/>"
       output += "Time Factor: " + MathUtil.roundToDecimal(_timeFactor.getTimeFactor(), 1)
-      $(".controls_ui.status").html output 
+      $(".controls_ui.status").html output
 
       # animate
       _animX += 3 * _timeFactor.getTimeFactor()
@@ -84,5 +84,5 @@
       prepContainers()
       initDemo()
       setUpControls()
-  
+
   new Demo()
