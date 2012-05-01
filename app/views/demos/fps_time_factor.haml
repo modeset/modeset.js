@@ -16,7 +16,7 @@
     FPS_MS = 1000 / TARGET_FPS
     _timeFactor = null
     _config =
-      targetFps: FPS_MS
+      msPerFrame: FPS_MS
       throttling: false
     _animObj = null
     _animX = 0
@@ -46,7 +46,7 @@
       document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
       $(".controls_ui .close-button").remove()
 
-      fpsVal = _gui.add(_config, "targetFps", 10, 100)
+      fpsVal = _gui.add(_config, "msPerFrame", 10, 100)
       fpsVal.listen()
       fpsVal.onChange (value) ->
         _timeFactor.setFps value
@@ -56,7 +56,7 @@
     runTimer = ->
       # update status
       _timeFactor.update()
-      output = "Target FPS: " + Math.round(1000 / _config.targetFps) + "<br/>"
+      output = "Target FPS: " + Math.round(1000 / _config.msPerFrame) + "<br/>"
       output += "Actual FPS: " + _timeFactor.getActualFps() + "<br/>"
       output += "Time Factor: " + MathUtil.roundToDecimal(_timeFactor.getTimeFactor(), 1)
       $(".controls_ui.status").html output
