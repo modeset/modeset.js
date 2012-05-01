@@ -5,9 +5,9 @@
   %div.controls_ui.right_side
   %div.anim_container
     %div.anim_obj
-%div.demo_controls
-  %h2 Controls
-  %div.controls_ui.status
+%div.demo_console
+  %h6 Console
+  %div.status
 
 
 :coffeescript
@@ -59,7 +59,7 @@
       output = "Target FPS: " + Math.round(1000 / _config.msPerFrame) + "<br/>"
       output += "Actual FPS: " + _timeFactor.getActualFps() + "<br/>"
       output += "Time Factor: " + MathUtil.roundToDecimal(_timeFactor.getTimeFactor(), 1)
-      $(".controls_ui.status").html output
+      $(".demo_console .status").html output
 
       # animate
       _animX += 3 * _timeFactor.getTimeFactor()
