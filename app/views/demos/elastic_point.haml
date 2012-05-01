@@ -21,111 +21,91 @@
   %div
     %button Update
 
-:javascript
-  var Demo = function(){
-    var _touch_tracker = null;
-    var _touch_delegate = null;
-    var _cursor = null;
-    var _box = null;
-    var _box_div = $('div.elastic');
-    var _box_layer = $('div.container');
-    var _box_base_x = 150;
-    var _box_base_y = 150;
+:coffeescript
+  Demo = ->
+    _touch_tracker = null
+    _touch_delegate = null
+    _cursor = null
+    _box = null
+    _box_div = $("div.elastic")
+    _box_layer = $("div.container")
+    _box_base_x = 150
+    _box_base_y = 150
+    prepContainers = ->
+      $("div.container").css
+        position: "relative"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#ff0"
 
-    // set styles on containers to run the demo
-    var prepContainers = function() {
-      $('div.container').css({
-        position:'relative',
-        height:'400px',
-        width:'400px',
-        backgroundColor:'#ff0'
-      });
-      $('div.elastic').css({
-        position:'absolute',
-        height:'100px',
-        width:'100px',
-        backgroundColor:'#f0f'
-      });
-    };
+      $("div.elastic").css
+        position: "absolute"
+        height: "100px"
+        width: "100px"
+        backgroundColor: "#f0f"
 
-    // init the demo
-    var initElastic = function() {
-      createTouchCallback();
-      _touch_tracker = new MouseAndTouchTracker( _box_layer[0], _touch_delegate, false, 'div' );
-      _cursor = new Cursor();
-      _box = new ElasticPoint( _box_base_x, _box_base_y, 0.75, 0.4 );
-      setUpInputs();
-      runTimer();
-    };
+    initElastic = ->
+      createTouchCallback()
+      _touch_tracker = new MouseAndTouchTracker(_box_layer[0], _touch_delegate, false, "div")
+      _cursor = new Cursor()
+      _box = new ElasticPoint(_box_base_x, _box_base_y, 0.75, 0.4)
+      setUpInputs()
+      runTimer()
 
-    // tweak elastic vars
-    var setUpInputs = function(){
-      // update friction
-      var frictionInput = $('input#friction');
-      var frictionVal = $('span#fric_val');
-      frictionInput.bind('change', function(e){
-        var value = frictionInput.val();
-        value *= 0.01;
-        _box.setFriction(value);
-        frictionVal.html(value);
-      });
-      // update acceleration
-      var accelInput = $('input#accel');
-      var accelVal = $('span#accel_val');
-      accelInput.bind('change', function(e){
-        var value = accelInput.val();
-        value *= 0.01;
-        _box.setAccel(value);
-        accelVal.html(value);
-      });
+    setUpInputs = ->
+      frictionInput = $("input#friction")
+      frictionVal = $("span#fric_val")
+      frictionInput.bind "change", (e) ->
+        value = frictionInput.val()
+        value *= 0.01
+        _box.setFriction value
+        frictionVal.html value
 
-    };
+      accelInput = $("input#accel")
+      accelVal = $("span#accel_val")
+      accelInput.bind "change", (e) ->
+        value = accelInput.val()
+        value *= 0.01
+        _box.setAccel value
+        accelVal.html value
 
-    // frame loop
-    var runTimer = function(){
-      // update ELasticPoint object and redraw screen
-      _box.update();
-      _box_div.css({ top:_box.y()+'px', left:_box.x()+'px' });
-      setTimeout(function(){ runTimer(); },30);
-    };
+    runTimer = ->
+      _box.update()
+      _box_div.css
+        top: _box.y() + "px"
+        left: _box.x() + "px"
 
-    // track mouse position
-    var createTouchCallback = function(){
-      _touch_delegate = {};
-      _touch_delegate.touchUpdated = function( state, touchEvent ){
-        switch( state ) {
-          case MouseAndTouchTracker.state_move :
-            _box.setTarget( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
-            break;
-          case MouseAndTouchTracker.state_start :
-            _cursor.setGrabHand();
-            break;
-          case MouseAndTouchTracker.state_end :
-            _box.setTarget( _box_base_x, _box_base_y );
-            if( _touch_tracker.touch_is_inside )
-              _cursor.setHand();
+      setTimeout (->
+        runTimer()
+      ), 30
+
+    createTouchCallback = ->
+      _touch_delegate = {}
+      _touch_delegate.touchUpdated = (state, touchEvent) ->
+        switch state
+          when MouseAndTouchTracker.state_move
+            _box.setTarget _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
+          when MouseAndTouchTracker.state_start
+            _cursor.setGrabHand()
+          when MouseAndTouchTracker.state_end
+            _box.setTarget _box_base_x, _box_base_y
+            if _touch_tracker.touch_is_inside
+              _cursor.setHand()
             else
-              _cursor.setDefault();
-            break;
-          case MouseAndTouchTracker.state_enter :
-            if( _touch_tracker.is_touching )
-              _cursor.setGrabHand();
+              _cursor.setDefault()
+          when MouseAndTouchTracker.state_enter
+            if _touch_tracker.is_touching
+              _cursor.setGrabHand()
             else
-              _cursor.setHand();
-            break;
-          case MouseAndTouchTracker.state_leave :
-            if( _touch_tracker.is_touching )
-              _cursor.setGrabHand();
+              _cursor.setHand()
+          when MouseAndTouchTracker.state_leave
+            if _touch_tracker.is_touching
+              _cursor.setGrabHand()
             else
-              _cursor.setDefault();
-            break;
-        }
-      };
-    };
+              _cursor.setDefault()
 
-    // set fire up demo
-    $(document).ready(function() {
-      prepContainers();
-      initElastic();
-    });
-  }();
+    $(document).ready ->
+      prepContainers()
+      initElastic()
+
+  new Demo()
