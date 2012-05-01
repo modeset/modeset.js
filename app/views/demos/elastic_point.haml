@@ -6,20 +6,9 @@
   %div modeset/scroll/cursor.js
   %div modeset/scroll/touch_tracker.js
 %div.demo_holder
+  %div.controls_ui.right_side
   %div.container
     %div.elastic
-%div.demo_controls
-  %h6 Controls
-  %div
-    %span Friction
-    %span#fric_val
-  %input(id="friction" type="number" name="friction" value="75" min="1" max="100")
-  %div
-    %span Accel
-    %span#accel_val
-  %input(id="accel" type="number" name="accel" value="40" min="1" max="100")
-  %div
-    %button Update
 
 :coffeescript
   Demo = ->
@@ -31,6 +20,12 @@
     _box_layer = $("div.container")
     _box_base_x = 150
     _box_base_y = 150
+
+    _config =
+      friction: 0.5
+      accel: 0.5
+
+
     prepContainers = ->
       $("div.container").css
         position: "relative"
@@ -49,25 +44,23 @@
       _touch_tracker = new MouseAndTouchTracker(_box_layer[0], _touch_delegate, false, "div")
       _cursor = new Cursor()
       _box = new ElasticPoint(_box_base_x, _box_base_y, 0.75, 0.4)
-      setUpInputs()
+      setUpControls()
       runTimer()
 
-    setUpInputs = ->
-      frictionInput = $("input#friction")
-      frictionVal = $("span#fric_val")
-      frictionInput.bind "change", (e) ->
-        value = frictionInput.val()
-        value *= 0.01
-        _box.setFriction value
-        frictionVal.html value
+    setUpControls = ->
+      _gui = new dat.GUI(autoPlace: false)
+      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
+      $(".controls_ui .close-button").remove()
 
-      accelInput = $("input#accel")
-      accelVal = $("span#accel_val")
-      accelInput.bind "change", (e) ->
-        value = accelInput.val()
-        value *= 0.01
+      frictionVal = _gui.add(_config, "friction", 0.1, 0.9)
+      frictionVal.listen()
+      frictionVal.onChange (value) ->
+        _box.setFriction value
+
+      accelVal = _gui.add(_config, "accel", 0.1, 0.9)
+      accelVal.listen()
+      accelVal.onChange (value) ->
         _box.setAccel value
-        accelVal.html value
 
     runTimer = ->
       _box.update()
