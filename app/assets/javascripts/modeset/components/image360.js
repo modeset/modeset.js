@@ -240,7 +240,7 @@ var HTMLDemo = function() {
 	_touch_delegate.touchUpdated = function( state, touchEvent ){
 		switch( state ) {
 			case MouseAndTouchTracker.state_start :
-				_cursor.setGrabbyHand();
+				_cursor.setGrabHand();
 				break;
 			case MouseAndTouchTracker.state_move :
 				_image_rotator.addRotation( _touch_tracker.touchspeed.x );
@@ -254,7 +254,7 @@ var HTMLDemo = function() {
 				if( !_touch_tracker.is_touching ) _cursor.setHand();
 				break;
 			case MouseAndTouchTracker.state_leave :
-				if(_touch_tracker.is_touching) _cursor.setGrabbyHand();
+				if(_touch_tracker.is_touching) _cursor.setGrabHand();
 				else _cursor.setDefault();
 				break;
 		}

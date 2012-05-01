@@ -98,7 +98,7 @@
             _box.setTarget( _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50 );
             break;
           case MouseAndTouchTracker.state_start :
-            _cursor.setGrabbyHand();
+            _cursor.setGrabHand();
             break;
           case MouseAndTouchTracker.state_end :
             _box.setTarget( _box_base_x, _box_base_y );
@@ -109,13 +109,13 @@
             break;
           case MouseAndTouchTracker.state_enter :
             if( _touch_tracker.is_touching )
-              _cursor.setGrabbyHand();
+              _cursor.setGrabHand();
             else
               _cursor.setHand();
             break;
           case MouseAndTouchTracker.state_leave :
             if( _touch_tracker.is_touching )
-              _cursor.setGrabbyHand();
+              _cursor.setGrabHand();
             else
               _cursor.setDefault();
             break;

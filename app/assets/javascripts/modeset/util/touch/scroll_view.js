@@ -83,7 +83,7 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 	},
 	onStart : function($super, touchEvent) {
 		$super( touchEvent );
-    this.cursor.setGrabbyHand();
+    this.cursor.setGrabHand();
 	},
 	onMove : function($super, touchEvent) {
 		$super( touchEvent );
@@ -100,7 +100,7 @@ var ScrollView = Class.create(ScrollViewTouchTracker, {
 	},
 	onLeave : function($super, touchEvent) {
 		$super( touchEvent );
-		if(this.touch_tracker.is_touching) this.cursor.setGrabbyHand();
+		if(this.touch_tracker.is_touching) this.cursor.setGrabHand();
 		else this.cursor.setDefault();
 	},
 	dispose : function($super) {

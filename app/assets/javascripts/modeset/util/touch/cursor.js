@@ -38,7 +38,7 @@ Cursor.prototype.setHand = function() {
   }
 };
 
-Cursor.prototype.setGrabbyHand = function() {
+Cursor.prototype.setGrabHand = function() {
   if( this.is_chrome ) {
     this.element.setAttribute('style', this.base_inline_css + this.CSS_HAND_GRAB + this.CSS_HAND_GRAB_CUR);
   } else if( this.is_msie ) {

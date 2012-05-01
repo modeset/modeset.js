@@ -29,7 +29,7 @@ Cursor.prototype.setHand = function() {
   }
 };
 
-Cursor.prototype.setGrabbyHand = function() {
+Cursor.prototype.setGrabHand = function() {
   this.setDefault();
   if( this.is_chrome || this.is_msie ) {
     this.addClass( 'handGrab handGrabCursor' );

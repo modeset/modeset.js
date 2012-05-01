@@ -205,7 +205,7 @@ var TouchScroller = function( element, elementInner, scrollBarContainer, cursor,
     if( _cursor ) {
   		switch( state ) {
   			case MouseAndTouchTracker.state_start :
-  				_cursor.setGrabbyHand();
+  				_cursor.setGrabHand();
   				break;
   			case MouseAndTouchTracker.state_move :
   				break;
@@ -217,7 +217,7 @@ var TouchScroller = function( element, elementInner, scrollBarContainer, cursor,
   				if( !_touch_tracker.is_touching ) _cursor.setHand();
   				break;
   			case MouseAndTouchTracker.state_leave :
-  				if(_touch_tracker.is_touching) _cursor.setGrabbyHand();
+  				if(_touch_tracker.is_touching) _cursor.setGrabHand();
   				else _cursor.setDefault();
   				break;
   		}
