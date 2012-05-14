@@ -150,7 +150,7 @@ var HTMLDemo = function() {
 			rotatorDone();
 		});
 
-		_cursor = new Cursor('../images/cur/openhand.cur','../images/cur/closedhand.cur');
+		_cursor = new CursorHand('../images/cur/openhand.cur','../images/cur/closedhand.cur');
 		_image_rotator = new ImageRotator( imagesContainer, 32, 'videos/stills/', 'jpg', self, instructions, _continue_button );
 		_touch_tracker = new MouseAndTouchTracker( _image_rotator_holder[0], _touch_delegate, false );
 

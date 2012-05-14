@@ -299,7 +299,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
             checkForClosestIndex();
 
-            // keep timer running - use requestAnimationFrame is available
+            // keep timer running - use requestAnimationFrame if available
             if( window.requestAnimationFrame ) {
                 window.requestAnimationFrame( runTimer );
             } else {

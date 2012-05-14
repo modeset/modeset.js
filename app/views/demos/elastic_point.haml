@@ -41,7 +41,7 @@
     initElastic = ->
       createTouchCallback()
       _touch_tracker = new MouseAndTouchTracker(_box_layer[0], _touch_delegate, false, "div")
-      _cursor = new Cursor()
+      _cursor = new CursorHand()
       _box = new ElasticPoint(_box_base_x, _box_base_y, 0.75, 0.4)
       setUpControls()
       runTimer()

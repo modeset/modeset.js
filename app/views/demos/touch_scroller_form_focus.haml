@@ -39,7 +39,7 @@
         background: "#ddd"
 
     initDemo = ->
-      _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new Cursor(), false, TouchScroller.VERTICAL, {}, "")
+      _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), false, TouchScroller.VERTICAL, {}, "")
       _scrollerFormFocus = new TouchScrollerFormFocus(_scroller, $(".scroll_outer")[0])
       _scrollerFormFocus.init()
       _scroller.setScrollerDelegate _scrollerFormFocus
