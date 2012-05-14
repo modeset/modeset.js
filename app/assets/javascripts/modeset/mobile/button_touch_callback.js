@@ -36,7 +36,7 @@ ButtonTouchCallback.prototype.touchUpdated = function ( touchState, touchEvent )
     }
     this.started_touching = false;
   }
-  
+
   //DOMUtil.killEvent( touchEvent );
 };
 
@@ -52,12 +52,3 @@ ButtonTouchCallback.prototype.dispose = function() {
 	delete this.callback;
 	delete this.element;
 };
-
-
-/*
-// do something with this?
-if(touchEvent) {
-  var target = touchEvent.target;
-  if (target.nodeType == 3) target = target.parentNode;
-}
-*/
