@@ -28,3 +28,12 @@ function drawPoint(ctx,x,y,r,color){
     ctx.fill();
     ctx.restore();
 }
+
+function drawArc(startAngle,endAngle) {
+  var drawingArc = true;  // set boolean value to show we&rsquo;re drawing       
+  // Define our path using the API
+  ctx.beginPath();               
+  ctx.arc(15,15,10, Math.PI/180)*(startAngle-90),(Math.PI/180)*(endAngle-90), false);    
+  ctx.stroke();   // draw on the canvas                 
+  drawingArc = false;            
+}
