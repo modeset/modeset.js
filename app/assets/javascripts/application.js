@@ -23,15 +23,15 @@
 //= require modeset/string/path_util
 //= require modeset/string/string_util
 
-/* SCROLL */
+/* MOUSE */
 //= require modeset/mouse/cursor_hand
 //= require modeset/mouse/cursor_loading
 
-/* SCROLL */
-//= require modeset/scroll/css_helper
-//= require modeset/scroll/touch_tracker
-//= require modeset/scroll/touch_scroller
-//= require modeset/scroll/touch_scroller_form_focus
+/* SCROLLER */
+//= require modeset/style/css_helper
+//= require modeset/mouse/touch_tracker
+//= require modeset/components/scroll/touch_scroller
+//= require modeset/components/scroll/touch_scroller_form_focus
 
 /* APPLICATION ASSETS */
 /* require_tree ./components*/
