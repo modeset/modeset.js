@@ -1,0 +1,15 @@
+.cursorLoading {
+  position: absolute;
+  z-index: 99999999;
+  width: 28px;
+  height: 28px;
+  left: 0;
+  top: 0;
+  background-color: #000;
+  background: rgba(0,0,0,0.75) url(/images/cursors/loading.gif) no-repeat center;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
