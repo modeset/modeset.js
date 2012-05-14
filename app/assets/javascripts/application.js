@@ -24,7 +24,10 @@
 //= require modeset/string/string_util
 
 /* SCROLL */
-//= require modeset/scroll/cursor
+//= require modeset/mouse/cursor_hand
+//= require modeset/mouse/cursor_loading
+
+/* SCROLL */
 //= require modeset/scroll/css_helper
 //= require modeset/scroll/touch_tracker
 //= require modeset/scroll/touch_scroller
