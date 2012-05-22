@@ -7,6 +7,7 @@
 /* ANIM */
 //= require modeset/anim/request_animation_frame
 //= require modeset/anim/fps_time_factor
+//= require modeset/anim/sprite_animation
 
 /* MATH */
 //= require modeset/math/math_util

@@ -1,12 +1,12 @@
-var ImageAnimation = function( width, height, imageHolder, image, numFrames, frameRate ) {
+var SpriteAnimation = function( width, height, imageHolder, image, numFrames, frameRate ) {
   // private vars
   var _width = width;
   var _height = height;
   var _num_frames = numFrames;
   var _cur_frame = 0;
   var _timeout = null;
-  var _framerate = frameRate || Math.round( 1000/30 );
-  
+  var _framerate = frameRate || Math.round( 1000/33 );
+
   // grab container refs
   var _img_holder = imageHolder;
   var _img_sprite = image;
@@ -24,22 +24,26 @@ var ImageAnimation = function( width, height, imageHolder, image, numFrames, fra
     // keep timer running
     _timeout = setTimeout( function() { runTimer(); } , _framerate );
   };
-  
+
   var stopTimer = function() {
     if( typeof _timeout !== 'undefined' ) {
       clearTimeout( _timeout );
     }
   };
-  
+
   /* public methods */
   return {
     start: function() {
       stopTimer();
       _timeout = setTimeout( function() { runTimer(); } , _framerate );
     },
-    
+
     stop: function() {
       stopTimer();
+    },
+
+    setFramerate: function( value ) {
+      _framerate = value;
     }
   };
 };
