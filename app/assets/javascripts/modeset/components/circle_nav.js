@@ -30,7 +30,7 @@ CircleNav.prototype.init = function ( navDiv, delegate )
     this.touchpoint.hide();
     this.camera_jq_obj = $("#camera");
     this.camera_div = this.camera_jq_obj.get(0);
-    
+
     // set up control parameters
     this.control_center_point = { x:70, y:95 };
     this.camera_radius_bounds = { inner:15, outer:70 };
@@ -40,7 +40,7 @@ CircleNav.prototype.init = function ( navDiv, delegate )
     this.timer_fps = 1000/50;
     this.current_segment_index = -1;
     this.num_stopping_points = 4;
-    
+
     // init touch tracking
 	this.touch_tracker = new MouseAndTouchTracker();
 	this.touch_tracker.init( navDiv, this );
@@ -48,11 +48,11 @@ CircleNav.prototype.init = function ( navDiv, delegate )
 	this.platform_helper.init();
 	// disable any clicking on the image
 	this.camera_div.onmousedown=function(){return false;}
-	
+
 	// draw parts
 	this.drawCamera();
 	this.buildStoppingPoints();
-	
+
 	// start timer
 	var self = this;
 	self.runTimer();
@@ -62,7 +62,7 @@ CircleNav.prototype.init = function ( navDiv, delegate )
 CircleNav.prototype.drawCamera = function ()
 {
     if( this.platform_helper.is_msie )
-    {   
+    {
         var cameraElement = this.camera_div;
 
         // remove default camera image and clear background
@@ -83,23 +83,23 @@ CircleNav.prototype.buildStoppingPoints = function ()
     for( var i=0; i < this.num_stopping_points; i++ )
     {
         var radians = i * this.segment_radians;
-        
+
         var point = document.createElement("div");
         point.className = "stopping_point";
         this.container_div.appendChild(point);
-        
+
         var newX = -3 + this.control_center_point.x + this.camera_radius * Math.sin( radians );
         var newY = -3 + this.control_center_point.y + this.camera_radius * Math.cos( radians );
 
     	// update camera position and angle
     	this.platform_helper.updatePosition( point, newX, newY, 0 );
-        
+
         this.stopping_points.push( { div:point, x:newX, y:newY, radians:radians } );
     }
 }
 
 CircleNav.prototype.runTimer = function() {
-    
+
     // find closest resting point to camera
     var closestSegmentIndex = 0;
     var smallestRadianDistance = Math.PI*2;
@@ -109,14 +109,14 @@ CircleNav.prototype.runTimer = function() {
         if( radianDistance < smallestRadianDistance )
         {
             this.stopping_points[closestSegmentIndex].div.style.backgroundColor = "#ffbbbb";
-            
+
             smallestRadianDistance = radianDistance;
             closestSegmentIndex = i;
             this.stopping_points[i].div.style.backgroundColor = "#000000";
         } else {
             this.stopping_points[i].div.style.backgroundColor = "#ffbbbb";
         }
-    }   
+    }
     if( closestSegmentIndex == this.stopping_points.length - 1 )
     {
         if( smallestRadianDistance > this.segment_radians/2 )
@@ -126,20 +126,20 @@ CircleNav.prototype.runTimer = function() {
             this.stopping_points[closestSegmentIndex].div.style.backgroundColor = "#000000";
         }
     }
-    
+
     // if index switches, call delegate to update view
     if( this.current_segment_index != closestSegmentIndex || this.current_segment_index == -1 )
     {
         this.current_segment_index = closestSegmentIndex;
         this.delegate.segmentIndexUpdated( this.current_segment_index );
     }
-    
+
     // handle the radians crossover from 180 -> -180
     if( Math.abs( this.camera_position.target_radians - this.camera_position.current_radians ) > Math.PI )
     {
-        if( this.camera_position.target_radians > this.camera_position.current_radians ) 
+        if( this.camera_position.target_radians > this.camera_position.current_radians )
             this.camera_position.current_radians += Math.PI * 2;
-        else 
+        else
             this.camera_position.current_radians -= Math.PI * 2;
     }
     // ease camera position into place
@@ -151,7 +151,7 @@ CircleNav.prototype.runTimer = function() {
         {
             this.camera_position.current_radians = this.camera_position.target_radians;
             // if camera has eased to a resting position, call the function
-            if( !this.touch_tracker.is_touching ) 
+            if( !this.touch_tracker.is_touching )
                 this.cameraResting();
         }
     }
@@ -160,7 +160,7 @@ CircleNav.prototype.runTimer = function() {
     var newX = this.control_center_point.x - this.camera_size/2 + this.camera_radius * Math.sin( this.camera_position.current_radians );
     var newY = this.control_center_point.y - this.camera_size/2 + this.camera_radius * Math.cos( this.camera_position.current_radians );
 	var cameraAngle = ( -this.camera_position.current_radians + Math.PI/2 ) * (180/Math.PI);
-	
+
 	// update camera position and angle
 	if( !this.platform_helper.is_msie ) {
 	    this.platform_helper.updatePosition( this.camera_div, newX, newY, cameraAngle );
@@ -180,7 +180,7 @@ CircleNav.prototype.getDistance = function ( a, b )
     return Math.abs( Math.sqrt(a*a + b*b) );
 }
 
-CircleNav.prototype.easeTo = function( current, target, easeFactor ) {  
+CircleNav.prototype.easeTo = function( current, target, easeFactor ) {
     return current -= ( ( current - target ) / easeFactor );
 }
 
@@ -199,16 +199,16 @@ CircleNav.prototype.touchUpdated = function ( touchState )
     	// position touchpoint
     	this.touchpoint.css( 'left', this.touch_tracker.touchcurrent.x - 4 );
     	this.touchpoint.css( 'top', this.touch_tracker.touchcurrent.y - 4 );
-    
+
         // set target radians
         this.camera_position.target_radians = Math.atan2(-xPos, -yPos) + Math.PI;
         var degrees = this.camera_position.target_radians * 180/Math.PI;
 	}
-	
+
 	// cancel tracking if touch/mouse leaves the touch radius
 	if( mouseRadius > this.camera_radius_bounds.outer && this.touch_tracker.is_touching )
 	    this.touch_tracker.onEnd(null);
-	    
+
 	// on touch end, set closest index as radian target
 	if( !this.touch_tracker.is_touching )
 	{
@@ -219,7 +219,7 @@ CircleNav.prototype.touchUpdated = function ( touchState )
 
 /****** Public methods called from A8Experience ******/
 
-CircleNav.prototype.updateFromCarDrag = function( dragSpeed ) 
+CircleNav.prototype.updateFromCarDrag = function( dragSpeed )
 {
     this.touch_tracker.is_touching = true;  // hacky...
     this.camera_position.target_radians += dragSpeed * 0.01;
@@ -227,7 +227,7 @@ CircleNav.prototype.updateFromCarDrag = function( dragSpeed )
     this.camera_position.target_radians %= Math.PI*2;                                                   // keep within 0 - Math.PI*2
 }
 
-CircleNav.prototype.carDragEnd = function( dragSpeed ) 
+CircleNav.prototype.carDragEnd = function( dragSpeed )
 {
     this.touch_tracker.is_touching = false;  // end hacky...
     this.camera_position.target_radians = this.current_segment_index * this.segment_radians;

@@ -42,9 +42,9 @@ var SignatureCanvas = function( canvasElem, debugging ) {
   var _lastPositions = [];
   var _pointsTracked = 0;
 
-  var addTouchCallbacks = function() {
+  var createTouchCallback = function() {
     var moved = 0;
-		_touch_delegate.touchUpdated = function( state, touchEvent ) {
+		return function( state, touchEvent ) {
 		    switch( state ) {
 		      case MouseAndTouchTracker.state_start :
 		        // start drawing if in canvas bounds
@@ -65,10 +65,10 @@ var SignatureCanvas = function( canvasElem, debugging ) {
 	            // store last positions captured
               var curX = _touch_tracker.touchcurrent.x - X_LEFT - 50;
               var curY = _touch_tracker.touchcurrent.y - Y_TOP + 132;
-              
+
               //               if( _lastPositions.length > 0 && curX != _lastPositions[0].x && curY != _lastPositions[0].y ) {
               //                 _lastPositions.push( { x: curX, y: curY } );
-              // } else 
+              // } else
 	            if( _lastPositions.length == 2 && curX != _lastPositions[1].x && curY != _lastPositions[1].y ) {
   	            _lastPositions.push( { x: curX, y: curY } );
 	            } else if( _lastPositions.length == 1 && curX != _lastPositions[0].x && curY != _lastPositions[0].y) {
@@ -77,7 +77,7 @@ var SignatureCanvas = function( canvasElem, debugging ) {
                 _lastPositions.push( { x: curX, y: curY } );
               }
               // console.log('_lastPositions.length = '+_lastPositions.length);
-                
+
   		        _touchIsInside = true;
               if( _lastX ) {
                 // old code to draw straight lines between points
@@ -142,12 +142,12 @@ var SignatureCanvas = function( canvasElem, debugging ) {
                   _context.stroke();
                   _context.closePath();
                 }
-                
+
                 // insane hack to prevent canvas from stopping drawing the signature line
                 _context.fillStyle = COLOR_CLEAR;
                 _context.fillRect( centroidArray[0] - BOX_HALF, centroidArray[1] - BOX_HALF, BOX, BOX );
-                
-                
+
+
                 // draw quad curve
                 _context.beginPath();
                 _context.strokeStyle = COLOR_SIG_LINE;
@@ -182,7 +182,7 @@ var SignatureCanvas = function( canvasElem, debugging ) {
               _context.stroke();
               _context.closePath();
 		        }
-		      
+
 		        _lastPositions.splice(0);
             _touching = false;
             _lastX = null;
@@ -267,23 +267,23 @@ function getControlPoints(x0,y0,x1,y1,x2,y2,t){
     //  x0,y0,x1,y1 are the coordinates of the end (knot) pts of this segment
     //  x2,y2 is the next knot -- not connected here but needed to calculate p2
     //  p1 is the control point calculated here, from x1 back toward x0.
-    //  p2 is the next control point, calculated here and returned to become the 
+    //  p2 is the next control point, calculated here and returned to become the
     //  next segment's p1.
     //  t is the 'tension' which controls how far the control points spread.
-    
+
     //  Scaling factors: distances from this knot to the previous and following knots.
     var d01=Math.sqrt(Math.pow(x1-x0,2)+Math.pow(y1-y0,2));
     var d12=Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-   
+
     var fa=t*d01/(d01+d12);
     var fb=t-fa;
-  
+
     var p1x=x1+fa*(x0-x2);
     var p1y=y1+fa*(y0-y2);
 
     var p2x=x1-fb*(x0-x2);
-    var p2y=y1-fb*(y0-y2);  
-    
+    var p2y=y1-fb*(y0-y2);
+
     return [p1x,p1y,p2x,p2y]
 }
 
@@ -294,12 +294,11 @@ function getControlPoints(x0,y0,x1,y1,x2,y2,t){
 	};
 
 	// set up touch tracker w/local delegate
-  var _touch_delegate = {};
-	var _touch_tracker = new MouseAndTouchTracker( canvasElem, _touch_delegate, false, 'img' );
+	var _touch_tracker = new MouseAndTouchTracker( canvasElem, createTouchCallback(), false, 'img' );
 	addTouchCallbacks();
 	clearCanvas();
 
-	// return public api  
+	// return public api
   return {
     getImageData : getImageData,
     clearCanvas : clearCanvas,

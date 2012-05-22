@@ -31,7 +31,6 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
         // touch helpers
         _cursor = cursor,
-        _touch_delegate = null,
         _touch_tracker = null,
         _css_helper = null,
         _scroller_delegate = scrollerDelegate,
@@ -67,9 +66,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
     var init = function() {
         _css_helper = new CSSHelper();
-        _touch_delegate = {};
-        _touch_tracker = new MouseAndTouchTracker( element, _touch_delegate, false, disableElements );
-        addTouchCallbacks();
+        _touch_tracker = new MouseAndTouchTracker( element, touchUpdated, false, disableElements );
 
         _cur_position = new ScrollerPosition();
         _container_size = new ScrollerSize();
@@ -85,27 +82,25 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         activate();
     };
 
-    var addTouchCallbacks = function() {
-        _touch_delegate.touchUpdated = function( state, touchEvent ) {
-            switch( state ) {
-              case MouseAndTouchTracker.state_start :
+    var touchUpdated = function( state, touchEvent ) {
+        switch( state ) {
+            case MouseAndTouchTracker.state_start :
                 onStart(touchEvent);
                 break;
-              case MouseAndTouchTracker.state_move :
+            case MouseAndTouchTracker.state_move :
                 onMove(touchEvent);
                 break;
-              case MouseAndTouchTracker.state_end :
+            case MouseAndTouchTracker.state_end :
                 onEnd(touchEvent);
                 break;
-              case MouseAndTouchTracker.state_enter :
+            case MouseAndTouchTracker.state_enter :
                 onEnter(touchEvent);
                 break;
-              case MouseAndTouchTracker.state_leave :
+            case MouseAndTouchTracker.state_leave :
                 onLeave(touchEvent);
                 break;
-            }
-            updateCursor( state );
-        };
+        }
+        updateCursor( state );
     };
 
     var onStart = function( touchEvent ) {

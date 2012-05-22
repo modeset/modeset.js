@@ -122,7 +122,6 @@ var HTMLDemo = function() {
 	var _continue_button = null;
 	var _cursor = null;
 	var _touch_tracker = null;
-	var _touch_delegate = {};
 	var _touch_speed = 0;
 
 	// app state
@@ -152,7 +151,7 @@ var HTMLDemo = function() {
 
 		_cursor = new CursorHand('../images/cur/openhand.cur','../images/cur/closedhand.cur');
 		_image_rotator = new ImageRotator( imagesContainer, 32, 'videos/stills/', 'jpg', self, instructions, _continue_button );
-		_touch_tracker = new MouseAndTouchTracker( _image_rotator_holder[0], _touch_delegate, false );
+		_touch_tracker = new MouseAndTouchTracker( _image_rotator_holder[0], touchUpdated, false );
 
 		rotatorReady();
 	};
@@ -237,7 +236,7 @@ var HTMLDemo = function() {
 		setTimeout(function(){ runTimer(); },33);
 	};
 
-	_touch_delegate.touchUpdated = function( state, touchEvent ){
+	var touchUpdated = function( state, touchEvent ){
 		switch( state ) {
 			case MouseAndTouchTracker.state_start :
 				_cursor.setGrabHand();

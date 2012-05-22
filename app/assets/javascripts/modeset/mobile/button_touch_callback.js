@@ -7,7 +7,7 @@ function ButtonTouchCallback( element, callback, highlights, highlightOpacity ) 
   this.started_touching = false;
   this.CANCEL_THRESHOLD = 3;
   // create touch tracker
-	this.touch_tracker = new MouseAndTouchTracker( this.element, this );
+	this.touch_tracker = new MouseAndTouchTracker( this.element, this.touchUpdated );
 }
 
 ButtonTouchCallback.prototype.touchUpdated = function ( touchState, touchEvent ) {

@@ -1,4 +1,4 @@
-function MouseAndTouchTracker ( element, delegate, isMouseUpTracking, disabledElements ) {
+function MouseAndTouchTracker ( element, callback, isMouseUpTracking, disabledElements ) {
 	// positioning / tracking coordinates
 	this.container_position = { x:0, y:0 };
 	this.touchstart = { x : 0, y : 0 };
@@ -15,8 +15,7 @@ function MouseAndTouchTracker ( element, delegate, isMouseUpTracking, disabledEl
 
 	// store parameters
 	this.container = element;
-	this.delegate = delegate;
-	this.is_mouseup_tracking = isMouseUpTracking;
+	this.callback = callback;
 	this.disabled_elements = disabledElements.split(' ') || [];
 
 	// add touch event listeners with scope for removal
@@ -119,7 +118,7 @@ MouseAndTouchTracker.prototype.onStart = function ( touchEvent ) {
 	}
 
 	// callback
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_start, touchEvent );
+	this.callback && this.callback( MouseAndTouchTracker.state_start, touchEvent )
 };
 
 MouseAndTouchTracker.prototype.onMove = function ( touchEvent ) {
@@ -144,9 +143,7 @@ MouseAndTouchTracker.prototype.onMove = function ( touchEvent ) {
 
 	// pass on move event if touching, or if we're allowing tracking without needing to touch
 	if( this.is_touching || this.is_mouseup_tracking )  {
-		if( this.delegate ) {
-			this.delegate.touchUpdated( MouseAndTouchTracker.state_move, touchEvent );
-		}
+		this.callback && this.callback( MouseAndTouchTracker.state_move, touchEvent );
 	}
 
 	// check for mouse in/out and make the call if it's changed
@@ -160,8 +157,8 @@ MouseAndTouchTracker.prototype.onMove = function ( touchEvent ) {
 };
 
 MouseAndTouchTracker.prototype.onEnd = function ( touchEvent ) {
-	// call delegate method before resetting all touch tracking props
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_end, touchEvent );
+	// callback before resetting all touch tracking props
+	this.callback && this.callback( MouseAndTouchTracker.state_end, touchEvent );
 
 	// reset tracking vars
 	this.is_touching = false;
@@ -178,11 +175,11 @@ MouseAndTouchTracker.prototype.onEnter = function () {
 	this.touchmoved.y = 0;
 	this.touchstart.x = this.touchcurrent.x;
 	this.touchstart.y = this.touchcurrent.y;
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_enter, null );
+	this.callback && this.callback( MouseAndTouchTracker.state_enter, null );
 };
 
 MouseAndTouchTracker.prototype.onLeave = function () {
-	if( this.delegate ) this.delegate.touchUpdated( MouseAndTouchTracker.state_leave, null );
+	this.callback && this.callback( MouseAndTouchTracker.state_leave, null );
 };
 
 MouseAndTouchTracker.prototype.dispose = function () {
@@ -197,7 +194,7 @@ MouseAndTouchTracker.prototype.dispose = function () {
 	this.endFunction = null;
 	this.endDocumentFunction = null;
 	// clear objects
-	this.delegate = false;
+	this.callback = false;
 	this.touchstart = false;
 	this.touchmovedlast = false;
 	this.touchmoved = false;

@@ -39,8 +39,7 @@
         backgroundColor: "#f0f"
 
     initElastic = ->
-      createTouchCallback()
-      _touch_tracker = new MouseAndTouchTracker(_box_layer[0], _touch_delegate, false, "div")
+      _touch_tracker = new MouseAndTouchTracker(_box_layer[0], touchUpdated, false, "div")
       _cursor = new CursorHand()
       _box = new ElasticPoint(_box_base_x, _box_base_y, 0.75, 0.4)
       setUpControls()
@@ -71,30 +70,28 @@
         runTimer()
       ), 33
 
-    createTouchCallback = ->
-      _touch_delegate = {}
-      _touch_delegate.touchUpdated = (state, touchEvent) ->
-        switch state
-          when MouseAndTouchTracker.state_move
-            _box.setTarget _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
-          when MouseAndTouchTracker.state_start
+    touchUpdated = (state, touchEvent) ->
+      switch state
+        when MouseAndTouchTracker.state_move
+          _box.setTarget _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
+        when MouseAndTouchTracker.state_start
+          _cursor.setGrabHand()
+        when MouseAndTouchTracker.state_end
+          _box.setTarget _box_base_x, _box_base_y
+          if _touch_tracker.touch_is_inside
+            _cursor.setHand()
+          else
+            _cursor.setDefault()
+        when MouseAndTouchTracker.state_enter
+          if _touch_tracker.is_touching
             _cursor.setGrabHand()
-          when MouseAndTouchTracker.state_end
-            _box.setTarget _box_base_x, _box_base_y
-            if _touch_tracker.touch_is_inside
-              _cursor.setHand()
-            else
-              _cursor.setDefault()
-          when MouseAndTouchTracker.state_enter
-            if _touch_tracker.is_touching
-              _cursor.setGrabHand()
-            else
-              _cursor.setHand()
-          when MouseAndTouchTracker.state_leave
-            if _touch_tracker.is_touching
-              _cursor.setGrabHand()
-            else
-              _cursor.setDefault()
+          else
+            _cursor.setHand()
+        when MouseAndTouchTracker.state_leave
+          if _touch_tracker.is_touching
+            _cursor.setGrabHand()
+          else
+            _cursor.setDefault()
 
     $(document).ready ->
       prepContainers()
