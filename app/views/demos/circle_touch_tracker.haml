@@ -7,6 +7,7 @@
   %div.controls_ui.right_side
   %div.container
     %div.dial
+      %div.dial_inner_radius
 %div.demo_console
   %h6 Console
   %div.status
@@ -14,6 +15,7 @@
 :coffeescript
   Demo = ->
     _circle_touch_tracker = null
+    _css_helper = null
     _touch_delegate = null
     _dial_div = $("div.dial")
     _container = $("div.container")
@@ -22,20 +24,28 @@
       friction: 0.5
 
     prepContainers = ->
-      $("div.container").css
+      _container.css
         position: "relative"
         height: "400px"
         width: "400px"
         backgroundColor: "#ff0"
 
-      $("div.dial").css
+      _dial_div.css
         position: "absolute"
-        height: "400px"
-        width: "400px"
+        height: "10px"
+        width: "220px"
         backgroundColor: "#f0f"
 
+      $('.dial_inner_radius').css
+        backgroundColor: "#ff0"
+        width: "20px"
+        height: "10px"
+
     init = ->
-      _circle_touch_tracker = new CircleTouchTracker( _container[0], _dial_div.width(), _dial_div.height(), touchUpdated, 'div img' )
+      _css_helper = new CSSHelper()
+      _dial_div[0].style[ _css_helper.getVendor() + "TransformOrigin" ] = "0 50%"
+      _circle_touch_tracker = new CircleTouchTracker( _container[0], _container.width(), _container.height(), touchUpdated, 'div img' )
+
       setUpControls()
       runTimer()
 
@@ -44,14 +54,16 @@
       angleChange = _circle_touch_tracker - curAngle
       $(".status").html state+": "+curAngle
 
+      _css_helper.update2DPosition _dial_div[0], 200, 200, 1, -curAngle, false
+
       # handle touch states & add circular angle change
-      switch state
-        when MouseAndTouchTracker.state_start
-          console.log 'start'
-        when MouseAndTouchTracker.state_move
-          console.log 'move'
-        when MouseAndTouchTracker.state_end
-          console.log 'end'
+      # switch state
+      #   when MouseAndTouchTracker.state_start
+      #     console.log 'start'
+      #   when MouseAndTouchTracker.state_move
+      #     console.log 'move'
+      #   when MouseAndTouchTracker.state_end
+      #     console.log 'end'
 
 
     setUpControls = ->
