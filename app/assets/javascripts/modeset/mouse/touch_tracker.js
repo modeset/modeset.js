@@ -41,8 +41,8 @@ function MouseAndTouchTracker ( element, callback, isMouseUpTracking, disabledEl
 		document.addEventListener( "touchend", this.endDocumentFunction, false );
 	}
 
-	//
-	if(!this.is_mouseup_tracking && !navigator.userAgent.match(/Android/i)) this.recurseDisableImages( this.container );
+	// hmm...
+	if(!navigator.userAgent.match(/Android/i)) this.recurseDisableImages( this.container );	// !this.is_mouseup_tracking &&
 }
 
 // add static constants
