@@ -1,0 +1,86 @@
+%div.demo_info
+  %h6 CircleTouchTracker demo
+  %div Use your mouse like an iPod wheel.
+  %p.classes Demos the following classes
+  %div modeset/scroll/touch_tracker.js
+%div.demo_holder
+  %div.controls_ui.right_side
+  %div.container
+    %div.dial
+%div.demo_console
+  %h6 Console
+  %div.status
+
+:coffeescript
+  Demo = ->
+    _circle_touch_tracker = null
+    _touch_delegate = null
+    _dial_div = $("div.dial")
+    _container = $("div.container")
+
+    _config =
+      friction: 0.5
+
+    prepContainers = ->
+      $("div.container").css
+        position: "relative"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#ff0"
+
+      $("div.dial").css
+        position: "absolute"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#f0f"
+
+    init = ->
+      _circle_touch_tracker = new CircleTouchTracker( _container[0], _dial_div.width(), _dial_div.height(), touchUpdated, 'div img' )
+      setUpControls()
+      runTimer()
+
+    touchUpdated = (state) =>
+      curAngle = _circle_touch_tracker.curAngle()
+      angleChange = _circle_touch_tracker - curAngle
+      $(".status").html state+": "+curAngle
+
+      # handle touch states & add circular angle change
+      switch state
+        when MouseAndTouchTracker.state_start
+          console.log 'start'
+        when MouseAndTouchTracker.state_move
+          console.log 'move'
+        when MouseAndTouchTracker.state_end
+          console.log 'end'
+
+
+    setUpControls = ->
+      _gui = new dat.GUI(autoPlace: false)
+      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
+      $(".controls_ui .close-button").remove()
+
+      # frictionVal = _gui.add(_config, "friction", 0.1, 0.9)
+      # frictionVal.listen()
+      # frictionVal.onChange (value) ->
+      #   _box.setFriction value
+
+      # accelVal = _gui.add(_config, "accel", 0.1, 0.9)
+      # accelVal.listen()
+      # accelVal.onChange (value) ->
+      #   _box.setAccel value
+
+    runTimer = ->
+      # _box.update _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
+      # _dial_div.css
+      #   top: _box.y() + "px"
+      #   left: _box.x() + "px"
+
+      setTimeout (->
+        runTimer()
+      ), 33
+
+    $(document).ready ->
+      prepContainers()
+      init()
+
+  new Demo()

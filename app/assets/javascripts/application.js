@@ -27,10 +27,11 @@
 /* MOUSE */
 //= require modeset/mouse/cursor_hand
 //= require modeset/mouse/cursor_loading
+//= require modeset/mouse/touch_tracker
+//= require modeset/mouse/circle_touch_tracker
 
 /* SCROLLER */
 //= require modeset/style/css_helper
-//= require modeset/mouse/touch_tracker
 //= require modeset/components/scroll/touch_scroller
 //= require modeset/components/scroll/touch_scroller_form_focus
 
