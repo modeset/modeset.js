@@ -2,7 +2,7 @@
 // Creates an old school iPod wheel control, returning your mouse/touch's radians/degrees as you move
 // requires: touch_tracker.js
 
-var CircleTouchTracker = function ( element, width, height, callback, disableElements ) {
+var CircleTouchTracker = function ( element, width, height, callback, disabledElements, radiusInnerFactor ) {
   // constants
   var TWO_PI = 2 * Math.PI,
       HALF_PI = Math.PI / 2;
@@ -18,15 +18,18 @@ var CircleTouchTracker = function ( element, width, height, callback, disableEle
   var _centerX,
       _centerY,
       _radiusOuter,
+      _radiusInnerFactor = radiusInnerFactor || 0.1,
       _radiusInner;
 
   // the goods
   var _curAngle = 0,
-      _curRadians = 0;
+      _curRadians = 0,
+      _lastAngle = -1,
+      _lastRadians = -1;
 
   // fire up the touch tracker and set the initial size
   var init = function() {
-    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, true, disableElements );
+    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, true, disabledElements );
     setSize( width, height );
   };
 
@@ -46,16 +49,48 @@ var CircleTouchTracker = function ( element, width, height, callback, disableEle
       if( _curRadians < 0 ) _curRadians += TWO_PI;      // normalize below 0
       _curRadians = _curRadians % TWO_PI;               // normalize above TWO_PI
       _curAngle = _curRadians * 180/Math.PI;            // convert radians to angle
+      // reset angle change tracking if re-entering bounds
+      if( _lastAngle == -1 ) {
+        _lastAngle = _curAngle;
+        _lastRadians = _curRadians;
+      }
     } else {
       _curRadians = null;
       _curAngle = null;
+      _lastAngle = -1;
+      _lastRadians = -1;
     }
 
-    // TODO: anything here?
+    // keep track of angle change amount between mouse/touch move events
+    _angleChange = 0;
+    _radianChange = 0;
+    if( _lastAngle != -1 && _lastAngle != null ) {
+      _angleChange = _lastAngle - _curAngle;
+      _radianChange = _lastRadians - _curRadians;
+    }
+    _lastAngle = _curAngle;
+    _lastRadians = _curRadians;
+
+    // handle wrapping around from 360 <-> 0
+    if( _angleChange > 180 ) {
+      _angleChange = _angleChange - 360;
+      _radianChange = TWO_PI - _radianChange;
+    } else if( _angleChange < -180 ) {
+      _angleChange = 360 + _angleChange;
+      _radianChange = _radianChange + TWO_PI;
+    }
+
+    // keep track of drag distance
     switch (state) {
       case MouseAndTouchTracker.state_start:
+        _lastAngle = _curAngle;
+        _lastRadians = _curRadians;
         break;
       case MouseAndTouchTracker.state_move:
+        break;
+      case MouseAndTouchTracker.state_end:
+        _lastAngle = -1;
+        _lastRadians = -1;
         break;
     }
 
@@ -78,6 +113,14 @@ var CircleTouchTracker = function ( element, width, height, callback, disableEle
     return _curRadians;
   };
 
+  var angleChange = function() {
+    return _angleChange;
+  };
+
+  var radianChange = function() {
+    return _radianChange;
+  };
+
   var setAngle = function( value ) {
     _curAngle = value;
   };
@@ -91,15 +134,18 @@ var CircleTouchTracker = function ( element, width, height, callback, disableEle
     _height = height;
     _centerX = _width / 2;
     _centerY = _height / 2;
-    _radiusOuter = _centerX * 1.1;
-    _radiusInner = _centerX * 0.1;
+    _radiusOuter = _centerX;
+    _radiusInner = _centerX * _radiusInnerFactor;
   };
 
   init();
 
   return {
+    touchTracker: _touch_tracker,
     curAngle: curAngle,
     curRadians: curRadians,
+    angleChange: angleChange,
+    radianChange: radianChange,
     setAngle: setAngle,
     setRadians: setRadians,
     setSize: setSize
