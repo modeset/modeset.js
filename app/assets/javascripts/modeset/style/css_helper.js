@@ -79,7 +79,7 @@ CSSHelper.getVendorPrefix = function( styleSuffix ) {
 
     // see if the major browser vendor prefixes are detected for css transforms
     var checkVendor = function() {
-        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        var vendors = ['ms', 'Moz', 'Webkit', 'O', 'Khtml'];
         var element = findElementWithStyle();
         for( var vendor in vendors ) {
             if( element.style[ vendors[vendor] + styleSuffix ] !== undefined ) {
