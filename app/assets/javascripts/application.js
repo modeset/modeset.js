@@ -18,6 +18,7 @@
 /* MEDIA */
 //= require modeset/media/image/image_crop
 //= require modeset/media/image/get_image_size
+//= require modeset/media/image/canvas_util
 
 /* STRING */
 //= require modeset/string/formatter
