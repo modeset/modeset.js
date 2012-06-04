@@ -250,7 +250,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         } else {
             _cur_position[ _axis ] += move;
         }
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
         if( _scroller_delegate && _scroller_delegate.updatePosition ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, true );
     };
 
@@ -285,7 +285,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
                     if( _scroller_delegate && _scroller_delegate.updatePosition && isDirty ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
                 }
                 if( isDirty ) {
-                    _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+                    _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
                     updateScrollbar();
                 }
             } else {
@@ -477,7 +477,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             _css_helper.convertToNativePositioning( _element_inner );
             _css_helper.convertToNativePositioning( _scroll_bar_pill );
         }
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
     };
 
     var getIsHardwareAcceleratedCSS = function() {
@@ -516,7 +516,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _page_index = 0;
         _cur_position.x = 0;
         _cur_position.y = 0;
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
         updateScrollbarPosition( 0 );
     };
 
@@ -617,9 +617,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
             // position the scroll bar pill
             if( _orientation == TouchScroller.VERTICAL ) {
-                _css_helper.update2DPosition( _scroll_bar_pill, 0, displayPillPosition );
+                _css_helper.update2DPosition( _scroll_bar_pill, 0, displayPillPosition, 1, 0, false );
             } else {
-                _css_helper.update2DPosition( _scroll_bar_pill, displayPillPosition, 0 );
+                _css_helper.update2DPosition( _scroll_bar_pill, displayPillPosition, 0, 1, 0, false );
             }
 
             // resize if dragging out of bounds
