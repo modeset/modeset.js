@@ -7,6 +7,10 @@ var CSSHelper = function() {
         return _transformsEnabled;
     };
 
+    var getVendor = function() {
+        return _curVendor;
+    };
+
     var convertToNativePositioning = function( element ) {
         _transformsEnabled = false;
         clearWebkitPositioning( element );
@@ -64,6 +68,7 @@ var CSSHelper = function() {
     return {
         update2DPosition : update2DPosition,
         getCssTransformsEnabled : getCssTransformsEnabled,
+        getVendor: getVendor,
         convertToNativePositioning : convertToNativePositioning,
         convertToWebkitPositioning : convertToWebkitPositioning
     };
