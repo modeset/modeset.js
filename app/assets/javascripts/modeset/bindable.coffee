@@ -1,28 +1,34 @@
 
 # ## Binds DOM elements to classes for instantiation
 class window.Bindable
-  constructor: ->
-    @bindables = $('[data-bindable]')
+  constructor: (context=$('body'), @dataKey='bindable')->
+    @bindables = $("[data-#{@dataKey}]", context)
+    @instanceKey = "#{@dataKey}-instance"
 
-  # Find all `data-bindable` elements store and instantiate their respective classes
-  # Usage: new Bindable().constructAll();
-  constructAll: ->
+  bindAll: ->
+    @bind(el) for el in @bindables
+
+  getRefs: ->
+    bindable.data(@instanceKey) for bindable in @bindables
+
+  release: ->
     for bindable in @bindables
-      key = $(el).data('bindable')
-      item = Bindable.registry[key]
-      item.refs.push(new item.class(el))
+      if instance = bindable.data(@instanceKey)
+        instance.release() if typeof instance?.release is 'function'
+        bindable.data(@instanceKey, null)
 
-  # Look up a bindable objects from the registry
   @getClass: (key) ->
-    Bindable.registry[key].class
+    @registry[key].class
 
-  # Look up a bindable elements from the registry
-  @getRefs: (key) ->
-    Bindable.registry[key].refs
-
-  # Map bindables to an internal registry
   @register: (key, klass) ->
     @registry ?= {}
-    @registry[key] = 'class': klass, 'refs': []
+    @registry[key] = { class: klass }
     return null
 
+  bind: (el, dataKey=@dataKey) ->
+    el = $(el)
+    key = el.data(dataKey)
+    if _class = @constructor.getClass(key)
+      el.data( @instanceKey, new _class(el) )
+    else
+      console?.error "Bindable for key: #{key} not found in Bindable.registry"
