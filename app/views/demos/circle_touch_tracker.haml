@@ -5,6 +5,8 @@
   %div modeset/mouse/touch_tracker.js
   %div modeset/mouse/circle_touch_tracker.js
   %div modeset/mouse/cursor_hand.js
+  %div modeset/style/css_helper.js
+  %div modeset/media/image/canvas_util.js
 %div.demo_holder
   %div.controls_ui.right_side
   %div.container
@@ -44,18 +46,18 @@
 
       _dial_div.css
         position: "absolute"
-        height: "10px"
+        height: "2px"
         width: _radius
         backgroundColor: "#f0f"
 
       $('.dial_inner_radius').css
         backgroundColor: "#ff0"
         width: _radius * _inner_radius_factor
-        height: "10px"
+        height: "2px"
 
       _dial_div_control.css
         position: "absolute"
-        height: "10px"
+        height: "2px"
         width: _radius
         backgroundColor: "#00f"
 
@@ -63,18 +65,14 @@
         position: "absolute"
 
       context = _canvas[0].getContext("2d")
-      context.fillStyle = 'rgba(255,255,0,1)'
+      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffff00', 1)
+      context.strokeStyle = CanvasUtil.hexToCanvasColor('#000000', 0)
+      console.log( CanvasUtil.hexToCanvasColor('#000000', 0) )
       context.fillRect(0, 0, 400, 400);
-      context.fillStyle = 'rgba(255,255,255,0.3)'
-      context.translate 200, 200
-      drawArc context, 200, 0, 360
-      drawArc context, 200 * _inner_radius_factor, 0, 360
-
-    drawArc = (ctx,radius,startAngle,endAngle) ->
-      ctx.beginPath()
-      ctx.arc( 0, 0, radius, (Math.PI/180)*(startAngle-90),(Math.PI/180)*(endAngle-90), false)
-      ctx.stroke()
-      ctx.fill()
+      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffffff', 1)
+      CanvasUtil.drawArc context, 200, 200, 200, 0, 360
+      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffff00', 1)
+      CanvasUtil.drawArc context, 200, 200, 200 * _inner_radius_factor, 0, 360
 
     init = ->
       _css_helper = new CSSHelper()
