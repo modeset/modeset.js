@@ -87,7 +87,7 @@
       setUpControls()
       runTimer()
 
-    touchUpdated = (state) ->
+    touchUpdated = (state, touchEvent) ->
       # get angle change
       curAngle = _circle_touch_tracker.curAngle()
 

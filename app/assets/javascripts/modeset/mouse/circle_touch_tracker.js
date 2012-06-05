@@ -34,7 +34,7 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
   };
 
   // calculate position in any touch state
-  var touchUpdated = function( state ) {
+  var touchUpdated = function( state, touchEvent ) {
 
     // get distance from center point
     var xPos = _touch_tracker.touchcurrent.x - _centerX;
