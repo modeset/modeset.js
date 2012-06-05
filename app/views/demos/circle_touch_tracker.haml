@@ -84,9 +84,6 @@
       _dial_div[0].style[ _css_helper.getVendor() + "TransformOrigin" ] = "0 50%"
       _dial_div_control[0].style[ _css_helper.getVendor() + "TransformOrigin" ] = "0 50%"
 
-      setUpControls()
-      runTimer()
-
     touchUpdated = (state, touchEvent) ->
       # get angle change
       curAngle = _circle_touch_tracker.curAngle()
@@ -126,30 +123,6 @@
       # demo info
       _console.html "Current angle: "+curAngle+"<br/>Drag angle total: "+_drag_distance
 
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      # frictionVal = _gui.add(_config, "friction", 0.1, 0.9)
-      # frictionVal.listen()
-      # frictionVal.onChange (value) ->
-      #   _box.setFriction value
-
-      # accelVal = _gui.add(_config, "accel", 0.1, 0.9)
-      # accelVal.listen()
-      # accelVal.onChange (value) ->
-      #   _box.setAccel value
-
-    runTimer = ->
-      # _box.update _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
-      # _dial_div.css
-      #   top: _box.y() + "px"
-      #   left: _box.x() + "px"
-
-      setTimeout (->
-        runTimer()
-      ), 33
 
     $(document).ready ->
       prepContainers()
