@@ -1,0 +1,18 @@
+:ruby
+  @colors = ['ff00ff', 'ff0000', '0000ff', 'ffff00', '00ffff']
+
+%section.carousel(data-bindable="carousel" data-autoplay="true" data-cycles="1" data-duration="2")
+  %nav.carousel-controls.fade
+    %a.paddle-prev(href="#prev") &larr;
+    %a.paddle-next(href="#next") &rarr;
+    %ul.nav.indication
+  %section.carousel-inner
+    - @colors.each do |color|
+      %article.carousel-panel
+        %figure.carousel-figure
+          %img(src="http://placehold.it/650x300/#{color}" alt="image")
+          %figcaption.carousel-caption
+
+:coffeescript
+  $ ->
+    new Bindable().bindAll()

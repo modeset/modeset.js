@@ -4,6 +4,9 @@
 //= require vendor/lib/underscore
 //= require vendor/lib/dat.gui.min
 
+/* BASE */
+//= require modeset/lib/bindable
+
 /* ANIM */
 //= require modeset/anim/request_animation_frame
 //= require modeset/anim/fps_time_factor
@@ -34,6 +37,7 @@
 
 /* SCROLLER */
 //= require modeset/style/css_helper
+//= require modeset/components/carousel
 //= require modeset/components/scroll/touch_scroller
 //= require modeset/components/scroll/touch_scroller_form_focus
 
