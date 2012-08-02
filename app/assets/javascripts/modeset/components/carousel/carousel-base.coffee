@@ -1,5 +1,5 @@
 
-class Carousel
+class window.CarouselBase
   constructor:(el) ->
     @el = $(el)
     @index = 0
@@ -17,59 +17,32 @@ class Carousel
     @num_cycles = parseFloat(@el.data('cycles')) || 99
     @duration = @el.data('duration') || 5
     @duration *= 1000
-    console.log '@num_cycles',@num_cycles
+    @active_class = @el.data('active-class') || 'in'
 
   initialize: ->
+    @getElements()
+
+    @buildControls() if @num_panels > 1 && @controls.length > 0
+    @swap(0)
+
+    @initTimer()
+
+  getElements: ->
     @slider = $(@el.find('.carousel-inner'))
     @panels = $(@el.find('.carousel-panel'))
     @figures = $(@el.find('.carousel-figure'))
+    @controls = $(@el.find('.carousel-controls'))
 
-    # @controls = $(@el.find('.carousel-controls'))
     @num_panels = @panels.length
+
+  initTimer: ->    
     @num_cycles *= @num_panels
-
-    @setSliderWidth()
-    @setPanelWidths()
-
-    @buildControls() unless @num_panels <= 1
-
-    @startTimer() if @autoplay == true
-
-    # @buildStatus() unless ......
-    # @addListeners()
+    @startTimer() if @autoplay == true && @num_panels > 1
 
   buildControls: ->
-    @buildScroller()
     @buildPaddles()
     @buildIndicators()
   
-  createScrollDelegate: ->
-    updatePosition: ( positionX, positionY, isTouching ) =>
-      @pressed_and_didnt_move = false
-    touchStart: =>
-      @clearTimer()
-      @pressed_and_didnt_move = true
-      @autoplay_finished = true
-    touchEnd: =>
-      if @pressed_and_didnt_move
-        @startTimer()
-      @pressed_and_didnt_move = false
-    handleDestination: =>
-      @updateIndicators() if @indicators
-      @clearTimer()
-      @startTimer()
-      # @shiftPages @scroller.getPage()
-    pageChanged: =>
-      @updateIndicators() if @indicators
-    #   @shiftPages @scroller.getPage()
-    closestIndexChanged: (closestIndex) =>
-      @updateIndicators() if @indicators
-    #   @shiftPages closestIndex
-
-  buildScroller: ->
-    disable_elements = 'img'
-    @scroller = new TouchScroller( @el[0], @slider[0], true, new CursorHand(), true, TouchScroller.HORIZONTAL, @createScrollDelegate(), disable_elements )
-
   buildPaddles: ->
     @el.find('.paddle-next').on("click", @next)
     @el.find('.paddle-prev').on("click", @prev)
@@ -86,11 +59,20 @@ class Carousel
       @indicators = indication.find('li')
       indication.find('a').on 'click', (e) =>
         e.preventDefault()
-        @scroller.setPage($(e.target).parent().index())
+        @autoplay_finished = true
+        newIndex = $(e.target).parent().index()
+        newIndex = @index - ( @index % @num_panels ) + newIndex # for infinite scrolling - mods the page index so we're in the current range
+        @swap(newIndex)
       @updateIndicators()
 
+  setSliderWidth: ->
+    @slider.width((100 * @num_panels) + '%')
+
+  setPanelWidths: ->
+    @panels.width((100 / @num_panels) + '%')
+
   updateIndicators: ->
-    indicator_index = @scroller.getPage() % @num_panels
+    indicator_index = @index % @num_panels  # mod page index in case of infinite scrolling
     for indicator, i in @indicators
       if i == indicator_index
         $(indicator).addClass 'active'
@@ -105,44 +87,53 @@ class Carousel
       return
     # set next slide timer
     @timer = setTimeout =>
-      @cycle_slide++
-      @scroller.nextPage(true)
+      unless @autoplay_finished
+        @cycle_slide++
+        @next()
     , @duration
 
   clearTimer: ->
     clearTimeout @timer
 
+  constrainIndex: ->
+    @index = 0 if @index >= @num_panels
+    @index = @num_panels - 1 if @index < 0
 
   # Public Functions
   
   next: (e) =>
     e?.preventDefault()
+    @autoplay_finished = true if e
     @clearTimer()
-    @scroller.nextPage(true)
+    @swap(@index + 1)
 
-  prev: =>
+  prev: (e) =>
     e?.preventDefault()
+    @autoplay_finished = true if e
     @clearTimer()
-    @scroller.prevPage(true)
+    @swap(@index - 1)
 
   resize: =>
 
   redraw: ->
 
-  swap: ->
+  swap: (index) ->
+    @index = index
+    @constrainIndex()
+    @slide()
+    @updateIndicators()
+    @startTimer()
+
+  # slide: ->
+    # throw new Error("Override CarouselBase.slide() to animate panel-swapping")
 
   slide: ->
+    for page, i in @panels
+      if i == @index
+        $(page).addClass @active_class
+      else
+        $(page).removeClass @active_class
 
   dispose: ->
 
-
-  # Internal Functions
-
-  setSliderWidth: ->
-    @slider.width((100 * @num_panels) + '%')
-
-  setPanelWidths: ->
-    @panels.width((100 / @num_panels) + '%')
-
-
-Bindable.register('carousel', Carousel)
+Bindable.register('carousel', CarouselBase)

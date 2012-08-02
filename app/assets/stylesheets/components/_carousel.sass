@@ -9,7 +9,7 @@
   +transform(translate3d(0,0,0))
   +backface-visibility(hidden)
   //+transition(all 0.5s $ease-in-out-quart)
-  width: 1000%
+  width: 100%
 
 .carousel-controls
   position: absolute
@@ -35,9 +35,8 @@
   background-color: rgba(#fff, 0.8)
   border-radius: 5px
   display: block
-  padding: 10px
-  width: 5px
-  height: 5px
+  outline: none
+  padding: 5px 10px
 
 .carousel-controls .indication .active > a
   color: #ff00ff
@@ -49,6 +48,7 @@
   padding: 20px
   background-color: rgba(#fff,0.5)
   border-radius: 8px
+  outline: none
   z-index 2
 
 .carousel-controls .paddle-next
@@ -68,7 +68,6 @@
 .carousel .carousel-panel
   +box-sizing(border-box)
   float: left
-  width: 10%
 
 .carousel-figure
   +box-sizing(border-box)
@@ -76,3 +75,10 @@
 .carousel-caption
   +box-sizing(border-box)
   +clearfixer
+
+.carousel[data-bindable="carousel"] .carousel-panel
+  width: auto
+  position: absolute
+
+.carousel[data-bindable="carousel"] .carousel-inner
+  height: 300px

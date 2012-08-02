@@ -35,11 +35,10 @@
 //= require modeset/mouse/touch_tracker
 //= require modeset/mouse/circle_touch_tracker
 
-/* SCROLLER */
+/* COMPONENTS */
+//= require modeset/components/carousel/carousel-base
+//= require modeset/components/carousel/carousel-touch
+//= require modeset/components/carousel/carousel-touch-infinite
 //= require modeset/style/css_helper
-//= require modeset/components/carousel
 //= require modeset/components/scroll/touch_scroller
 //= require modeset/components/scroll/touch_scroller_form_focus
-
-/* APPLICATION ASSETS */
-/* require_tree ./components*/
