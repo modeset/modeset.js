@@ -11,6 +11,7 @@
 //= require modeset/anim/request_animation_frame
 //= require modeset/anim/fps_time_factor
 //= require modeset/anim/sprite_animation
+//= require modeset/anim/transition-callback
 
 /* MATH */
 //= require modeset/math/math_util

@@ -1,4 +1,10 @@
 
+# requires:
+# TouchScroller
+# MouseAndTouchTracker
+# CursorHand
+# Scroller.css
+
 class window.CarouselTouch extends CarouselBase
 
   initialize: ->
@@ -29,16 +35,18 @@ class window.CarouselTouch extends CarouselBase
       @updateIndicators() if @indicators
       @clearTimer()
       @startTimer()
-      # @shiftPages @scroller.getPage()
+      @scrollerPageUpdated @scroller.getPage()
+      @handleTransitionEnd()
     pageChanged: =>
       @updateIndicators() if @indicators
       @index = @scroller.getPage()
-    #   @shiftPages @scroller.getPage()
+      @scrollerPageUpdated @scroller.getPage()
     closestIndexChanged: (closestIndex) =>
       @updateIndicators() if @indicators
-    #   @shiftPages closestIndex
+      @scrollerPageUpdated closestIndex
 
-  # Public Functions
+  scrollerPageUpdated: (index) ->
+    # do nothing - used in infinite scroller
 
   slide: ->
     super()

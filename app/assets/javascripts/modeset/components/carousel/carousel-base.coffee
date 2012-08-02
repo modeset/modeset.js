@@ -1,4 +1,7 @@
 
+# requires:
+# TransitionCallback
+
 class window.CarouselBase
   constructor:(el) ->
     @el = $(el)
@@ -18,6 +21,7 @@ class window.CarouselBase
     @duration = @el.data('duration') || 5
     @duration *= 1000
     @active_class = @el.data('active-class') || 'in'
+    @keyboard = (@el.data('keyboard') + "" == "true")
 
   initialize: ->
     @getElements()
@@ -28,10 +32,11 @@ class window.CarouselBase
     @initTimer()
 
   getElements: ->
-    @slider = $(@el.find('.carousel-inner'))
-    @panels = $(@el.find('.carousel-panel'))
-    @figures = $(@el.find('.carousel-figure'))
-    @controls = $(@el.find('.carousel-controls'))
+    @slider = @el.find('.carousel-inner')
+    @panels = @el.find('.carousel-panel')
+    @figures = @el.find('.carousel-figure')
+    @controls = @el.find('.carousel-controls')
+    @indication = @el.find('.indication')
 
     @num_panels = @panels.length
 
@@ -42,28 +47,36 @@ class window.CarouselBase
   buildControls: ->
     @buildPaddles()
     @buildIndicators()
+    @buildKeyboardControl()
   
   buildPaddles: ->
     @el.find('.paddle-next').on("click", @next)
     @el.find('.paddle-prev').on("click", @prev)
 
   buildIndicators: ->
-    indication = @el.find('.indication')
     indicators_html = ''
     # add <li> buttons
-    if indication
+    if @indication
       for i in [1..@num_panels]
         indicators_html += "<li><a href='#slide_#{i}'>#{i}</a></li>"
-      indication.append(indicators_html)
+      @indication.append(indicators_html)
       # add clicks
-      @indicators = indication.find('li')
-      indication.find('a').on 'click', (e) =>
+      @indicators = @indication.find('li')
+      @indication.find('a').on 'click', (e) =>
         e.preventDefault()
         @autoplay_finished = true
         newIndex = $(e.target).parent().index()
         newIndex = @index - ( @index % @num_panels ) + newIndex # for infinite scrolling - mods the page index so we're in the current range
         @swap(newIndex)
       @updateIndicators()
+
+  buildKeyboardControl: ->
+    if @keyboard
+      $(document).on 'keydown', @handleKeyboard
+
+  handleKeyboard: (e) =>
+    @prev() if e.keyCode == 37
+    @next() if e.keyCode == 39
 
   setSliderWidth: ->
     @slider.width((100 * @num_panels) + '%')
@@ -113,10 +126,6 @@ class window.CarouselBase
     @clearTimer()
     @swap(@index - 1)
 
-  resize: =>
-
-  redraw: ->
-
   swap: (index) ->
     @index = index
     @constrainIndex()
@@ -124,16 +133,25 @@ class window.CarouselBase
     @updateIndicators()
     @startTimer()
 
-  # slide: ->
-    # throw new Error("Override CarouselBase.slide() to animate panel-swapping")
-
   slide: ->
     for page, i in @panels
       if i == @index
+        if TransitionCallback.hasTransition then $(page).on(TransitionCallback.transition.end, @handleTransitionEnd) else @handleTransitionEnd()
         $(page).addClass @active_class
       else
+        if TransitionCallback.hasTransition then $(page).off(TransitionCallback.transition.end, @handleTransitionEnd) 
         $(page).removeClass @active_class
 
+  handleTransitionEnd: (e) =>
+    @el.trigger('carousel:transitionEnd', index: @index, length: @num_panels)
+
   dispose: ->
+    @clearTimer()
+    @panels.off(TransitionCallback.transition.end, @handleTransitionEnd) 
+    $(document).off 'keydown', @handleKeyboard
+    @el.find('.paddle-next').off("click", @next)
+    @el.find('.paddle-prev').off("click", @prev)
+    @indication.find('a').off 'click'
 
 Bindable.register('carousel', CarouselBase)
+
