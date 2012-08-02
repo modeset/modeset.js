@@ -23,11 +23,12 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         NON_PAGED_FRICTION_SHORT = 0.3,
         NON_PAGED_FRICTION = 0.8,
         _non_paged_friction = 0,
-        _has_decided_a_direction = false,
-        _touch_lock_direction = false,
+        _has_locked_drag_axis = false,
+        _drag_lock_axis = false,
         _orientation = null,
         _was_dragged_beyond_bounds = false,
         _stays_in_bounds = true,
+        _bounces = true,
 
         // touch helpers
         _cursor = cursor,
@@ -74,7 +75,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
         if( _has_scroll_bar ) buildScrollbar();
 
-        _touch_lock_direction = TouchScroller.UNLOCKED;
+        _drag_lock_axis = null;
         _non_paged_friction = NON_PAGED_FRICTION;
         setOrientation( defaultOrientation || TouchScroller.HORIZONTAL );
         calculateDimensions();
@@ -105,93 +106,60 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
     var onStart = function( touchEvent ) {
         if( _timer_active == false ) return;
-        // touchEvent.stopPropagation();
         showScrollbar();
         if( _scroller_delegate && _scroller_delegate.touchStart ) _scroller_delegate.touchStart();
     };
 
     var onMove = function( touchEvent ) {
         if( _timer_active == false ) return;
-        if( !_has_decided_a_direction ) {
+        if( !_has_locked_drag_axis ) {
             if( Math.abs( _touch_tracker.touchmoved.x ) > DECIDE_DIR_THRESHOLD ) {
-                hasDecidedDirection( TouchScroller.HORIZONTAL );
+                decideDragAxis( TouchScroller.HORIZONTAL );
             } else if( Math.abs( _touch_tracker.touchmoved.y ) > DECIDE_DIR_THRESHOLD ) {
-                hasDecidedDirection( TouchScroller.VERTICAL );
+                decideDragAxis( TouchScroller.VERTICAL );
             }
         } else {
-            // move it if allowed
             updatePositionFromTouch( ( _touch_tracker.touchmoved.x - _touch_tracker.touchmovedlast.x ), ( _touch_tracker.touchmoved.y - _touch_tracker.touchmovedlast.y ) );
         }
 
         // prevent page scrolling if we've locked on the opposite axis
-        if( ( _orientation == TouchScroller.VERTICAL && _touch_lock_direction == TouchScroller.VERTICAL ) || ( _orientation == TouchScroller.HORIZONTAL && _touch_lock_direction == TouchScroller.HORIZONTAL ) ) {
-            if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.preventDefault && typeof touchEvent.preventDefault !== 'undefined') touchEvent.preventDefault();
+        if( ( _orientation == TouchScroller.VERTICAL && _drag_lock_axis == TouchScroller.VERTICAL ) || ( _orientation == TouchScroller.HORIZONTAL && _drag_lock_axis == TouchScroller.HORIZONTAL ) ) {
+            eventPreventDefault( touchEvent );
         }
-
         // disable touch event if allowed
-        if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.stopPropagation && typeof touchEvent.stopPropagation !== 'undefined') touchEvent.stopPropagation();
+        eventStopPropa( touchEvent );
     };
 
     var onEnd = function( touchEvent ) {
         if( _timer_active == false ) return;
         if( _touch_tracker.touchmoved.x != 0 && _touch_tracker.touchmoved.y != 0 ) {
-            if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.stopPropagation && typeof touchEvent.stopPropagation !== 'undefined') touchEvent.stopPropagation();
+            eventStopPropa( touchEvent );
         }
         // set flags and store last known page index before recalculating
-        _has_decided_a_direction = false;
-        _touch_lock_direction = TouchScroller.UNLOCKED;
+        _has_locked_drag_axis = false;
+        _drag_lock_axis = null;
         var prevIndex = _page_index;
 
         // get mouse speed for non-paged mode
-        if( _touch_tracker.touchspeed[ _axis ] != 0 ) _speed = -_touch_tracker.touchspeed[ _axis ];
-
-            // calculate speed to get back to edge if content was dragged out-of-bounds
-            if( _stays_in_bounds == true ) {
-
-            if( _cur_position[ _axis ] - _speed > 0 || _cur_position[ _axis ] - _speed < _end_position || _doesnt_need_scroll ) {
-
-                // if( _cur_position[ _axis ] > 0 || _cur_position[ _axis ] < _end_position || _doesnt_need_scroll ) {
-                _was_dragged_beyond_bounds = true;
-                var distanceFromEdge = 0;
-
-                // apply speed so we can treat it as if we dragged as far as the drag speed added
-                _cur_position[ _axis ] -= _speed;
-
-                // send back to top, or bottom
-                if( _cur_position[ _axis ] > 0 || _doesnt_need_scroll == true )
-                  distanceFromEdge = _cur_position[ _axis ];
-                else if( _cur_position[ _axis ] < _end_position )
-                  distanceFromEdge = _cur_position[ _axis ] - _end_position;
-
-                // solve for initial speed, given distance and friction
-                if( distanceFromEdge != 0 ) {
-                    _speed = getSpeedToReachDestination( distanceFromEdge );
-                }
+        if( _touch_tracker.touchspeed[ _axis ] != 0 ) {
+            var tossRightInBounds = ( _touch_tracker.touchspeed[ _axis ] > 0 && _cur_position[ _axis ] < 0 );
+            var tossLeftInBounds = ( _touch_tracker.touchspeed[ _axis ] < 0 && _cur_position[ _axis ] > _end_position );
+            if( tossRightInBounds || tossLeftInBounds ) {
+                // apply speed after tossing if in-bounds
+                _speed = -_touch_tracker.touchspeed[ _axis ];
+            } else {
+                // if dragging against the limit, don't add speed
+                hideScrollbar();
             }
+        } 
+        // hide the scrollbar if touch was just a tap
+        if( _touch_tracker.touchmoved[ _axis ] == 0 || _touch_tracker.touchspeed[ _axis ] == 0 ) {
+            hideScrollbar();
         }
 
-        // snap to page and constrain page calculation
-        if( _is_paged == true ) {
-            var pageChanged = false;
-            // have we swiped far enough to turn the page
-            if( _touch_tracker.touchmoved[ _axis ] > _container_size[ _length ] * PAGE_TURN_RATIO ) {
-                _page_index = ( _page_index == 0 ) ? 0 : _page_index - 1;
-                pageChanged = true;
-            } else if ( _touch_tracker.touchmoved[ _axis ] < -_container_size[ _length ] * PAGE_TURN_RATIO ) {
-                _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
-                pageChanged = true;
-            }
+        sendBackInBounds();
+        detectPageChangeOnTouchEnd( prevIndex );
 
-            // checks whether we've gone more than halfway to a page, or allows above code to let us swipe slightly for next/prev pages
-            if( !( prevIndex == _closest_scroll_index && prevIndex != _page_index ) ) {
-                _page_index = _closest_scroll_index;
-                pageChanged = true;
-            }
-
-            if( pageChanged == true ) {
-              if( _scroller_delegate && _scroller_delegate.pageChanged ) _scroller_delegate.pageChanged( _page_index );
-            }
-        }
         if( _scroller_delegate && _scroller_delegate.touchEnd ) _scroller_delegate.touchEnd();
     };
 
@@ -226,70 +194,11 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         }
     };
 
-    var calculateDimensions = function() {
-        if( !_timer_active || !_container_size || !_element_outer ) return;
-        _container_size.w = _element_outer.offsetWidth;
-        _container_size.h = _element_outer.offsetHeight;
-        _content_size.w = _element_inner.offsetWidth;
-        _content_size.h = _element_inner.offsetHeight;
-        _num_pages = Math.ceil( _content_size[ _length ] / _container_size[ _length ] );
-        _end_position = _container_size[ _length ] - _content_size[ _length ];
-        resizeScrollbar();
-        _doesnt_need_scroll = ( _container_size[ _length ] > _content_size[ _length ] );
-        if( _page_index > _num_pages - 1 ) _page_index = _num_pages - 1;
-    };
-
-    // update scroll position
-    var updatePositionFromTouch = function( moveX, moveY ) {
-        // handle bounce-back and lessened swipe-ability at ends of scroll area
-        var move = ( _axis == 'x' ) ? moveX : moveY;
-        if( _cur_position[ _axis ] > 0 && _touch_tracker.touchspeed[ _axis ] > 0 ) {
-            _cur_position[ _axis ] += move * PAST_BOUNDS_FRICTION;
-        } else if( _cur_position[ _axis ] < -_content_size[ _length ] + _container_size[ _length ] && _touch_tracker.touchspeed[ _axis ] < 0 ) {
-            _cur_position[ _axis ] += move * PAST_BOUNDS_FRICTION;
-        } else {
-            _cur_position[ _axis ] += move;
-        }
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
-        if( _scroller_delegate && _scroller_delegate.updatePosition ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, true );
-    };
-
-    var hasDecidedDirection = function( direction ) {
-        _has_decided_a_direction = true;
-        _touch_lock_direction = direction;
-    };
-
-    // paged scroller methods
     var runTimer = function() {
         if( _timer_active && _cur_position ) {
             calculateDimensions();
-            var isDirty = false;
-            var curX = _cur_position.x;
-            var curY = _cur_position.y;
             if( !_touch_tracker.is_touching ) {
-                // update position and set dirty flag if the position has actually moved
-                if( _is_paged == true ) {
-                    // ease to the cosest index while not touching
-                    easeToIndex();
-                } else {
-                    // slide it and apply friction
-                    applyInertia();
-                }
-                if( curX != _cur_position.x || curY != _cur_position.y ) isDirty = true;
-                // hide scrollbar and set speed to zero when it eases close enough
-                if( Math.abs( _speed ) <= 0.01 ) {
-                    if( _speed != 0 ) handleDestination();
-                    _speed = 0;
-                    hideScrollbar();
-                } else {
-                    if( _scroller_delegate && _scroller_delegate.updatePosition && isDirty ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
-                }
-                if( isDirty ) {
-                    _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
-                    updateScrollbar();
-                }
-            } else {
-                updateScrollbar();
+                updateWhileNotTouching();
             }
 
             checkForClosestIndex();
@@ -302,6 +211,84 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             }
         }
     };
+
+    var update2DPosition = function( element, x, y ){
+        _css_helper.update2DPosition( element, x, y, 1, 0, false );
+    };
+
+    var calculateDimensions = function() {
+        if( !_timer_active || !_container_size || !_element_outer ) return;
+        
+        var outerW = _element_outer.offsetWidth;
+        var outerH = _element_outer.offsetHeight;
+        var contentW = _element_inner.offsetWidth;
+        var contentH = _element_inner.offsetHeight;
+
+        if( contentW != _content_size.w || contentH != _content_size.h || outerW != _container_size.w || outerH != _container_size.h ) {
+            _container_size.w = outerW;
+            _container_size.h = outerH;
+            _content_size.w = contentW;
+            _content_size.h = contentH;
+            _num_pages = Math.ceil( _content_size[ _length ] / _container_size[ _length ] );
+            _end_position = _container_size[ _length ] - _content_size[ _length ];
+            resizeScrollbar();
+            _doesnt_need_scroll = ( _container_size[ _length ] > _content_size[ _length ] );
+            if( _page_index > _num_pages - 1 ) _page_index = _num_pages - 1;
+            sendBackInBounds();
+        }
+    };
+
+    var decideDragAxis = function( direction ) {
+        _has_locked_drag_axis = true;
+        _drag_lock_axis = direction;
+    };
+
+    // update scroll position
+    var updatePositionFromTouch = function( moveX, moveY ) {
+        // handle bounce-back and lessened swipe-ability at ends of scroll area
+        var move = ( _axis == 'x' ) ? moveX : moveY;
+        if( _cur_position[ _axis ] > 0 && _touch_tracker.touchspeed[ _axis ] > 0 ) {
+            _cur_position[ _axis ] += move * PAST_BOUNDS_FRICTION;
+        } else if( _cur_position[ _axis ] < _end_position && _touch_tracker.touchspeed[ _axis ] < 0 ) {
+            _cur_position[ _axis ] += move * PAST_BOUNDS_FRICTION;
+        } else {
+            _cur_position[ _axis ] += move;
+        }
+        if( !_bounces ) {
+            if( _cur_position[ _axis ] < _end_position ) _cur_position[ _axis ] = _end_position
+            if( _cur_position[ _axis ] > 0 ) _cur_position[ _axis ] = 0
+        }
+        update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+        if( _scroller_delegate && _scroller_delegate.updatePosition ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, true );
+        updateScrollbar();
+    };
+
+    var updateWhileNotTouching = function() {
+        var curX = _cur_position.x;
+        var curY = _cur_position.y;
+        var isDirty = false;
+        // update position and set dirty flag if the position has actually moved
+        if( _is_paged == true ) {
+            // ease to the cosest index while not touching
+            easeToIndex();
+        } else {
+            // slide it and apply friction
+            applyInertia();
+        }
+        if( curX != _cur_position.x || curY != _cur_position.y ) isDirty = true;
+        // hide scrollbar and set speed to zero when it eases close enough
+        if( Math.abs( _speed ) <= 0.01 && _speed != 0 ) {
+            handleDestination();
+            _speed = 0;
+            hideScrollbar();
+        } else {
+            if( _scroller_delegate && _scroller_delegate.updatePosition && isDirty ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
+        }
+        if( isDirty ) {
+            update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
+            updateScrollbar();
+        }
+    }
 
     var easeToIndex = function() {
         var lastLoc = _cur_position[ _axis ];
@@ -319,15 +306,66 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
                 _cur_position[ _axis ] = 0;
                 // _speed *= BOUNCEBACK_FACTOR;
                 _speed = 0;
+                hideScrollbar();
             } else if( _cur_position[ _axis ] < _end_position ) {
                 _cur_position[ _axis ] = _end_position;
                 // _speed *= BOUNCEBACK_FACTOR;
                 _speed = 0;
+                hideScrollbar();
             }
         }
         // check to see if content is back in bounds after sliding off
         if ( _cur_position[ _axis ] < 0 && _cur_position[ _axis ] > _end_position ) {
             _was_dragged_beyond_bounds = false;
+        }
+    };
+
+    var sendBackInBounds = function() {
+        // calculate speed to get back to edge if content was dragged out-of-bounds
+        if( _stays_in_bounds == true && _bounces ) {
+            if( _cur_position[ _axis ] - _speed > 0 || _cur_position[ _axis ] - _speed < _end_position || _doesnt_need_scroll ) {
+                _was_dragged_beyond_bounds = true;
+                var distanceFromEdge = 0;
+
+                // apply speed so we can treat it as if we dragged as far as the drag speed added
+                _cur_position[ _axis ] -= _speed;
+
+                // send back to top, or bottom
+                if( _cur_position[ _axis ] > 0 || _doesnt_need_scroll == true )
+                  distanceFromEdge = _cur_position[ _axis ];
+                else if( _cur_position[ _axis ] < _end_position )
+                  distanceFromEdge = _cur_position[ _axis ] - _end_position;
+
+                // solve for initial speed, given distance and friction
+                if( distanceFromEdge != 0 ) {
+                    _speed = getSpeedToReachDestination( distanceFromEdge );
+                }
+            }
+        }
+    };
+
+    var detectPageChangeOnTouchEnd = function( prevIndex ) {
+        // snap to page and constrain page calculation
+        if( _is_paged == true ) {
+            var pageChanged = false;
+            // have we swiped far enough to turn the page
+            if( _touch_tracker.touchmoved[ _axis ] > _container_size[ _length ] * PAGE_TURN_RATIO ) {
+                _page_index = ( _page_index == 0 ) ? 0 : _page_index - 1;
+                pageChanged = true;
+            } else if ( _touch_tracker.touchmoved[ _axis ] < -_container_size[ _length ] * PAGE_TURN_RATIO ) {
+                _page_index = ( _page_index < _num_pages - 1 ) ? _page_index + 1 : _num_pages - 1;
+                pageChanged = true;
+            }
+
+            // checks whether we've gone more than halfway to a page, or allows above code to let us swipe slightly for next/prev pages
+            if( !( prevIndex == _closest_scroll_index && prevIndex != _page_index ) ) {
+                _page_index = _closest_scroll_index;
+                pageChanged = true;
+            }
+
+            if( pageChanged == true ) {
+              if( _scroller_delegate && _scroller_delegate.pageChanged ) _scroller_delegate.pageChanged( _page_index );
+            }
         }
     };
 
@@ -372,6 +410,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     };
 
     var handleDestination = function () {
+        hideScrollbar();
         _cur_position.x = Math.round( _cur_position.x );
         _cur_position.y = Math.round( _cur_position.y );
         if( _scroller_delegate && _scroller_delegate.handleDestination ) _scroller_delegate.handleDestination();
@@ -400,6 +439,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         resizeScrollbar();
     };
 
+    var setBounces = function( bounces ) {
+        _bounces = bounces;
+    };
+
     var setIsPaged = function( isPaged ) {
         _is_paged = isPaged;
     };
@@ -420,6 +463,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
     var getNumPages = function() {
         return ( _is_paged ) ? _num_pages : -1;
+    };
+
+    var getScrollLength = function() {
+        return _end_position;
     };
 
     var prevPage = function ( loops, immediately ) {
@@ -477,7 +524,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             _css_helper.convertToNativePositioning( _element_inner );
             _css_helper.convertToNativePositioning( _scroll_bar_pill );
         }
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
+        update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
     };
 
     var getIsHardwareAcceleratedCSS = function() {
@@ -516,7 +563,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _page_index = 0;
         _cur_position.x = 0;
         _cur_position.y = 0;
-        _css_helper.update2DPosition( _element_inner, _cur_position.x, _cur_position.y, 1, 0, false );
+        update2DPosition( _element_inner, _cur_position.x, _cur_position.y );
         updateScrollbarPosition( 0 );
     };
 
@@ -617,9 +664,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
             // position the scroll bar pill
             if( _orientation == TouchScroller.VERTICAL ) {
-                _css_helper.update2DPosition( _scroll_bar_pill, 0, displayPillPosition, 1, 0, false );
+                update2DPosition( _scroll_bar_pill, 0, displayPillPosition );
             } else {
-                _css_helper.update2DPosition( _scroll_bar_pill, displayPillPosition, 0, 1, 0, false );
+                update2DPosition( _scroll_bar_pill, displayPillPosition, 0 );
             }
 
             // resize if dragging out of bounds
@@ -631,15 +678,24 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         if( !_has_scroll_bar || _timer_active == false || _is_showing == true || !_container_size ) return;
         if( _container_size.h < _content_size.h || _container_size.w < _content_size.w ) {
             _is_showing = true;
-            _scroll_bar_pill.style.display = 'block';
-            _scroll_bar_pill.style.opacity = _scroll_bar_opacity;
+            addClassName( _scroll_bar_pill, 'showing' );
         }
     };
 
     var hideScrollbar = function() {
         if( !_has_scroll_bar || _is_showing == false ) return;
         _is_showing = false;
-        _scroll_bar_pill.style.opacity = 0;
+        removeClassName( _scroll_bar_pill, 'showing' );
+    };
+
+    // DOM/Math utility methods -------------------------------------
+
+    var eventPreventDefault = function( touchEvent ) {
+        if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.preventDefault && typeof touchEvent.preventDefault !== 'undefined') touchEvent.preventDefault();
+    };
+
+    var eventStopPropa = function( touchEvent ) {
+        if(touchEvent && typeof touchEvent !== 'undefined' && touchEvent.stopPropagation && typeof touchEvent.stopPropagation !== 'undefined') touchEvent.stopPropagation();
     };
 
     var getPercentWithinRange = function( bottomRange, topRange, valueInRange ) {
@@ -683,19 +739,20 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         }
     };
 
-
     init();
 
     return {
         activate : activate,
         deactivate : deactivate,
         setOrientation : setOrientation,
+        setBounces : setBounces,
         setIsPaged : setIsPaged,
         prevPage : prevPage,
         nextPage : nextPage,
         setPage : setPage,
         getPage : getPage,
         getNumPages : getNumPages,
+        getScrollLength : getScrollLength,
         scrollToEnd : scrollToEnd,
         scrollToTop: scrollToTop,
         scrollToPosition : scrollToPosition,
@@ -705,6 +762,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         getIsHardwareAcceleratedCSS : getIsHardwareAcceleratedCSS,
         setNonPagedFrictionIsShort : setNonPagedFrictionIsShort,
         setStayInBounds : setStayInBounds,
+        showScrollbar : showScrollbar,
         setScrollerDelegate : setScrollerDelegate,
         reset : reset,
         dispose : dispose
@@ -713,4 +771,3 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
 TouchScroller.HORIZONTAL = 'horizontal';
 TouchScroller.VERTICAL = 'vertical';
-TouchScroller.UNLOCKED = 'unlocked';

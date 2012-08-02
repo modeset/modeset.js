@@ -89,7 +89,9 @@ MouseAndTouchTracker.prototype.disposeMouseListeners = function () {
 MouseAndTouchTracker.prototype.onStart = function ( touchEvent ) {
 	// HACK for Android - otherwise touchmove events don't fire. See: http://code.google.com/p/android/issues/detail?id=5491
 	if( navigator.userAgent.match(/Android/i) ) {
-		if( touchEvent.preventDefault ) touchEvent.preventDefault();
+		if( touchEvent.preventDefault ) {
+			touchEvent.preventDefault();	// if( touchEvent.target.tagName.toLowerCase() != 'img' ) // potential fix for the Android image menu on tap & hold
+		}
 	}
 
 	// get page position of container for relative mouse/touch position
@@ -216,7 +218,7 @@ MouseAndTouchTracker.prototype.findPos = function(obj) {
 
 	if (obj.offsetParent) {
 		do {
-			if( typeof obj.parentNode.style !== 'undefined' && typeof obj.parentNode.style.webkitTransform !== 'undefined' && obj.parentNode.style.webkitTransform ) {   // last conditional fixes chrome on windows
+			if( typeof obj.parentNode.style !== 'undefined' && typeof obj.parentNode.style.webkitTransform !== 'undefined' && obj.parentNode.style.webkitTransform && obj.parentNode.style.webkitTransform.indexOf('translate3d') != -1 ) {   // last conditional fixes chrome on windows
 				var transformXYZArray = obj.parentNode.style.webkitTransform.split('translate3d(')[1].split(')')[0].replace(/ +/g, '').replace(/px+/g, '').split(',');
 				curleft += parseInt( transformXYZArray[0] );
 				curtop += parseInt( transformXYZArray[1] );
