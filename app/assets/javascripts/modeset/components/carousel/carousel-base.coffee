@@ -34,7 +34,6 @@ class window.CarouselBase
   getElements: ->
     @slider = @el.find('.carousel-inner')
     @panels = @el.find('.carousel-panel')
-    @figures = @el.find('.carousel-figure')
     @controls = @el.find('.carousel-controls')
     @indication = @el.find('.indication')
 
