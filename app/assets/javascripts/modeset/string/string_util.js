@@ -28,6 +28,20 @@ StringUtil.escapeHTML = function(str) {
 };
 
 /**
+ *  Converts Ascii character codes into the characters themselves.
+ *  @param  str The string containing ascii characters.
+ *  @return A converted string.
+ *  @use    {@code var nonAsciiStr = StringUtil.replaceAscii( '&#039; &#035; &#034;' );}
+ */
+StringUtil.replaceAscii = function(str) {
+  var results = str.match(/&#(\d+);/g); 
+  for(var i=0; i < results.length; i++) {
+    str = str.replace( results[i], String.fromCharCode( results[i].match(/&#(\d+);/)[1] ) );       
+  };
+  return str;
+};
+
+/**
  *  Removes html tags from a string with markup.
  *  @param  str The string to strip.
  *  @return A string without html tags.
