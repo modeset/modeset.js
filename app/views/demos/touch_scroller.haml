@@ -1,10 +1,16 @@
 %div.demo_info
-  %h1 Scroller demo
+  %h6 Scroller demo
   %div For all your scrollable needs.
+  %p.classes Demos the following classes
+  %div modeset/mouse/touch_tracker.js
+  %div modeset/mouse/cursor_hand.js
+  %div modeset/mobile/button_touch_callback.js
+  %div modeset/components/scroll/touch_scroller.js
 %div.demo_holder
   %div.controls_ui.right_side
   %div.scroll_outer
     %div.scroll_inner
+      %button
 
 %div.demo_console
   %h6 Console
@@ -14,6 +20,7 @@
 :coffeescript
 Demo = ->
     _scroller = null
+    _buttonCallback = null
     _gui = null
     _gui_paged = null
     _gui_free = null
@@ -30,9 +37,21 @@ Demo = ->
         width: "800px"
         background: "#666 url(/images/mode-set-logo.png) repeat"
 
+      $("div.scroll_inner button").css
+        position: "absolute"
+        height: "50px"
+        width: "50px"
+        left: "175px"
+        top: "175px"
+        background: "#222"
+
     initDemo = ->
       _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), _config.isPaged, _config.orientation, createScrollDelegate(), "div")
+      _buttonCallback = new ButtonTouchCallback( $("div.scroll_inner button")[0], buttonClicked, "active" );
       toggleOrientation()
+
+    buttonClicked = ->
+      alert 'click!'
 
     createScrollDelegate = ->
       updatePosition: (positionX, positionY, isTouching) ->
@@ -74,7 +93,7 @@ Demo = ->
     updateControlsStatus = ->
       page = _scroller.getPage()
       page += 1  unless page is -1
-      $(".demo_console .status").html "Orientation = " + _config.orientation + "<br/>" + "isPaged = " + _config.isPaged + "<br/>" + "Page = " + page + "/" + _scroller.getNumPages() + "<br/>" + "Cur scroll position = " + _scroller.getCurScrollPosition()
+      $(".demo_console .status").html "Orientation = " + _config.orientation + "<br/>" + "isPaged = " + _config.isPaged + "<br/>" + "Page = " + page + "/" + _scroller.getNumPages() + "<br/>" + "Cur scroll position = " + _scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + _scroller.getCurScrollPercent()
 
     _config =
       isActive: true

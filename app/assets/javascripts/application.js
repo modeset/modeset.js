@@ -36,6 +36,9 @@
 //= require modeset/mouse/touch_tracker
 //= require modeset/mouse/circle_touch_tracker
 
+/* MOBILE */
+//= require modeset/mobile/button_touch_callback
+
 /* COMPONENTS */
 //= require modeset/components/carousel/carousel-base
 //= require modeset/components/carousel/carousel-touch
