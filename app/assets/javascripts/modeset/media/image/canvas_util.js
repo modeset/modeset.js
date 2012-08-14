@@ -50,3 +50,45 @@ CanvasUtil.drawArc = function( ctx, x, y, radius, startAngle, endAngle ) {
   ctx.fill();
   ctx.restore();
 };
+
+
+CanvasUtil.getPixelColorFromContext = function( context, x, y ) {
+  var pixelData = context.getImageData( x, y, 1, 1 ).data;
+  return [pixelData[0], pixelData[1], pixelData[2]];
+};
+
+// useful for grabbing an image and caching it as a pixel source
+CanvasUtil.loadImageToContext = function( imagePath, callback ) {
+    var image = new Image();
+    image.onload = function() {
+        var canvasSource = document.createElement("canvas");
+        canvasSource.width = image.width;
+        canvasSource.height = image.height;
+        var context = canvasSource.getContext("2d");
+        context.drawImage( image, 0, 0 );
+        callback( context );
+    };
+    image.src = imagePath;
+};
+
+CanvasUtil.copyPixels = function( source, destination, sourceX, sourceY, sourceW, sourceH, destX, destY, destW, destH ) {
+    sourceX = sourceX || 0;
+    sourceY = sourceY || 0;
+    sourceW = sourceW || source.canvas.width;
+    sourceH = sourceH || source.canvas.height;
+    destX = destX || 0;
+    destY = destY || 0;
+    destW = destW || source.canvas.width;
+    destH = destH || source.canvas.height;
+    destination.putImageData( source.getImageData( sourceX, sourceY, sourceW, sourceH ), destX, destY, destX, destY, destW, destH );
+};
+
+  // canvas saving
+  CanvasUtil.saveCanvas = function(){
+    // save canvas image as data url (png format by default)
+    var dataURL = canvas.toDataURL();
+
+    // set canvasImg image src to dataURL
+    // so it can be saved as an image
+    document.getElementById("save").src = dataURL;
+  };
