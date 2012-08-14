@@ -16,6 +16,7 @@ describe 'StringUtil', ->
   describe 'replaceAscii()', ->
     it 'Should convert any ascii characters to the non-ascii equivalent', ->
       expect(StringUtil.replaceAscii('&#039; &#035; &#034;')).toBe('\' # "')
+      expect(StringUtil.replaceAscii('hello')).toBe('hello')
   
   describe 'stripTags()', ->
     it 'Should remove html tags from a string with markup', ->

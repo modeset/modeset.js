@@ -35,6 +35,7 @@ StringUtil.escapeHTML = function(str) {
  */
 StringUtil.replaceAscii = function(str) {
   var results = str.match(/&#(\d+);/g); 
+  if(!results) return str;
   for(var i=0; i < results.length; i++) {
     str = str.replace( results[i], String.fromCharCode( results[i].match(/&#(\d+);/)[1] ) );       
   };
