@@ -1,0 +1,39 @@
+%div.demo_info
+  %h6 ModeSetLogo demo
+  %div Watch the drawing.
+  %p.classes Demos the following classes
+  %div modeset/media/image/canvas_util.js
+%div.demo_holder
+  %div.controls_ui.right_side
+  %div.container
+
+:coffeescript
+  Demo = ->
+    _logo = null
+    _container = $("div.container")
+
+    prepContainers = ->
+      $("div.container").css
+        position: "relative"
+        height: "400px"
+        width: "400px"
+        backgroundColor: "#ff0"
+
+    initLogo = ->
+      _logo = new ModeSetLogo( _container[0], 200 )
+
+    setUpControls = ->
+      _gui = new dat.GUI(autoPlace: false)
+      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
+      $(".controls_ui .close-button").remove()
+
+    runTimer = ->
+      setTimeout (->
+        runTimer()
+      ), 33
+
+    $(document).ready ->
+      prepContainers()
+      initLogo()
+
+  new Demo()

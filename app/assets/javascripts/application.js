@@ -47,3 +47,4 @@
 //= require modeset/style/css_helper
 //= require modeset/components/scroll/touch_scroller
 //= require modeset/components/scroll/touch_scroller_form_focus
+//= require modeset/components/logo/mode-set-logo
