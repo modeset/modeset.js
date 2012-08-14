@@ -516,6 +516,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         return _cur_position[ _axis ];
     };
 
+    var getCurScrollPercent = function() {
+        return _cur_position[ _axis ] / _end_position;
+    };
+
     var setIsHardwareAcceleratedCSS = function( isAccelerated ) {
         if( isAccelerated ) {
             _css_helper.convertToWebkitPositioning( _element_inner );
@@ -758,6 +762,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         scrollToPosition : scrollToPosition,
         setOffsetPosition : setOffsetPosition,
         getCurScrollPosition : getCurScrollPosition,
+        getCurScrollPercent : getCurScrollPercent,
         setIsHardwareAcceleratedCSS : setIsHardwareAcceleratedCSS,
         getIsHardwareAcceleratedCSS : getIsHardwareAcceleratedCSS,
         setNonPagedFrictionIsShort : setNonPagedFrictionIsShort,
