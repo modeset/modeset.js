@@ -3,12 +3,12 @@ var CSSHelper = function() {
     var _curVendor = CSSHelper.getVendorPrefix( 'Transform' );
     var _transformsEnabled = ( _curVendor != null );
 
-    var getCssTransformsEnabled = function() {
-        return _transformsEnabled;
-    };
-
     var getVendor = function() {
         return _curVendor;
+    };
+
+    var getCssTransformsEnabled = function() {
+        return _transformsEnabled;
     };
 
     var convertToNativePositioning = function( element ) {
@@ -32,7 +32,13 @@ var CSSHelper = function() {
 
     var clearWebkitTransition = function( element ) {
         // stop any previous webkit animations
-        element.style[ _curVendor + 'Transform' ] = '';
+        element.style[ _curVendor + 'Transition' ] = '';
+    };
+
+    var setBackfaceVisbility = function( element, hidden ) {
+        hidden = hidden || 'hidden';
+        element.style.backfaceVisibility = 'hidden';
+        element.style[ _curVendor + 'BackfaceVisibility' ] = 'hidden';
     };
 
     // update css based on webkit positioning, or standard top/left css
@@ -44,17 +50,40 @@ var CSSHelper = function() {
         if( keepTransition == false ) clearWebkitTransition( element );
 
         if( !_transformsEnabled ) {
-            clearWebkitPositioning( element );
+            // clearWebkitPositioning( element );
             element.style.left = CSSHelper.roundForCSS( x ) + 'px';
             element.style.top = CSSHelper.roundForCSS( y ) + 'px';
         } else {
-            clearNativePositioning( element );
-            element.style[ _curVendor + 'Transform' ] = buildPositionTranslateString( x, y ) + buildScaleTranslateString( scale ) + buildRotationTranslateString( rot );     // element[ _curVendor + 'Transform' ] &&
+            // check for android, and hardware-accelerated capable androids... this relies on android-fix.js right now... move this.
+            var docClass = document.documentElement.className;
+            var isAndroid = (docClass.indexOf('android') != -1);
+            var notAndroid = (docClass.indexOf('no-android') != -1);
+            var isAndroid4Plus = (docClass.indexOf('android4plus') != -1);
+            // TODO: Make this only < Android 4 since hardware acceleration has been fixed
+            if( isAndroid == true && notAndroid == false && isAndroid4Plus == false ) {
+                clearWebkitPositioning( element );
+                // add data attr with x/y positioning since we'll be overriding what would otherwise be additive positioning between top/left and translate3d
+                if(!element.getAttribute('data-pos') ) {
+                    element.setAttribute('data-pos',element.offsetLeft+','+element.offsetTop);
+                }
+                // pull original placement off stored data attr and add to current position
+                pos = element.getAttribute('data-pos').split(',')
+                x += parseInt(pos[0]);
+                y += parseInt(pos[1]);
+                element.style.left = CSSHelper.roundForCSS( x ) + 'px';
+                element.style.top = CSSHelper.roundForCSS( y ) + 'px';
+                // apply scale to inner element if we need scaling - this requires a nested element for scaling
+                if( scale != 1 && element.children && element.children[0] && element.children[0].style ) {
+                    element.children[0].style[ _curVendor + 'Transform' ] = buildScaleTranslateString( scale );
+                }
+            } else {
+                element.style[ _curVendor + 'Transform' ] = buildPositionTranslateString( x, y ) + buildScaleTranslateString( scale ) + buildRotationTranslateString( rot );     // element[ _curVendor + 'Transform' ] &&
+            }
         }
     };
 
     var buildPositionTranslateString = function( x, y ) {
-        return "translate3d( " + CSSHelper.roundForCSS( x ) + "px, " + CSSHelper.roundForCSS( y ) + "px, 0px )";
+        return " translate3d( " + CSSHelper.roundForCSS( x ) + "px, " + CSSHelper.roundForCSS( y ) + "px, 0px )";
     };
 
     var buildScaleTranslateString = function( deg ) {
@@ -67,10 +96,11 @@ var CSSHelper = function() {
 
     return {
         update2DPosition : update2DPosition,
-        getCssTransformsEnabled : getCssTransformsEnabled,
         getVendor: getVendor,
+        getCssTransformsEnabled : getCssTransformsEnabled,
         convertToNativePositioning : convertToNativePositioning,
-        convertToWebkitPositioning : convertToWebkitPositioning
+        convertToWebkitPositioning : convertToWebkitPositioning,
+        setBackfaceVisbility : setBackfaceVisbility
     };
 };
 
@@ -79,7 +109,7 @@ CSSHelper.getVendorPrefix = function( styleSuffix ) {
 
     // see if the major browser vendor prefixes are detected for css transforms
     var checkVendor = function() {
-        var vendors = ['ms', 'Moz', 'Webkit', 'O', 'Khtml'];
+        var vendors = ['Moz', 'Webkit', 'O', 'Khtml'];   // should have 'ms' also, but IE9 transform doesn't work, even though it claims to exist. bullshit.
         var element = findElementWithStyle();
         for( var vendor in vendors ) {
             if( element.style[ vendors[vendor] + styleSuffix ] !== undefined ) {

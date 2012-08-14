@@ -8,6 +8,8 @@ MobileUtil.LANDSCAPE_RIGHT = -90;
 MobileUtil.LANDSCAPE_LEFT = 90;
 MobileUtil.PORTRAIT_REVERSE = 180;
 
+MobileUtil.ORIENTATION = 0;
+
 MobileUtil.ADDRESS_BAR_HEIGHT = ( navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/Android/i) ) ? 60 : 0;
 
 MobileUtil.setContainerToWindowSize = function( element ) {

@@ -10,13 +10,13 @@
 var ElasticPoint = function( x, y, fric, accel ) {
   var _fric = fric,
       _accel = accel,
-  
+
       _curX = x,
       _curY = y,
-    
+
       _targetX = x,
       _targetY = y,
-    
+
       _speedX = 0,
       _speedY = 0;
 
@@ -28,19 +28,24 @@ var ElasticPoint = function( x, y, fric, accel ) {
     return _curY;
   };
 
+  var setCurrent = function( x, y ) {
+    _curX = x;
+    _curY = y;
+  };
+
   var setTarget = function( x, y ) {
     _targetX = x;
     _targetY = y;
   };
-  
+
   var setFriction = function( fric ) {
     _fric = fric;
   };
-  
+
   var setAccel = function( accel ) {
     _accel = accel;
   };
-  
+
   var update = function() {
     // update elastic point based on current target position vs current position
     _speedX = ( ( _targetX - _curX ) * _accel + _speedX ) * _fric;
@@ -53,6 +58,7 @@ var ElasticPoint = function( x, y, fric, accel ) {
     x: x,
     y: y,
     setTarget: setTarget,
+    setCurrent: setCurrent,
     setFriction: setFriction,
     setAccel: setAccel,
     update: update
