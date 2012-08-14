@@ -9,6 +9,7 @@ GetImageSize.prototype.requestImageSize = function () {
   var self = this;
   // create load/error callbacks
   this.image.onload = function () {
+    // TODO: look at naturalWidth & naturalHeight
     if( self.callback ) self.callback( self.image.width, self.image.height );
     self.cleanup();
   };
