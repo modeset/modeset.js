@@ -1,9 +1,48 @@
-/**
- * Fires an HTML Event.
- */
 
 var EventUtil = {};
 
+// originally from kagnax: http://perfectionkills.com/detecting-event-support-without-browser-sniffing/
+EventUtil.isEventSupportedExtended = function(){
+  var TAGNAMES = {
+    'select':'input',
+    'change':'input',
+    'submit':'form',
+    'reset':'form',
+    'error':'img',
+    'load':'img',
+    'abort':'img'
+  }
+  function isEventSupported(eventName) {
+    var el = document.createElement(TAGNAMES[eventName] || 'div');
+    eventName = 'on' + eventName;
+    var isSupported = (eventName in el);
+    if (!isSupported) {
+      el.setAttribute(eventName, 'return;');
+      isSupported = typeof el[eventName] == 'function';
+    }
+    el = null;
+    return isSupported;
+  }
+  return isEventSupported;
+};
+
+// originally from kagnax: http://perfectionkills.com/detecting-event-support-without-browser-sniffing/
+EventUtil.isEventSupported = function(eventName) {
+  var el = document.createElement('div');
+  eventName = 'on' + eventName;
+  var isSupported = (eventName in el);
+  if (!isSupported) {
+    el.setAttribute(eventName, 'return;');
+    isSupported = typeof el[eventName] == 'function';
+  }
+  el = null;
+  return isSupported;
+};
+
+
+/**
+ * Fires an HTML Event.
+ */
 EventUtil.dispatch = function() {
   var $el, $type, evt;
   // only one value passed, assume we are given the type and dispatch from the document.
