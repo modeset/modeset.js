@@ -11,7 +11,7 @@ function ValidateUtil() {}
  * modified to include the "+" in the local-part by RB.
  */
 ValidateUtil.isValidEmail = function( email ) {
-    var emailExpression = new RegExp(/^[a-z][+\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i);
+    var emailExpression = new RegExp(/^[+\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i);
     return emailExpression.test(email);
 };
 
