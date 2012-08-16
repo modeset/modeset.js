@@ -31,6 +31,7 @@ ButtonTouchCallback.prototype.touchUpdated = function ( touchState, touchEvent )
     var moveTotal = Math.abs( this.touch_tracker.touchmoved.x ) + Math.abs( this.touch_tracker.touchmoved.y );
     if( this.touch_tracker && moveTotal > this.CANCEL_THRESHOLD && this.started_touching ) this.canceled = true;
     if( this.canceled == false && this.callback ) this.callback( this.element, touchEvent );
+    if( touchEvent && touchEvent.preventDefault ) touchEvent.preventDefault();
     this.started_touching = false;
   }
 };
