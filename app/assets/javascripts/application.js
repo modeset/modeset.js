@@ -29,6 +29,7 @@
 //= require modeset/string/formatter
 //= require modeset/string/path_util
 //= require modeset/string/string_util
+//= require modeset/string/validate_util
 
 /* MOUSE */
 //= require modeset/mouse/cursor_hand

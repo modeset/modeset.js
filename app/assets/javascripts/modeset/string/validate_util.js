@@ -1,4 +1,4 @@
-function ValidateUtil() {}
+var ValidateUtil = ValidateUtil || {};
 
 /**
 * Utils for front-end form validation.
@@ -16,15 +16,6 @@ ValidateUtil.isValidEmail = function( email ) {
 };
 
 /**
- * Checks to see if a string is a valid email. 
- * created by JG after going through lots of 3rd party and original iterations.
- */
-ValidateUtil.isValidEmailJG = function( email ) {
-  var emailExpression = new RegExp(/^([a-zA-Z0-9_.-])+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
-  return emailExpression.test(email);
-};
-
-/**
  * Checks to see if a string is a proper formatted US zip code.
  * 12345 and 12345-1234 will return true.
  */
@@ -37,7 +28,7 @@ ValidateUtil.isValidUSZip = function( zip ) {
  * Checks to see if a string is a proper formatted Canadian postal code.
  * A1B2C3 or A1B 2C3 will return true.
  */
-ValidateUtil.isValidCanPostal = function( postal ) {
+ValidateUtil.isValidCanadaPostal = function( postal ) {
   var postalExpression = new RegExp(/^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ]\s?\d[ABCEGHJKLMNPRSTVWXYZ]\d$/);
   return postalExpression.test( postal );
 };
@@ -47,26 +38,26 @@ ValidateUtil.isValidCanPostal = function( postal ) {
  * 7777777, 777 7777, or 777-7777 will return true.
  */
 ValidateUtil.isValidPhoneNumber = function( number ) {
-	var numberExpression = new RegExp(/^\d{3}(-|\s)?\d{4}$/);
-	return numberExpression.test( number );
+  var numberExpression = new RegExp(/^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
+  return numberExpression.test( number );
 };
 
 /**
  * Makes sure the string is a valid area code.
  * 123 will return true.
  */
-ValidateUtil.isValidAreaCode = function( areaCode ) {
-	var areaExpression = new RegExp(/^\d{3}$/);
-	return areaExpression.test( areaCode );
-};
+// ValidateUtil.isValidAreaCode = function( areaCode ) {
+//  var areaExpression = new RegExp(/^\d{3}$/);
+//  return areaExpression.test( areaCode );
+// };
 
 /**
  * Checks to see if a form element is filled out
  */
-ValidateUtil.isNotEmpty = function( txt ) {
-  if( txt != '' && txt != null ) {
-  	return true;
+ValidateUtil.isEmpty = function( txt ) {
+  if( txt == '' || txt == null ) {
+    return true;
   } else {
-  	return false;
+    return false;
   }
 };
