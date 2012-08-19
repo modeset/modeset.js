@@ -54,6 +54,22 @@ MobileUtil.hideSoftKeyboard = function() {
   $('input').blur()
 };
 
+MobileUtil.addAndroidClasses = function() {
+  // adds classes for android, android 4.0+ and not-android
+  var is_android = ( navigator.userAgent.toLowerCase().match(/android/i) ) ? true : false;
+  var elem = document.documentElement;
+  if( is_android == true ) {
+    elem.className = [elem.className, 'is-android'].join(' ');
+    // check for android 4+ so we can hardware accelerate
+    var androidVersion = parseFloat( navigator.userAgent.match(/Android (\d+(?:\.\d+)+)/gi)[0].replace('Android ','') )
+    if( androidVersion >= 4 ) {
+      elem.className = [elem.className, 'is-android4plus'].join(' ');
+    }
+  } else {
+    elem.className = [elem.className, 'no-android'].join(' ');
+  }
+};
+
 MobileUtil.openNewWindow = function( href ) {
   // gets around native popup blockers
   var link = document.createElement('a');
