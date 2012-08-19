@@ -1,3 +1,4 @@
+// requires MobileUtil for orientation constants
 var Accelerometer = Accelerometer || {};
 
 Accelerometer.AVAILABLE = false;
