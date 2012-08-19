@@ -29,7 +29,7 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
 
   // fire up the touch tracker and set the initial size
   var init = function() {
-    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, true, disabledElements );
+    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, true, disabledElements || '' );
     setSize( width, height );
   };
 
@@ -105,6 +105,20 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
 
   // Public interface & initialization -----------------------
 
+  var drawDebug = function( canvasContext, radOuter, radInner, hexBg, hexCircle ) {
+    canvasContext.strokeStyle = CanvasUtil.hexToCanvasColor(hexCircle, 0);
+    canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexBg, 1);
+    canvasContext.fillRect(0, 0, radOuter*2, radOuter*2);
+    canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexCircle, 1);
+    CanvasUtil.drawArc(canvasContext, radOuter, radOuter, radOuter, 0, 360);
+    canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexBg, 1);
+    CanvasUtil.drawArc(canvasContext, radOuter, radOuter, radInner, 0, 360);
+  };
+
+  var is_touching = function() {
+    return _touch_tracker.is_touching;
+  };
+
   var curAngle = function() {
     return _curAngle;
   };
@@ -138,6 +152,12 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
     _radiusInner = _centerX * _radiusInnerFactor;
   };
 
+  var dispose = function() {
+    _touch_tracker.dispose();
+    _element = null;
+    _callback = null;
+  };
+
   init();
 
   return {
@@ -148,6 +168,8 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
     radianChange: radianChange,
     setAngle: setAngle,
     setRadians: setRadians,
-    setSize: setSize
+    setSize: setSize,
+    drawDebug: drawDebug,
+    dispose: dispose
   };
 };
