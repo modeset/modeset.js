@@ -39,7 +39,6 @@
 //= require modeset/mouse/circle_touch_tracker
 
 /* MOBILE */
-//= require modeset/mobile/android-fix
 //= require modeset/mobile/button_touch_callback
 
 /* COMPONENTS */
