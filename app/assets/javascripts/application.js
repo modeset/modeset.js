@@ -6,6 +6,7 @@
 
 /* BASE */
 //= require modeset/lib/bindable
+//= require modeset/lib/bindable_init
 
 /* ANIM */
 //= require modeset/anim/request_animation_frame
@@ -49,3 +50,6 @@
 //= require modeset/components/scroll/touch_scroller
 //= require modeset/components/scroll/touch_scroller_form_focus
 //= require modeset/components/logo/mode-set-logo
+
+/* DEMO BINDABLES */
+//= require_tree ./demos/
