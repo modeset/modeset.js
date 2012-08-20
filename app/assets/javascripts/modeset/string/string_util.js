@@ -28,6 +28,16 @@ StringUtil.escapeHTML = function(str) {
 };
 
 /**
+ *  Unscapes a limited set of common html characters: &, <, >, ".
+ *  @param  str The string to escape.
+ *  @return An html string.
+ *  @use    {@code var unescapedStr = StringUtil.unescapeHTML( '&lt;div&gt;Hello &amp; World&lt;/div&gt;' );}
+ */
+StringUtil.unescapeHTML = function(str) {
+  return str.replace(/&amp;/g,'&').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&quot;/igm,'"');
+};
+
+/**
  *  Converts Ascii character codes into the characters themselves.
  *  @param  str The string containing ascii characters.
  *  @return A converted string.

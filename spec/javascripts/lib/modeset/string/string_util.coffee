@@ -13,6 +13,10 @@ describe 'StringUtil', ->
     it 'Should escape a limited set of common html characters from a markup string', ->
       expect(StringUtil.escapeHTML('<div>"Hi"</div>')).toBe('&lt;div&gt;&quot;Hi&quot;&lt;/div&gt;')
   
+  describe 'unescapeHTML()', ->
+    it 'Should unescape a limited set of common html characters from an escaped string', ->
+      expect(StringUtil.unescapeHTML('&lt;div&gt;&quot;Hi&quot;&lt;/div&gt;')).toBe('<div>"Hi"</div>')
+  
   describe 'replaceAscii()', ->
     it 'Should convert any ascii characters to the non-ascii equivalent', ->
       expect(StringUtil.replaceAscii('&#039; &#035; &#034;')).toBe('\' # "')
