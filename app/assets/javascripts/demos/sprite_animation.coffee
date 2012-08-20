@@ -1,4 +1,4 @@
-class SpriteAnimationDemo
+class SpriteAnimationDemo extends Demo
 
   constructor: (@el) ->
     @anim = null
@@ -31,11 +31,9 @@ class SpriteAnimationDemo
     @setUpControls()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    fpsVal = _gui.add(@config, "framerate", 2, 60)
+    fpsVal = @gui.add(@config, "framerate", 2, 60)
     fpsVal.listen()
     fpsVal.onChange (value) =>
       @anim.setFramerate 1000/value

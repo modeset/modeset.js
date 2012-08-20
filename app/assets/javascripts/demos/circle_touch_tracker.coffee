@@ -1,4 +1,4 @@
-class CircleTouchTrackerDemo
+class CircleTouchTrackerDemo extends Demo
 
   constructor: (@el) ->
     @circle_touch_tracker = null

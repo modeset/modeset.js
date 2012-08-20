@@ -1,4 +1,4 @@
-class FpsTimeFactorDemo
+class FpsTimeFactorDemo extends Demo
 
   constructor: (@el) ->
     @TARGET_FPS = 30
@@ -35,16 +35,14 @@ class FpsTimeFactorDemo
     @runTimer()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    fpsVal = _gui.add(@config, "msPerFrame", 10, 100)
+    fpsVal = @gui.add(@config, "msPerFrame", 10, 100)
     fpsVal.listen()
     fpsVal.onChange (value) =>
       @timeFactor.setFps value
 
-    _gui.add(@config, 'throttling');
+    @gui.add(@config, 'throttling');
 
   runTimer: =>
     # update status

@@ -1,4 +1,4 @@
-class ImageCropDemo
+class ImageCropDemo extends Demo
 
   constructor: (@el) ->
     @crop = null
@@ -29,25 +29,23 @@ class ImageCropDemo
       @setUpControls()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    containerW = _gui.add(@config, "containerW", 50, 400)
+    containerW = @gui.add(@config, "containerW", 50, 400)
     containerW.listen()
     containerW.onChange (value) =>
       @crop_div.css
         width: value
       @crop.updateContainerSize @config.containerW, @config.containerH
 
-    containerH = _gui.add(@config, "containerH", 50, 400)
+    containerH = @gui.add(@config, "containerH", 50, 400)
     containerH.listen()
     containerH.onChange (value) =>
       @crop_div.css
         height: value
       @crop.updateContainerSize @config.containerW, @config.containerH
 
-    cropType = _gui.add(@config, 'cropType', { CROP: ImageCrop.CROP, CROP_TOP: ImageCrop.CROP_TOP, CROP_BOTTOM: ImageCrop.CROP_BOTTOM, LETTERBOX: ImageCrop.LETTERBOX } );
+    cropType = @gui.add(@config, 'cropType', { CROP: ImageCrop.CROP, CROP_TOP: ImageCrop.CROP_TOP, CROP_BOTTOM: ImageCrop.CROP_BOTTOM, LETTERBOX: ImageCrop.LETTERBOX } );
     cropType.listen()
     cropType.onChange (value) =>
       @crop.setScaleType value

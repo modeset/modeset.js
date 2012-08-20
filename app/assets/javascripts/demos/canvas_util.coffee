@@ -1,4 +1,4 @@
-class CanvasUtilDemo
+class CanvasUtilDemo extends Demo
 
   constructor: (@el) ->
     @ease = null
@@ -48,12 +48,10 @@ class CanvasUtilDemo
     @runTimer()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    _gui.add @config, "drawArc"
-    _gui.add @config, "drawPoint"
+    @gui.add @config, "drawArc"
+    @gui.add @config, "drawPoint"
 
   runTimer: =>
     setTimeout =>

@@ -1,4 +1,4 @@
-class TouchScrollerDemo
+class TouchScrollerDemo extends Demo
 
   constructor: (@el) ->
     @scroller = null
@@ -105,9 +105,8 @@ class TouchScrollerDemo
     $(".demo_console .status").html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
 
   setUpControls: ->
-    @gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild @gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
+
     activeCheck = @gui.add(@config, "isActive")
     activeCheck.onChange (value) =>
       if value

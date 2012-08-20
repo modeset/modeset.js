@@ -1,4 +1,4 @@
-class TouchScrollerFormFocusDemo
+class TouchScrollerFormFocusDemo extends Demo
 
   constructor: (@el) ->
     @scroller = null
@@ -35,15 +35,14 @@ class TouchScrollerFormFocusDemo
     @scrollerFormFocus.init()
     @scroller.setScrollerDelegate @scrollerFormFocus
 
-  dispose: ->
+  dispose: =>
     @scroller.dispose()
     @scrollerFormFocus.dispose()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
-    _gui.add @config, "dispose"
+    super()
+
+    @gui.add @config, "dispose"
 
 
 Bindable.register('touch-scroller-form-focus-demo', TouchScrollerFormFocusDemo)

@@ -1,4 +1,4 @@
-class ModeSetLogoDemo
+class ModeSetLogoDemo extends Demo
 
   constructor: (@el) ->
     @logo = null
@@ -13,9 +13,7 @@ class ModeSetLogoDemo
       backgroundColor: "#ff0"
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
 
 Bindable.register('mode-set-logo-demo', ModeSetLogoDemo)

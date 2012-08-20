@@ -1,4 +1,4 @@
-class EasingFloatDemo
+class EasingFloatDemo extends Demo
 
   constructor: (@el) ->
     @ease = null
@@ -33,11 +33,9 @@ class EasingFloatDemo
     @runSetTargetInterval()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    easeFactorVal = _gui.add(@config, "easeFactor", 2, 20)
+    easeFactorVal = @gui.add(@config, "easeFactor", 2, 20)
     easeFactorVal.listen()
     easeFactorVal.onChange (value) =>
       @ease.setEaseFactor value

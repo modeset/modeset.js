@@ -1,4 +1,4 @@
-class ElasticPointDemo
+class ElasticPointDemo extends Demo
 
   constructor: (@el) ->
     @touch_tracker = null
@@ -37,16 +37,14 @@ class ElasticPointDemo
     @runTimer()
 
   setUpControls: ->
-    _gui = new dat.GUI(autoPlace: false)
-    document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-    $(".controls_ui .close-button").remove()
+    super()
 
-    frictionVal = _gui.add(@config, "friction", 0.1, 0.9)
+    frictionVal = @gui.add(@config, "friction", 0.1, 0.9)
     frictionVal.listen()
     frictionVal.onChange (value) =>
       @box.setFriction value
 
-    accelVal = _gui.add(@config, "accel", 0.1, 0.9)
+    accelVal = @gui.add(@config, "accel", 0.1, 0.9)
     accelVal.listen()
     accelVal.onChange (value) =>
       @box.setAccel value
