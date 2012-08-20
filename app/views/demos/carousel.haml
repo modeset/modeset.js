@@ -1,23 +1,20 @@
-:ruby
-  @colors = ['ff00ff', 'ff0000', '0000ff', 'ffff00', '00ffff']
-  @bindables = ['carousel', 'carousel-touch', 'carousel-touch-infinite']
+%section.demo
+  :ruby
+    @colors = ['ff00ff', 'ff0000', '0000ff', 'ffff00', '00ffff']
+    @bindables = ['carousel', 'carousel-touch', 'carousel-touch-infinite']
 
-- @bindables.each do |carousel|
+  - @bindables.each do |carousel|
 
-  %h2=carousel.upcase
-  %section.carousel(data-bindable="#{carousel}" data-autoplay="true" data-cycles="1" data-duration="2" data-active-class="in" data-keyboard="true")
-    %nav.carousel-controls.fade.in
-      %a.paddle-prev(href="#prev") &larr;
-      %a.paddle-next(href="#next") &rarr;
-      %ul.nav.indication
-    %section.carousel-inner
-      - @colors.each do |color|
-        %article.carousel-panel(class="#{(carousel == 'carousel') ? 'fade' : ''}")
-          %figure.carousel-figure
-            %img(src="http://placehold.it/650x300/#{color}" alt="image")
-            / %img(src="/images/mode-set-logo.png" width="650" height="300" style="" alt="image")
-            %figcaption.carousel-caption
-
-:coffeescript
-  $ ->
-    new Bindable().bindAll()
+    %h2=carousel.upcase
+    %section.carousel(data-bindable="#{carousel}" data-autoplay="true" data-cycles="1" data-duration="2" data-active-class="in" data-keyboard="true")
+      %nav.carousel-controls.fade.in
+        %a.paddle-prev(href="#prev") &larr;
+        %a.paddle-next(href="#next") &rarr;
+        %ul.nav.indication
+      %section.carousel-inner
+        - @colors.each do |color|
+          %article.carousel-panel(class="#{(carousel == 'carousel') ? 'fade' : ''}")
+            %figure.carousel-figure
+              %img(src="http://placehold.it/650x300/#{color}" alt="image")
+              / %img(src="/images/mode-set-logo.png" width="650" height="300" style="" alt="image")
+              %figcaption.carousel-caption

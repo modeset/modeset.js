@@ -1,32 +1,20 @@
-%div.demo_info
-  %h1 GetImageSize demo
-  %div Returns the dimensions of an image.
-  %p.classes Demos the following classes
-  %div modeset/media/image/get_image_size.js
-%div.demo_holder
-  %img(src="/images/mode-set-logo.png")
+%section.demo(data-bindable="get-image-size-demo")
+  %div.demo_info
+    %h1 GetImageSize demo
+    %div Returns the dimensions of an image.
+    %p.classes Demos the following classes
+    %div modeset/media/image/get_image_size.js
+  %div.demo_holder
+    %img(src="/images/mode-set-logo.png")
 
-%div.demo_console
-  %h6 Console
-  %div.status
+  %div.demo_console
+    %h6 Console
+    %div.status
 
-%div.demo_usage
-  %h2 Example usage:
-  %pre
-    :preserve
-      new GetImageSize( imgSrc, function( w, h ) {
-        console.log( w, h );
-      });
-
-:coffeescript
-  Demo = ->
-    initDemo = ->
-      imageInDom = $("div.demo_holder").find("img")[0]
-      new GetImageSize(imageInDom.src, (w, h) ->
-        $(".status").html "Image: " + imageInDom.src + "<br/>Size: " + w + "," + h
-      )
-
-    $(document).ready ->
-      initDemo()
-
-  new Demo()
+  %div.demo_usage
+    %h2 Example usage:
+    %pre
+      :preserve
+        new GetImageSize( imgSrc, function( w, h ) {
+          console.log( w, h );
+        });

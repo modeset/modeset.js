@@ -1,54 +1,11 @@
-%div.demo_info
-  %h6 SpriteAnimation demo
-  %div Moves a .png image sequence sprite inside of a container, at a specific framerate.
-  %p.classes Demos the following classes
-  %div modeset/anim/sprite_animation.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.container
-    %div.image_holder
-      %img(src="/images/demo/loader-sprite.png" width="400" height="50")
-
-:coffeescript
-  Demo = ->
-    _anim = null
-    _anim_holder = $("div.image_holder")
-    _anim_sprite = _anim_holder.find("img")
-    _anim_w = 50
-    _anim_h = 50
-
-    _config =
-      framerate: 1000/33
-
-    prepContainers = ->
-      _anim_holder.css
-        position: "relative"
-        overflow: "hidden"
-        width: "50px"
-        height: "50px"
-
-      _anim_sprite.css
-        position: "absolute"
-        width: "400px"
-        height: "50px"
-
-    initAnimation = ->
-      _anim = new SpriteAnimation( _anim_w, _anim_h, _anim_holder[0], _anim_sprite[0], 8, _config.framerate )
-      _anim.start()
-      setUpControls()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      fpsVal = _gui.add(_config, "framerate", 2, 60)
-      fpsVal.listen()
-      fpsVal.onChange (value) ->
-        _anim.setFramerate 1000/value
-
-    $(document).ready ->
-      prepContainers()
-      initAnimation()
-
-  new Demo()
+%section.demo(data-bindable="sprite-animation-demo")
+  %div.demo_info
+    %h6 SpriteAnimation demo
+    %div Moves a .png image sequence sprite inside of a container, at a specific framerate.
+    %p.classes Demos the following classes
+    %div modeset/anim/sprite_animation.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      %div.image_holder
+        %img(src="/images/demo/loader-sprite.png" width="400" height="50")

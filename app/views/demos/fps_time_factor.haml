@@ -1,90 +1,13 @@
-%div.demo_info
-  %h1 FpsTimeFactor demo
-  %div Runs alongside a local timer, keeping track of actual FPS vs. target FPS, giving us a "time factor" to multiply values that should be independent of actual FPS. This lets us animate things at a consistent pace, regardless of framerate fluctuations.
-  %p.classes Demos the following classes
-  %div modeset/anim/fps_time_factor.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.anim_container
-    %div.anim_obj
-%div.demo_console
-  %h6 Console
-  %div.status
-
-
-:coffeescript
-  Demo = ->
-    TARGET_FPS = 30
-    FPS_MS = 1000 / TARGET_FPS
-    _timeFactor = null
-    _config =
-      msPerFrame: FPS_MS
-      throttling: false
-    _animObj = null
-    _animX = 0
-
-    prepContainers = ->
-      $("div.anim_container").css
-        position: "relative"
-        overflow: "hidden"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ccc"
-
-      _animObj = $("div.anim_obj")
-      _animObj.css
-        position: "absolute"
-        height: "40px"
-        width: "40px"
-        left: _animX
-        backgroundColor: "#333"
-
-    initDemo = ->
-      _timeFactor = new FpsTimeFactor(TARGET_FPS)
-      runTimer()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      fpsVal = _gui.add(_config, "msPerFrame", 10, 100)
-      fpsVal.listen()
-      fpsVal.onChange (value) ->
-        _timeFactor.setFps value
-
-      _gui.add(_config, 'throttling');
-
-    runTimer = ->
-      # update status
-      _timeFactor.update()
-      output = "Target FPS: " + Math.round(1000 / _config.msPerFrame) + "<br/>"
-      output += "Actual FPS: " + _timeFactor.getActualFps() + "<br/>"
-      output += "Time Factor: " + MathUtil.roundToDecimal(_timeFactor.getTimeFactor(), 1)
-      $(".demo_console .status").html output
-
-      # animate
-      _animX += 3 * _timeFactor.getTimeFactor()
-      _animX = -40 if _animX > 400
-      _animObj.css(left: _animX)
-
-      if _config.throttling
-        i = 0
-        while i < 1000000
-          throttle = Math.sin(i * 0.9)
-          i++
-
-      # run timer
-      if window.requestAnimationFrame
-        window.requestAnimationFrame runTimer
-      else
-        setTimeout (->
-          runTimer()
-        ), FPS_MS
-
-    $(document).ready ->
-      prepContainers()
-      initDemo()
-      setUpControls()
-
-  new Demo()
+%section.demo(data-bindable="fps-time-factor-demo")
+  %div.demo_info
+    %h1 FpsTimeFactor demo
+    %div Runs alongside a local timer, keeping track of actual FPS vs. target FPS, giving us a "time factor" to multiply values that should be independent of actual FPS. This lets us animate things at a consistent pace, regardless of framerate fluctuations.
+    %p.classes Demos the following classes
+    %div modeset/anim/fps_time_factor.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.anim_container
+      %div.anim_obj
+  %div.demo_console
+    %h6 Console
+    %div.status

@@ -1,131 +1,21 @@
-%div.demo_info
-  %h6 CircleTouchTracker demo
-  %div Use your mouse like an iPod wheel. The mouse/touch must stay in between the inner & outer radius of the control.
-  %p.classes Demos the following classes
-  %div modeset/mouse/touch_tracker.js
-  %div modeset/mouse/circle_touch_tracker.js
-  %div modeset/mouse/cursor_hand.js
-  %div modeset/style/css_helper.js
-  %div modeset/media/image/canvas_util.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.container
-    %canvas#dial_debug(width="400" height="400")
-    %div.dial
-      %div.dial_inner_radius
-    %div.dial_control
-      %div.dial_inner_radius
-%div.demo_console
-  %h6 Console
-  %div.status
-
-:coffeescript
-  Demo = ->
-    _circle_touch_tracker = null
-    _radius = 200
-    _inner_radius_factor = 0.2
-    _css_helper = null
-    _cursor = null
-    _dial_div = $("div.dial")
-    _dial_div_control = $("div.dial_control")
-    _container = $("div.container")
-    _canvas = $("canvas#dial_debug")
-    _console = $(".status")
-    _drag_distance = 0
-    _dial_control_rot = 0
-
-    _config =
-      friction: 0.5
-
-    prepContainers = ->
-      _container.css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ff0"
-
-      _dial_div.css
-        position: "absolute"
-        height: "2px"
-        width: _radius
-        backgroundColor: "#f0f"
-
-      $('.dial_inner_radius').css
-        backgroundColor: "#ff0"
-        width: _radius * _inner_radius_factor
-        height: "2px"
-
-      _dial_div_control.css
-        position: "absolute"
-        height: "2px"
-        width: _radius
-        backgroundColor: "#00f"
-
-      _canvas.css
-        position: "absolute"
-
-      context = _canvas[0].getContext("2d")
-      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffff00', 1)
-      context.strokeStyle = CanvasUtil.hexToCanvasColor('#000000', 0)
-      console.log( CanvasUtil.hexToCanvasColor('#000000', 0) )
-      context.fillRect(0, 0, 400, 400);
-      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffffff', 1)
-      CanvasUtil.drawArc context, 200, 200, 200, 0, 360
-      context.fillStyle = CanvasUtil.hexToCanvasColor('#ffff00', 1)
-      CanvasUtil.drawArc context, 200, 200, 200 * _inner_radius_factor, 0, 360
-
-    init = ->
-      _css_helper = new CSSHelper()
-      _circle_touch_tracker = new CircleTouchTracker( _container[0], _container.width(), _container.height(), touchUpdated, 'div img', _inner_radius_factor )
-      _cursor = new CursorHand()
-
-      _css_helper.update2DPosition _dial_div[0], 200, 200, 1, 0, false
-      _css_helper.update2DPosition _dial_div_control[0], 200, 200, 1, 0, false
-      _dial_div[0].style[ _css_helper.getVendor() + "TransformOrigin" ] = "0 50%"
-      _dial_div_control[0].style[ _css_helper.getVendor() + "TransformOrigin" ] = "0 50%"
-
-    touchUpdated = (state, touchEvent) ->
-      # get angle change
-      curAngle = _circle_touch_tracker.curAngle()
-
-      # rotate div
-      if curAngle != null
-        _css_helper.update2DPosition _dial_div[0], 200, 200, 1, -curAngle, false
-      else
-        _drag_distance = 0
-
-      # set cursor state
-      if _circle_touch_tracker.touchTracker.is_touching == true
-        # handle touch states & add circular angle change
-        switch state
-          when MouseAndTouchTracker.state_start
-            _cursor.setGrabHand()
-            _drag_distance = 0
-          when MouseAndTouchTracker.state_move
-            _drag_distance += _circle_touch_tracker.angleChange()
-            _dial_control_rot += _circle_touch_tracker.angleChange()
-          when MouseAndTouchTracker.state_end
-            _drag_distance = 0
-            if curAngle == null
-              _cursor.setDefault()
-            else
-              _cursor.setHand()
-      else
-        # show hand cursor when inside active area
-        if curAngle == null
-          _cursor.setDefault()
-        else
-          _cursor.setHand()
-
-      # move dial
-      _css_helper.update2DPosition _dial_div_control[0], 200, 200, 1, _dial_control_rot, false
-
-      # demo info
-      _console.html "Current angle: "+curAngle+"<br/>Drag angle total: "+_drag_distance
-
-
-    $(document).ready ->
-      prepContainers()
-      init()
-
-  new Demo()
+%section.demo(data-bindable="circle-touch-tracker-demo")
+  %div.demo_info
+    %h6 CircleTouchTracker demo
+    %div Use your mouse like an iPod wheel. The mouse/touch must stay in between the inner & outer radius of the control.
+    %p.classes Demos the following classes
+    %div modeset/mouse/touch_tracker.js
+    %div modeset/mouse/circle_touch_tracker.js
+    %div modeset/mouse/cursor_hand.js
+    %div modeset/style/css_helper.js
+    %div modeset/media/image/canvas_util.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      %canvas#dial_debug(width="400" height="400")
+      %div.dial
+        %div.dial_inner_radius
+      %div.dial_control
+        %div.dial_inner_radius
+  %div.demo_console
+    %h6 Console
+    %div.status

@@ -1,75 +1,10 @@
-%div.demo_info
-  %h6 EasingFloat demo
-  %div Use the controls to adjust the easing.
-  %p.classes Demos the following classes
-  %div modeset/math/easing_float.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.container
-    %div.easing
-
-:coffeescript
-  Demo = ->
-    _ease = null
-    _box_div = $("div.easing")
-    _box_layer = $("div.container")
-    _box_base_x = 150
-    _box_base_y = 0
-
-    _config =
-      easeFactor: 5
-
-    prepContainers = ->
-      $("div.container").css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ff0"
-
-      $("div.easing").css
-        position: "absolute"
-        height: "10px"
-        width: "100px"
-        backgroundColor: "#f0f"
-
-    initEasing = ->
-      _ease = new EasingFloat(0, 5)
-      setUpControls()
-      runTimer()
-      runSetTargetInterval()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      easeFactorVal = _gui.add(_config, "easeFactor", 2, 20)
-      easeFactorVal.listen()
-      easeFactorVal.onChange (value) ->
-        _ease.setEaseFactor value
-
-      _box_div.css
-        top: _ease.value()
-
-    runSetTargetInterval = ->
-      setInterval (=>
-        if _ease.value() < 150
-          _ease.setTarget 300
-        else
-          _ease.setTarget 0
-      ), 1000
-
-    runTimer = ->
-      _ease.update()
-      _box_div.css
-        top: _ease.value()
-
-      setTimeout (->
-        runTimer()
-      ), 33
-
-    $(document).ready ->
-      prepContainers()
-      initEasing()
-
-  new Demo()
+%section.demo(data-bindable="easing-float-demo")
+  %div.demo_info
+    %h6 EasingFloat demo
+    %div Use the controls to adjust the easing.
+    %p.classes Demos the following classes
+    %div modeset/math/easing_float.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      %div.easing

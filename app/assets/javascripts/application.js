@@ -40,6 +40,7 @@
 
 /* MOBILE */
 //= require modeset/mobile/button_touch_callback
+//= require modeset/mobile/mobile-util
 
 /* COMPONENTS */
 //= require modeset/components/carousel/carousel-base

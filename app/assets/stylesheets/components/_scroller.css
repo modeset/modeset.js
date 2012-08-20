@@ -15,6 +15,11 @@
   left:0px;
   top:0px;
   float:left;
+
+  transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
 }
 
 /* Scroll bar holder */
@@ -41,16 +46,18 @@
 /* Scroll bar indicator */
 .scroll_outer div.scroll_bar_pill {
   position:absolute;
-  display:none;
   left:0px;
   top:0px;
-  background-color:black;
-  opacity:0.5;
+  background-color: black;
+  opacity:0;
 
-  -moz-border-radius:6px;
   -webkit-border-radius:6px;
+  -o-border-radius:6px;
+  -moz-border-radius:6px;
   border-radius:6px;
+}
 
+.no-android .scroll_outer div.scroll_bar_pill {
   -webkit-transition: opacity 0.2s ease-in-out;
   -o-transition: opacity 0.2s ease-in-out;
   -moz-transition: opacity 0.2s ease-in-out;
@@ -63,4 +70,9 @@
 
 .scroll_outer.vertical div.scroll_bar_pill {
   width:5px;
+}
+
+div.scroll_bar_pill.showing {
+  display:block;
+  opacity:1;
 }

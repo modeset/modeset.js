@@ -1,100 +1,12 @@
-%div.demo_info
-  %h6 ElasticPoint demo
-  %div Drag the box.
-  %p.classes Demos the following classes
-  %div modeset/math/elastic_point.js
-  %div modeset/scroll/touch_tracker.js
-  %div modeset/scroll/cursor.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.container
-    %div.elastic
-
-:coffeescript
-  Demo = ->
-    _touch_tracker = null
-    _touch_delegate = null
-    _cursor = null
-    _box = null
-    _box_div = $("div.elastic")
-    _box_layer = $("div.container")
-    _box_base_x = 150
-    _box_base_y = 150
-
-    _config =
-      friction: 0.5
-      accel: 0.5
-
-    prepContainers = ->
-      $("div.container").css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ff0"
-
-      $("div.elastic").css
-        position: "absolute"
-        height: "100px"
-        width: "100px"
-        backgroundColor: "#f0f"
-
-    initElastic = ->
-      _touch_tracker = new MouseAndTouchTracker(_box_layer[0], touchUpdated, false, "div")
-      _cursor = new CursorHand()
-      _box = new ElasticPoint(_box_base_x, _box_base_y, 0.75, 0.4)
-      setUpControls()
-      runTimer()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      frictionVal = _gui.add(_config, "friction", 0.1, 0.9)
-      frictionVal.listen()
-      frictionVal.onChange (value) ->
-        _box.setFriction value
-
-      accelVal = _gui.add(_config, "accel", 0.1, 0.9)
-      accelVal.listen()
-      accelVal.onChange (value) ->
-        _box.setAccel value
-
-    runTimer = ->
-      _box.update()
-      _box_div.css
-        top: _box.y() + "px"
-        left: _box.x() + "px"
-
-      setTimeout (->
-        runTimer()
-      ), 33
-
-    touchUpdated = (state, touchEvent) ->
-      switch state
-        when MouseAndTouchTracker.state_move
-          _box.setTarget _touch_tracker.touchcurrent.x - 50, _touch_tracker.touchcurrent.y - 50
-        when MouseAndTouchTracker.state_start
-          _cursor.setGrabHand()
-        when MouseAndTouchTracker.state_end
-          _box.setTarget _box_base_x, _box_base_y
-          if _touch_tracker.touch_is_inside
-            _cursor.setHand()
-          else
-            _cursor.setDefault()
-        when MouseAndTouchTracker.state_enter
-          if _touch_tracker.is_touching
-            _cursor.setGrabHand()
-          else
-            _cursor.setHand()
-        when MouseAndTouchTracker.state_leave
-          if _touch_tracker.is_touching
-            _cursor.setGrabHand()
-          else
-            _cursor.setDefault()
-
-    $(document).ready ->
-      prepContainers()
-      initElastic()
-
-  new Demo()
+%section.demo(data-bindable="elastic-point-demo")
+  %div.demo_info
+    %h6 ElasticPoint demo
+    %div Drag the box.
+    %p.classes Demos the following classes
+    %div modeset/math/elastic_point.js
+    %div modeset/scroll/touch_tracker.js
+    %div modeset/scroll/cursor.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      %div.elastic

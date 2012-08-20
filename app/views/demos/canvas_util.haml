@@ -1,77 +1,10 @@
-%div.demo_info
-  %h6 CanvasUtil demo
-  %div Watch the drawing.
-  %p.classes Demos the following classes
-  %div modeset/media/image/canvas_util.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.container
-    %canvas(width="400" height="400")
-
-:coffeescript
-  Demo = ->
-    _ease = null
-    _container = $("div.container")
-    _canvas = $("canvas")
-    _context = _canvas[0].getContext("2d")
-
-    drawArc = ->
-      x = MathUtil.randRange(0,400)
-      y = MathUtil.randRange(0,400)
-      radius = MathUtil.randRange(10,40)
-      angleStart = MathUtil.randRange(0,180)
-      angleEnd = MathUtil.randRange(180,360)
-      strokeW = MathUtil.randRange(1,5)
-      fill = Random.bool()
-      _context.fillStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 1) else CanvasUtil.hexToCanvasColor('#000000', 0)
-      _context.strokeStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 0) else CanvasUtil.hexToCanvasColor('#000000', 1)
-      _context.lineWidth = strokeW;
-
-      CanvasUtil.drawArc( _context, x, y, radius, angleStart, angleEnd )
-
-    drawPoint = ->
-      x = MathUtil.randRange(0,400)
-      y = MathUtil.randRange(0,400)
-      radius = MathUtil.randRange(10,40)
-      fill = Random.bool()
-      _context.fillStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 1) else CanvasUtil.hexToCanvasColor('#000000', 0)
-      _context.strokeStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 0) else CanvasUtil.hexToCanvasColor('#000000', 1)
-
-      CanvasUtil.drawPoint( _context, x, y, radius )
-
-    _config =
-      drawArc: drawArc
-      drawPoint: drawPoint
-
-    prepContainers = ->
-      $("div.container").css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ff0"
-
-    initEasing = ->
-      _ease = new EasingFloat(0, 5)
-      setUpControls()
-      runTimer()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-
-      _gui.add _config, "drawArc"
-      _gui.add _config, "drawPoint"
-
-    runTimer = ->
-
-
-      setTimeout (->
-        runTimer()
-      ), 33
-
-    $(document).ready ->
-      prepContainers()
-      initEasing()
-
-  new Demo()
+%section.demo(data-bindable="canvas-util-demo")
+  %div.demo_info
+    %h6 CanvasUtil demo
+    %div Watch the drawing.
+    %p.classes Demos the following classes
+    %div modeset/media/image/canvas_util.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      %canvas(width="400" height="400")

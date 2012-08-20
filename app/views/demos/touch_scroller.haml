@@ -1,163 +1,18 @@
-%div.demo_info
-  %h6 Scroller demo
-  %div For all your scrollable needs.
-  %p.classes Demos the following classes
-  %div modeset/mouse/touch_tracker.js
-  %div modeset/mouse/cursor_hand.js
-  %div modeset/mobile/button_touch_callback.js
-  %div modeset/components/scroll/touch_scroller.js
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.scroll_outer
-    %div.scroll_inner
-      %button
+%section.demo(data-bindable="touch-scroller-demo")
+  %div.demo_info
+    %h6 Scroller demo
+    %div For all your scrollable needs.
+    %p.classes Demos the following classes
+    %div modeset/mouse/touch_tracker.js
+    %div modeset/mouse/cursor_hand.js
+    %div modeset/mobile/button_touch_callback.js
+    %div modeset/components/scroll/touch_scroller.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.scroll_outer
+      %div.scroll_inner
+        %button
 
-%div.demo_console
-  %h6 Console
-  %div.status
-
-
-:coffeescript
-Demo = ->
-    _scroller = null
-    _buttonCallback = null
-    _gui = null
-    _gui_paged = null
-    _gui_free = null
-    prepContainers = ->
-      $("div.scroll_outer").css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ccc"
-
-      $("div.scroll_inner").css
-        position: "absolute"
-        height: "800px"
-        width: "800px"
-        background: "#666 url(/images/mode-set-logo.png) repeat"
-
-      $("div.scroll_inner button").css
-        position: "absolute"
-        height: "50px"
-        width: "50px"
-        left: "175px"
-        top: "175px"
-        background: "#222"
-
-    initDemo = ->
-      _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), _config.isPaged, _config.orientation, createScrollDelegate(), "div")
-      _buttonCallback = new ButtonTouchCallback( $("div.scroll_inner button")[0], buttonClicked, "active" );
-      toggleOrientation()
-
-    buttonClicked = ->
-      alert 'click!'
-
-    createScrollDelegate = ->
-      updatePosition: (positionX, positionY, isTouching) ->
-        _config.scrollOffset = _scroller.getCurScrollPosition()  if _scroller
-        updateControlsStatus()
-
-      touchEnd: ->
-
-      handleDestination: ->
-        _config.scrollOffset = _scroller.getCurScrollPosition()  if _scroller
-        updateControlsStatus()
-
-      pageChanged: ->
-        updateControlsStatus()
-
-    toggleOrientation = ->
-      _config.orientation = (if (_config.orientation is TouchScroller.VERTICAL) then TouchScroller.HORIZONTAL else TouchScroller.VERTICAL)
-      _scroller.setOrientation _config.orientation
-      updateControlsStatus()
-
-    swapPaged = ->
-      _scroller.setIsPaged _config.isPaged
-      updateControlsStatus()
-      updateGUIFolders()
-
-    addContent = ->
-      $(".scroll_inner").css
-        width: $(".scroll_inner").width() + $(".scroll_outer").width()
-        height: $(".scroll_inner").height() + $(".scroll_outer").height()
-
-    updateGUIFolders = ->
-      if _config.isPaged is true
-        _gui_free.close()
-        _gui_paged.open()
-      else
-        _gui_free.open()
-        _gui_paged.close()
-
-    updateControlsStatus = ->
-      page = _scroller.getPage()
-      page += 1  unless page is -1
-      $(".demo_console .status").html "Orientation = " + _config.orientation + "<br/>" + "isPaged = " + _config.isPaged + "<br/>" + "Page = " + page + "/" + _scroller.getNumPages() + "<br/>" + "Cur scroll position = " + _scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + _scroller.getCurScrollPercent()
-
-    _config =
-      isActive: true
-      isVertical: true
-      orientation: TouchScroller.HORIZONTAL
-      isPaged: false
-      addContent: addContent
-      prevPage: ->
-        _scroller.prevPage()
-
-      nextPage: ->
-        _scroller.nextPage()
-
-      scrollToTop: ->
-        _scroller.scrollToTop()
-
-      scrollToEnd: ->
-        _scroller.scrollToEnd()
-
-      scrollByOffset: ->
-        _scroller.setOffsetPosition 100
-
-      scrollOffset: 0
-      dispose: ->
-        _scroller.dispose()
-
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-      activeCheck = _gui.add(_config, "isActive")
-      activeCheck.onChange (value) ->
-        if value
-          _scroller.activate()
-        else
-          _scroller.deactivate()
-
-      verticalCheck = _gui.add(_config, "isVertical")
-      verticalCheck.onChange (value) ->
-        toggleOrientation()
-
-      pagedCheck = _gui.add(_config, "isPaged")
-      pagedCheck.onChange (value) ->
-        swapPaged()
-
-      _gui.add _config, "addContent"
-      _gui.add _config, "dispose"
-      _gui_paged = _gui.addFolder("Paged Controls")
-      _gui_paged.add _config, "prevPage"
-      _gui_paged.add _config, "nextPage"
-      _gui_free = _gui.addFolder("Non-paged Controls")
-      _gui_free.add _config, "scrollToTop"
-      _gui_free.add _config, "scrollToEnd"
-      _gui_free.add _config, "scrollByOffset"
-      scrollOffsetVal = _gui_free.add(_config, "scrollOffset", -400, 0)
-      scrollOffsetVal.listen()
-      scrollOffsetVal.onChange (value) ->
-        _scroller.scrollToPosition value
-
-      updateGUIFolders()
-
-    $(document).ready ->
-      prepContainers()
-      initDemo()
-      setUpControls()
-
-  new Demo()
+  %div.demo_console
+    %h6 Console
+    %div.status

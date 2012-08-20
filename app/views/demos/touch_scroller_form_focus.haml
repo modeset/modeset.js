@@ -1,69 +1,16 @@
-%div.demo_info
-  %h1 TouchScrollerFormFocus demo
-  %div Animates form fields into view on focus() within a TouchScroller. Specifically for use on mobile/phonegap projects when you need more native-like behavior with forms. Also holds the window in place to prevent the default behavior of iOS HTML forms of zooming/panning between fields. This demo doesnt give the full picture, but it does show the code setup.
-%div.demo_holder
-  %div.controls_ui.right_side
-  %div.scroll_outer
-    %div.scroll_inner
-      %input.form_focus
-      %input.form_focus
-      %input.form_focus
-      %input.form_focus
+%section.demo(data-bindable="touch-scroller-form-focus-demo")
+  %div.demo_info
+    %h1 TouchScrollerFormFocus demo
+    %div Animates form fields into view on focus() within a TouchScroller. Specifically for use on mobile/phonegap projects when you need more native-like behavior with forms. Also holds the window in place to prevent the default behavior of iOS HTML forms of zooming/panning between fields. This demo doesnt give the full picture, but it does show the code setup.
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.scroll_outer
+      %div.scroll_inner
+        %input.form_focus
+        %input.form_focus
+        %input.form_focus
+        %input.form_focus
 
-%div.demo_console
-  %h6 Console
-  %div.status
-
-
-:coffeescript
-  Demo = ->
-    _scroller = null
-    _scrollerFormFocus = null
-    _gui = null
-    prepContainers = ->
-      $("div.scroll_outer").css
-        position: "relative"
-        height: "400px"
-        width: "400px"
-        backgroundColor: "#ccc"
-
-      $("div.scroll_inner").css
-        position: "absolute"
-        height: "800px"
-        width: "400px"
-        background: "#666 url(/images/mode-set-logo.png) repeat"
-
-      $("input.form_focus").css
-        margin: "100px auto"
-        width: "200px"
-        background: "#ddd"
-
-    initDemo = ->
-      _scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), false, TouchScroller.VERTICAL, {}, "")
-      _scrollerFormFocus = new TouchScrollerFormFocus(_scroller, $(".scroll_outer")[0])
-      _scrollerFormFocus.init()
-      _scroller.setScrollerDelegate _scrollerFormFocus
-      runTimer()
-
-    dispose = ->
-      _scroller.dispose()
-      _scrollerFormFocus.dispose()
-
-    _config = dispose: dispose
-    setUpControls = ->
-      _gui = new dat.GUI(autoPlace: false)
-      document.getElementsByClassName("controls_ui")[0].appendChild _gui.domElement
-      $(".controls_ui .close-button").remove()
-      _gui.add _config, "dispose"
-
-    runTimer = ->
-      setTimeout (->
-        runTimer()
-      ), 30
-
-    $(document).ready ->
-      prepContainers()
-      initDemo()
-      setUpControls()
-
-  new Demo()
+  %div.demo_console
+    %h6 Console
+    %div.status
