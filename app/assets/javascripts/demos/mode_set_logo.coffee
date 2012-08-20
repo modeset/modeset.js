@@ -1,9 +1,8 @@
 class ModeSetLogoDemo extends Demo
 
   constructor: (@el) ->
-    @logo = null
-    @container = $("div.container")
-    @logo = new ModeSetLogo( @container[0], 200 )
+    @container = @el.find("div.container")
+    @logo = new ModeSetLogo( @container[0], 400 )
 
   prepContainers: ->
     $("div.container").css

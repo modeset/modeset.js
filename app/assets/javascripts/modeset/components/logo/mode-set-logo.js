@@ -5,6 +5,7 @@ var ModeSetLogo = function( holder, size ) {
   holder.appendChild( _canvas );
   var _context = _canvas.getContext("2d");
   var _size = size;
+  var _touch_tracker = null;
   
   // draw mode flags
   var _drawNumbers = false;
@@ -26,94 +27,78 @@ var ModeSetLogo = function( holder, size ) {
   var _fric = .65;
   var _accel = .4;
   
-  // displacement point class
-  var Point = function( x, y ) {
-    var self = this;
 
-    // base location
-    this.x = x * (_size/1000);
-    this.y = y * (_size/1000);
-    
-    // current location
-    this.curX = this.x;
-    this.curY = this.y;
-    this.targetX = x;
-    this.targetY = y;
-    this.xspeed = 0;
-    this.yspeed = 0;
-
-    this.displaceAmount = 0;
-    
-    this.recalcDisplacement = function() {
-      // calculate displacement based on mouse distance from point base
-      var xdiff = self.x - _mouseX;
-      var ydiff = self.y - _mouseY;
-      var d = Math.sqrt( xdiff * xdiff + ydiff * ydiff );
-      if ( d < _range ) {
-        self.targetX = self.x - ( xdiff - _range * ( xdiff / d ) );
-        self.targetY = self.y - ( ydiff - _range * ( ydiff / d ) );
-      } else {
-        self.targetX = self.x;
-        self.targetY = self.y;
-      }
-      // elastically move based on current target poisition vs current position
-      self.xspeed = ( ( self.targetX - self.curX ) * _accel + self.xspeed ) * _fric;
-      self.yspeed = ( ( self.targetY - self.curY ) * _accel + self.yspeed ) * _fric;
-      self.curX += self.xspeed;
-      self.curY += self.yspeed;
-      
-      self.displaceAmount = Math.abs( self.curX - self.x ) + Math.abs( self.curY - self.y );
-      self.displaceDir = ( self.curX - self.x ) + ( self.curY - self.y );
-    };
-  }
-  
-  var onMouseMoved = function(e) {
-    var offset = $(_canvas).offset()
-    _mouseX = e.clientX - offset.left;
-    _mouseY = e.clientY - offset.top;
-    _frameCount = 0;
-  };
-  
   // toggle draw modes
   var handleKeyPress = function(evt) {
     // if(evt.keyCode == 78) _drawNumbers = !_drawNumbers;
     // if(evt.keyCode == 76) _drawLines = !_drawLines;
   };
-  
+
   // kickstart my heart
   var init = function() {
     createPoints();
-    _canvas.addEventListener('mousemove',onMouseMoved,false);
+    _touch_tracker = new MouseAndTouchTracker( _canvas, touchUpdated, true, 'canvas' );
+    MobileUtil.trackOrientation();
+    _shake_gesture = new ShakeGesture( onShake, 20, 20, 1 );
     document.addEventListener('keydown',handleKeyPress,false);
     setTimeout( function() { draw(); }, 30 );
   };
   
+  // calculate position in any touch state
+  var touchUpdated = function( state, touchEvent ) {
+    // keep track of drag distance
+    switch (state) {
+      case MouseAndTouchTracker.state_start:
+        break;
+      case MouseAndTouchTracker.state_move:
+        _mouseX = _touch_tracker.touchcurrent.x;
+        _mouseY = _touch_tracker.touchcurrent.y;
+        _frameCount = 0;
+        break;
+      case MouseAndTouchTracker.state_end:
+        break;
+    }
+  };
+
+  var onShake = function( curX, curY, curZ ) {
+    if( _touch_tracker ) {
+      _touch_tracker.dispose();
+      _touch_tracker = null;
+    }
+    _mouseX = _size/2 + curX;
+    _mouseY = _size/2 + curY;
+    // if( curX + curY > 100 ) _frameCount = 0;
+  };
+  
   // set up hard-coded coordinates
   var createPoints = function() {
+    // points here are based on a 1000x1000 pixel square
+    var sizeRatio = _size/1000;
+    var displaceDist = _size/5;
     // set up hard-coded outer logo _points in a 1000x1000 px space
-    _points.push( new Point( 148, 346 ) );
-    _points.push( new Point( 148, 662 ) );
-    _points.push( new Point( 236, 790 ) );
-    _points.push( new Point( 236, 644 ) );
-    _points.push( new Point( 436, 932 ) );
-    _points.push( new Point( 436, 726 ) );
-    _points.push( new Point( 492, 658 ) );
-    _points.push( new Point( 492, 974 ) );
-    _points.push( new Point( 694, 782 ) );
-    _points.push( new Point( 694, 622 ) );
-    _points.push( new Point( 738, 582 ) );
-    _points.push( new Point( 738, 668 ) );
-    _points.push( new Point( 848, 568 ) );
-    _points.push( new Point( 848, 22 ) );
-    _points.push( new Point( 738, 128 ) );
-    _points.push( new Point( 738, 284 ) );
-    _points.push( new Point( 694, 326 ) );
-    _points.push( new Point( 694, 238 ) );
-    _points.push( new Point( 590, 336 ) );
-    _points.push( new Point( 402, 64 ) );
-    _points.push( new Point( 402, 336 ) );
-    _points.push( new Point( 206, 52 ) );
-    _points.push( new Point( 206, 282 ) );
+    _points.push( new DisplacementPoint( 148 * sizeRatio, 346 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 148 * sizeRatio, 662 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 236 * sizeRatio, 790 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 236 * sizeRatio, 644 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 436 * sizeRatio, 932 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 436 * sizeRatio, 726 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 492 * sizeRatio, 658 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 492 * sizeRatio, 974 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 694 * sizeRatio, 782 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 694 * sizeRatio, 622 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 738 * sizeRatio, 582 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 738 * sizeRatio, 668 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 848 * sizeRatio, 568 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 848 * sizeRatio, 22 * sizeRatio,  _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 738 * sizeRatio, 128 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 738 * sizeRatio, 284 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 694 * sizeRatio, 326 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 694 * sizeRatio, 238 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 590 * sizeRatio, 336 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 402 * sizeRatio, 64 * sizeRatio,  _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 402 * sizeRatio, 336 * sizeRatio, _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 206 * sizeRatio, 52 * sizeRatio,  _fric, _accel, displaceDist ) );
+    _points.push( new DisplacementPoint( 206 * sizeRatio, 282 * sizeRatio, _fric, _accel, displaceDist ) );
     
     // connect sub-triangles to fill in the inside of the logo
     _subTriangles.push( [0,1,3] );
@@ -153,7 +138,7 @@ var ModeSetLogo = function( holder, size ) {
     recalcMouseDisplacement();
     if( _drawNumbers ) drawPointNumbers();
     _frameCount++;
-    if(_frameCount == 30) {
+    if(_frameCount >= 30) {
       _mouseX = -10;
       _mouseY = -10;
     }
@@ -172,7 +157,7 @@ var ModeSetLogo = function( holder, size ) {
   // loop through all points and recalc their displacement position from the mouse 
   var recalcMouseDisplacement = function() {
     for( var i=0; i < _numPoints; i++ ) {
-      _points[i].recalcDisplacement();
+      _points[i].update( _mouseX, _mouseY );
     }
   };
   
@@ -186,11 +171,11 @@ var ModeSetLogo = function( holder, size ) {
       // get the indexes of the 3 triangle Point objects, and grab the last one to start drawing from
       var curTrianglePointIndexes = _subTriangles[i];
       var point = _points[ curTrianglePointIndexes[2] ];
-      
+
       // get aggregate displacement for the triangle
       triangleDisplaceTotal = triangleDisplaceDir = 0;
-      for( var j=0; j < curTrianglePointIndexes.length; j++ ) triangleDisplaceTotal += _points[ curTrianglePointIndexes[j] ].displaceAmount;
-      for( var j=0; j < curTrianglePointIndexes.length; j++ ) triangleDisplaceDir += _points[ curTrianglePointIndexes[j] ].displaceDir;
+      for( var j=0; j < curTrianglePointIndexes.length; j++ ) triangleDisplaceTotal += _points[ curTrianglePointIndexes[j] ].displaceAmount();
+      for( var j=0; j < curTrianglePointIndexes.length; j++ ) triangleDisplaceDir += _points[ curTrianglePointIndexes[j] ].displaceDir();
       
       // base fill color on displacement - make it relative to the size of the canvas 
       triangleDisplaceTotal *= ( 1000 / _size ) * 0.01;
@@ -203,15 +188,20 @@ var ModeSetLogo = function( holder, size ) {
 
       // draw the 3 points
       _context.beginPath();
-      _context.moveTo( point.curX, point.curY );
+      _context.moveTo( point.x(), point.y() );
+
       for( var j=0; j < curTrianglePointIndexes.length; j++ ) {
         point = _points[ curTrianglePointIndexes[j] ];
-        _context.lineTo( point.curX, point.curY );
+        _context.lineTo( point.x(), point.y() );
       }
       _context.closePath();
       if(_drawLines) _context.stroke();
       _context.fill();
     }
+    // draw mouse
+    // _context.fillStyle = 'rgba(0,0,0,255)';
+    // _context.fillRect( _mouseX, _mouseY, 4, 4 );
+
   };
   
   // draws the index number for each point, which really just helped with figuring out which outer points to connect for the triangles
@@ -221,7 +211,7 @@ var ModeSetLogo = function( holder, size ) {
     for( var i=0; i < _numPoints; i++ ) {
       // draw text
       _context.textBaseline = "top";
-      _context.fillText(''+i, _points[i].curX, _points[i].curY);
+      _context.fillText(''+i, _points[i].x(), _points[i].y());
     }
   };
   

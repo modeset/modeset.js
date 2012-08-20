@@ -1,4 +1,4 @@
-class ParaNorman.TouchSpeedGesture
+class TouchSpeedGesture
 
   constructor: (el, callback, rangeW = 40, rangeH = 40, multiplerX = 1, multiplerY = 1, @resetOnEnd = false) ->
     @touchTracker = new MouseAndTouchTracker( el, @updated, false, 'div' );
@@ -38,3 +38,5 @@ class ParaNorman.TouchSpeedGesture
   dispose: ->
     @touchTracker.dispose()
     @active = false
+
+@TouchSpeedGesture = TouchSpeedGesture

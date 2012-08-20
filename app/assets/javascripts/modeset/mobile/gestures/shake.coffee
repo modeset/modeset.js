@@ -1,4 +1,4 @@
-class ParaNorman.ShakeGesture
+class ShakeGesture
 
   constructor: (callback, multiplerX = 1, multiplerY = 1, multiplerZ = 1) ->
     Accelerometer.watch(@updated)
@@ -16,3 +16,5 @@ class ParaNorman.ShakeGesture
   dispose: ->
     Accelerometer.unwatch(@updated)
     @active = false
+
+@ShakeGesture = ShakeGesture

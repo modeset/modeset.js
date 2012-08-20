@@ -1,4 +1,4 @@
-class ParaNorman.CircleTouch360Gesture
+class CircleTouch360Gesture
 
   constructor: (el, width, height, callback) ->
     @callback = callback
@@ -54,3 +54,5 @@ class ParaNorman.CircleTouch360Gesture
   dispose: ->
     @circleTouchTracker.dispose()
     @active = false
+
+@CircleTouch360Gesture = CircleTouch360Gesture

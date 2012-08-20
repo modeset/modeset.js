@@ -1,4 +1,4 @@
-class ParaNorman.TiltGesture
+class TiltGesture
 
   constructor: (@callback, @rangeW = 40, @rangeH = 40) ->
     Accelerometer.watch(@updated)
@@ -29,3 +29,5 @@ class ParaNorman.TiltGesture
   dispose: ->
     Accelerometer.unwatch(@updated)
     @active = false
+
+@TiltGesture = TiltGesture

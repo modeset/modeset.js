@@ -1,4 +1,4 @@
-class ParaNorman.Spin360Gesture
+class Spin360Gesture
 
   constructor: (callback) ->
     Accelerometer.watch(@updated)
@@ -39,3 +39,5 @@ class ParaNorman.Spin360Gesture
   dispose: ->
     Accelerometer.unwatch(@updated)
     @active = false
+
+@Spin360Gesture = Spin360Gesture
