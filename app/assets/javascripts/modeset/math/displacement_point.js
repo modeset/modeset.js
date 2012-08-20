@@ -24,8 +24,8 @@ var DisplacementPoint = function( x, y, fric, accel, range ) {
   var _targetY = y;
   var _speedX = 0;
   var _speedY = 0;
-
   var _displaceAmount = 0;
+  var _displaceDir = 0;
   
   var x = function() {
     return _curX;
@@ -33,6 +33,14 @@ var DisplacementPoint = function( x, y, fric, accel, range ) {
 
   var y = function() {
     return _curY;
+  };
+
+  var displaceAmount = function() {
+    return _displaceAmount;
+  };
+
+  var displaceDir = function() {
+    return _displaceDir;
   };
 
   var setFriction = function( fric ) {
@@ -69,6 +77,8 @@ var DisplacementPoint = function( x, y, fric, accel, range ) {
   return {
     x: x,
     y: y,
+    displaceAmount: displaceAmount,
+    displaceDir: displaceDir,
     setFriction: setFriction,
     setAccel: setAccel,
     update: update
