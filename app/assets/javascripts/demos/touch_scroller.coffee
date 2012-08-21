@@ -33,6 +33,7 @@ class TouchScrollerDemo extends Demo
 
 
   prepContainers: ->
+    @status = @el.find(".demo_console .status")
     $("div.scroll_outer").css
       position: "relative"
       height: "400px"
@@ -102,7 +103,7 @@ class TouchScrollerDemo extends Demo
   updateControlsStatus: ->
     page = @scroller.getPage()
     page += 1  unless page is -1
-    $(".demo_console .status").html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
+    # @status.html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
 
   setUpControls: ->
     super()

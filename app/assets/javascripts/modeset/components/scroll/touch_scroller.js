@@ -22,7 +22,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         BOUNCEBACK_FACTOR = -0.2,
         NON_PAGED_FRICTION_SHORT = 0.3,
         NON_PAGED_FRICTION = 0.8,
+        BEYOND_BOUNDS_FRICTION = 0.4,
         _non_paged_friction = 0,
+        _beyond_bounds_friction = 0,
         _has_locked_drag_axis = false,
         _drag_lock_axis = false,
         _orientation = null,
@@ -77,6 +79,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
 
         _drag_lock_axis = null;
         _non_paged_friction = NON_PAGED_FRICTION;
+        _beyond_bounds_friction = BEYOND_BOUNDS_FRICTION;
         setOrientation( defaultOrientation || TouchScroller.HORIZONTAL );
         calculateDimensions();
 
@@ -277,10 +280,9 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         }
         if( curX != _cur_position.x || curY != _cur_position.y ) isDirty = true;
         // hide scrollbar and set speed to zero when it eases close enough
-        if( Math.abs( _speed ) <= 0.01 && _speed != 0 ) {
+        if( hasSlowedToStop() ) {
             handleDestination();
             _speed = 0;
-            hideScrollbar();
         } else {
             if( _scroller_delegate && _scroller_delegate.updatePosition && isDirty ) _scroller_delegate.updatePosition( _cur_position.x, _cur_position.y, false );
         }
@@ -289,6 +291,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
             updateScrollbar();
         }
     }
+
+    var hasSlowedToStop = function() {
+        return (Math.abs( _speed ) <= 0.1 && _speed != 0);
+    };
 
     var easeToIndex = function() {
         var lastLoc = _cur_position[ _axis ];
@@ -301,17 +307,11 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         _cur_position[ _axis ] -= _speed;
 
         // reverse direction if inertia has brought the content out of bounds
-        if( _num_pages > 1 && _was_dragged_beyond_bounds == false && _stays_in_bounds == true ) {
-            if( _cur_position[ _axis ] > 0 ) {
-                _cur_position[ _axis ] = 0;
-                // _speed *= BOUNCEBACK_FACTOR;
-                _speed = 0;
-                hideScrollbar();
-            } else if( _cur_position[ _axis ] < _end_position ) {
-                _cur_position[ _axis ] = _end_position;
-                // _speed *= BOUNCEBACK_FACTOR;
-                _speed = 0;
-                hideScrollbar();
+        var headingOutOfBounds = ( ( _cur_position[ _axis ] > 0 && _speed < 0 ) || ( _cur_position[ _axis ] < _end_position && _speed > 0 ) );
+        if( headingOutOfBounds ) {
+            _speed *= _beyond_bounds_friction;
+            if( hasSlowedToStop() ) {
+                sendBackInBounds();
             }
         }
         // check to see if content is back in bounds after sliding off
