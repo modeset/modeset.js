@@ -22,11 +22,8 @@ describe 'MathUtil', ->
 
   describe 'getPercentWithinRange()', ->
     it 'Should return a percentage, given a min, max and value for a numeric range', ->
-      bottom = 100
-      top = 500
-      value = 300
-      percent = MathUtil.getPercentWithinRange(bottom,top,value)
-      expect(percent).toBe(0.5)
+      expect(MathUtil.getPercentWithinRange(100,500,300)).toBe(0.5)
+      expect(MathUtil.getPercentWithinRange(-100,100,0)).toBe(0.5)
 
   describe 'roundToDecimal()', ->
     it 'Should return a number rounded to a specific number of decimal points', ->
