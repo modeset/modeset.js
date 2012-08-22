@@ -5,7 +5,8 @@ class window.Demo
     document.getElementsByClassName("controls_ui")[0].appendChild @gui.domElement
     $(".controls_ui .close-button").remove()
 
-    if @config
+    # add mobileLocked toggle is property exists
+    if @config?.mobileLocked
       mobileLocked = @gui.add(@config, "mobileLocked")
       mobileLocked.onChange (value) =>
         @swapMobileLocked()
