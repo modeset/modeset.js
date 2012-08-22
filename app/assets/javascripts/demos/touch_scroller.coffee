@@ -12,6 +12,7 @@ class TouchScrollerDemo extends Demo
       isVertical: true
       orientation: TouchScroller.HORIZONTAL
       isPaged: false
+      bounces: true
       addContent: @addContent
       prevPage: =>
         @scroller.prevPage()
@@ -23,6 +24,8 @@ class TouchScrollerDemo extends Demo
         @scroller.scrollToEnd()
       scrollByOffset: =>
         @scroller.setOffsetPosition 100
+      scrollToPercent: =>
+        @scroller.scrollToPercent 0.5
       scrollOffset: 0
       dispose: =>
         @scroller.dispose()
@@ -92,6 +95,9 @@ class TouchScrollerDemo extends Demo
       width: $(".scroll_inner").width() + $(".scroll_outer").width()
       height: $(".scroll_inner").height() + $(".scroll_outer").height()
 
+  swapBounces: ->
+    @scroller.setBounces @config.bounces
+
   updateGUIFolders: ->
     if @config.isPaged is true
       @gui_free.close()
@@ -103,7 +109,7 @@ class TouchScrollerDemo extends Demo
   updateControlsStatus: ->
     page = @scroller.getPage()
     page += 1  unless page is -1
-    # @status.html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
+    @status.html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
 
   setUpControls: ->
     super()
@@ -123,6 +129,10 @@ class TouchScrollerDemo extends Demo
     pagedCheck.onChange (value) =>
       @swapPaged()
 
+    bouncesCheck = @gui.add(@config, "bounces")
+    bouncesCheck.onChange (value) =>
+      @swapBounces()
+
     @gui.add @config, "addContent"
     @gui.add @config, "dispose"
     @gui_paged = @gui.addFolder("Paged Controls")
@@ -132,6 +142,7 @@ class TouchScrollerDemo extends Demo
     @gui_free.add @config, "scrollToTop"
     @gui_free.add @config, "scrollToEnd"
     @gui_free.add @config, "scrollByOffset"
+    @gui_free.add @config, "scrollToPercent"
     scrollOffsetVal = @gui_free.add(@config, "scrollOffset", -400, 0)
     scrollOffsetVal.listen()
     scrollOffsetVal.onChange (value) =>

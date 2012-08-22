@@ -309,15 +309,25 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         // reverse direction if inertia has brought the content out of bounds
         var headingOutOfBounds = ( ( _cur_position[ _axis ] > 0 && _speed < 0 ) || ( _cur_position[ _axis ] < _end_position && _speed > 0 ) );
         if( headingOutOfBounds ) {
-            _speed *= _beyond_bounds_friction;
-            if( hasSlowedToStop() ) {
-                sendBackInBounds();
+            if( _bounces ) {
+                _speed *= _beyond_bounds_friction;
+                if( hasSlowedToStop() ) {
+                    sendBackInBounds();
+                }
+            } else {
+                _speed = 0;
+                constrainContent();
             }
         }
         // check to see if content is back in bounds after sliding off
         if ( _cur_position[ _axis ] < 0 && _cur_position[ _axis ] > _end_position ) {
             _was_dragged_beyond_bounds = false;
         }
+    };
+
+    var constrainContent = function() {
+        if( _cur_position[ _axis ] > 0 ) _cur_position[ _axis ] = 0;
+        if( _cur_position[ _axis ] < _end_position ) _cur_position[ _axis ] = _end_position;
     };
 
     var sendBackInBounds = function() {
@@ -501,6 +511,10 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
     var scrollToPosition = function ( position ) {
         var offsetToPosition = _cur_position[ _axis ] - position;
         setOffsetPosition( offsetToPosition );
+    };
+
+    var scrollToPercent = function ( percent ) {
+        scrollToPosition( getScrollLength() * percent );
     };
 
     var setOffsetPosition = function ( offsetFromCurPosition ) {
@@ -751,6 +765,7 @@ var TouchScroller = function( element, elementInner, hasScrollBar, cursor, isPag
         scrollToEnd : scrollToEnd,
         scrollToTop: scrollToTop,
         scrollToPosition : scrollToPosition,
+        scrollToPercent : scrollToPercent,
         setOffsetPosition : setOffsetPosition,
         getCurScrollPosition : getCurScrollPosition,
         getCurScrollPercent : getCurScrollPercent,
