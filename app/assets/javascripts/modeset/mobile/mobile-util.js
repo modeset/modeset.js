@@ -39,8 +39,8 @@ MobileUtil.orientationUpdated = function() {
   }
 };
 
-MobileUtil.lockTouchScreen = function( unlock ) {
-  if( unlock == true ) {
+MobileUtil.lockTouchScreen = function( lock ) {
+  if( lock == false ) {
     document.ontouchmove = null;
   } else {
     document.ontouchmove = function( event ) {
