@@ -15,6 +15,7 @@ class CircleTouchTrackerDemo extends Demo
     @dial_control_rot = 0
 
     @prepContainers()
+    @setUpControls()
     @init()
 
   prepContainers: ->
@@ -94,6 +95,11 @@ class CircleTouchTrackerDemo extends Demo
     # demo info
     @console.html "Current angle: "+curAngle+"<br/>Drag angle total: "+@drag_distance
 
+  setUpControls: ->
+    @config =
+      mobileLocked: false
+
+    super()
 
 
 Bindable.register('circle-touch-tracker-demo', CircleTouchTrackerDemo)

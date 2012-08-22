@@ -12,6 +12,7 @@ class DisplacementPointDemo extends Demo
     @config =
       friction: 0.5
       accel: 0.5
+      mobileLocked: false
 
     @prepContainers()
     @initDisplacement()
