@@ -1,14 +1,15 @@
 var MobileUtil = MobileUtil || {};
 
-MobileUtil.IS_PORTRAIT = false;
-MobileUtil.IS_LANDSCAPE = false;
+MobileUtil.isPortrait = false;
+MobileUtil.isLandscape = false;
 
 MobileUtil.PORTRAIT = 0;
 MobileUtil.LANDSCAPE_RIGHT = -90;
 MobileUtil.LANDSCAPE_LEFT = 90;
 MobileUtil.PORTRAIT_REVERSE = 180;
 
-MobileUtil.ORIENTATION = 0;
+MobileUtil.orientation = 0;
+MobileUtil.isTracking = false;
 
 MobileUtil.ADDRESS_BAR_HEIGHT = ( navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/Android/i) ) ? 60 : 0;
 
@@ -20,7 +21,8 @@ MobileUtil.setContainerToWindowSize = function( element ) {
 };
 
 MobileUtil.trackOrientation = function() {
-  if (window.orientation !== undefined) {
+  if (window.orientation !== undefined && !MobileUtil.isTracking) {
+    MobileUtil.isTracking = true;
     window.addEventListener('orientationchange', MobileUtil.orientationUpdated, false);
     MobileUtil.orientationUpdated();
   }
@@ -28,13 +30,13 @@ MobileUtil.trackOrientation = function() {
 
 MobileUtil.orientationUpdated = function() {
   if( window.orientation !== undefined ) {
-    MobileUtil.ORIENTATION = window.orientation;
+    MobileUtil.orientation = window.orientation;
     if( Math.abs( window.orientation ) % 180 === 90 ) {
-      MobileUtil.IS_PORTRAIT = false;
-      MobileUtil.IS_LANDSCAPE = true;
+      MobileUtil.isPortrait = false;
+      MobileUtil.isLandscape = true;
     } else {
-      MobileUtil.IS_PORTRAIT = true;
-      MobileUtil.IS_LANDSCAPE = false;
+      MobileUtil.isPortrait = true;
+      MobileUtil.isLandscape = false;
     }
   }
 };

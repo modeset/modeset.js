@@ -1,4 +1,4 @@
-// requires MobileUtil for orientation constants
+// requires MobileUtil for orientation constants and orientation change events
 var Accelerometer = Accelerometer || {};
 
 Accelerometer.AVAILABLE = false;
@@ -6,9 +6,13 @@ Accelerometer.ACTIVE = false;
 Accelerometer.HAS_ACCEL = false;
 Accelerometer.HAS_GYRO = false;
 Accelerometer.HAS_TILT = false;
+Accelerometer.X_AXIS = 1;
+Accelerometer.Y_AXIS = 2;
+Accelerometer.Z_AXIS = 3;
 Accelerometer.callback = [];
 
 Accelerometer.watch = function( callback ) {
+  MobileUtil.trackOrientation();
   if( typeof callback !== 'undefined' ) Accelerometer.callback.push( callback );
   if( Accelerometer.ACTIVE == false ) {
     Accelerometer.ACTIVE = true;
@@ -36,38 +40,38 @@ Accelerometer.update = function( event ) {
 
   // device acceleration in 3d space - x/y based on cartesian coordinates
   if( Accelerometer.HAS_ACCEL ) {
-    if( MobileUtil.IS_PORTRAIT ) {
-      Accelerometer.accelX = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? event.acceleration.x : -event.acceleration.x;
-      Accelerometer.accelY = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? -event.acceleration.y : event.acceleration.y;
+    if( MobileUtil.isPortrait ) {
+      Accelerometer.accelX = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? event.acceleration.x : -event.acceleration.x;
+      Accelerometer.accelY = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? -event.acceleration.y : event.acceleration.y;
     } else {
-      Accelerometer.accelX = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_LEFT ) ? -event.acceleration.y : event.acceleration.y;
-      Accelerometer.accelY = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_LEFT ) ? -event.acceleration.x : event.acceleration.x;
+      Accelerometer.accelX = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_LEFT ) ? -event.acceleration.y : event.acceleration.y;
+      Accelerometer.accelY = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_LEFT ) ? -event.acceleration.x : event.acceleration.x;
     }
     Accelerometer.accelZ = event.acceleration.z;
   }
 
   // current rotation direction on 3d axis. same for both orientations. requires gyroscope
   if( Accelerometer.HAS_GYRO ) {
-    if( MobileUtil.IS_PORTRAIT ) {
-      Accelerometer.rotX = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? event.rotationRate.alpha : -event.rotationRate.alpha;
-      Accelerometer.rotY = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? event.rotationRate.beta : -event.rotationRate.beta;
+    if( MobileUtil.isPortrait ) {
+      Accelerometer.rotX = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? event.rotationRate.alpha : -event.rotationRate.alpha;
+      Accelerometer.rotY = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? event.rotationRate.beta : -event.rotationRate.beta;
       Accelerometer.rotZ = -event.rotationRate.gamma;
     } else {
-      Accelerometer.rotX = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_RIGHT ) ? event.rotationRate.beta : -event.rotationRate.beta;
-      Accelerometer.rotY = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_RIGHT ) ? -event.rotationRate.alpha : event.rotationRate.alpha;
+      Accelerometer.rotX = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_RIGHT ) ? event.rotationRate.beta : -event.rotationRate.beta;
+      Accelerometer.rotY = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_RIGHT ) ? -event.rotationRate.alpha : event.rotationRate.alpha;
       Accelerometer.rotZ = -event.rotationRate.gamma;
     }
   }
 
   // tilt - horiz = 0 when flat on a table, vert = 0 when standing straight up
   if( Accelerometer.HAS_TILT ) {
-    if( MobileUtil.IS_PORTRAIT ) {
-        Accelerometer.tiltZ = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? event.accelerationIncludingGravity.x : -event.accelerationIncludingGravity.x;
-        Accelerometer.tiltXHoriz = ( MobileUtil.ORIENTATION == MobileUtil.PORTRAIT ) ? event.accelerationIncludingGravity.y : -event.accelerationIncludingGravity.y;
+    if( MobileUtil.isPortrait ) {
+        Accelerometer.tiltZ = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? event.accelerationIncludingGravity.x : -event.accelerationIncludingGravity.x;
+        Accelerometer.tiltXHoriz = ( MobileUtil.orientation == MobileUtil.PORTRAIT ) ? event.accelerationIncludingGravity.y : -event.accelerationIncludingGravity.y;
         Accelerometer.tiltXVert = event.accelerationIncludingGravity.z;
     } else {
-        Accelerometer.tiltXHoriz = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_LEFT ) ? event.accelerationIncludingGravity.x : -event.accelerationIncludingGravity.x;
-        Accelerometer.tiltZ = ( MobileUtil.ORIENTATION == MobileUtil.LANDSCAPE_RIGHT ) ? event.accelerationIncludingGravity.y : -event.accelerationIncludingGravity.y;
+        Accelerometer.tiltXHoriz = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_LEFT ) ? event.accelerationIncludingGravity.x : -event.accelerationIncludingGravity.x;
+        Accelerometer.tiltZ = ( MobileUtil.orientation == MobileUtil.LANDSCAPE_RIGHT ) ? event.accelerationIncludingGravity.y : -event.accelerationIncludingGravity.y;
         Accelerometer.tiltXVert = event.accelerationIncludingGravity.z;
     }
   }
