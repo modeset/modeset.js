@@ -24,6 +24,10 @@ class GestureSpin360Demo extends Demo
       display: 'inline'
       opacity: '0'
 
+    $('.demo_holder .container').css
+      height: '200px'
+      'padding-top': '50px'
+
   spinDetected: (clockwise) =>
     if clockwise == true || clockwise == false
       if clockwise
