@@ -42,7 +42,7 @@
 //= require modeset/mobile/mobile-util
 //= require modeset/mobile/accelerometer-util
 //= require modeset/mobile/button_touch_callback
-//= require_tree ./modeset/mobile/gestures/
+//= require_tree ./modeset/gesture/
 
 /* COMPONENTS */
 //= require modeset/components/carousel/carousel-base
