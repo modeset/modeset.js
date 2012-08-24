@@ -1,4 +1,4 @@
-class TouchSpeedGesture
+class TouchPointBoundsGesture
 
   constructor: (el, callback, rangeW = 40, rangeH = 40, multiplerX = 1, multiplerY = 1, @resetOnEnd = false) ->
     @touchTracker = new MouseAndTouchTracker( el, @updated, false, 'div' );
@@ -39,4 +39,4 @@ class TouchSpeedGesture
     @touchTracker.dispose()
     @active = false
 
-@TouchSpeedGesture = TouchSpeedGesture
+@TouchPointBoundsGesture = TouchPointBoundsGesture
