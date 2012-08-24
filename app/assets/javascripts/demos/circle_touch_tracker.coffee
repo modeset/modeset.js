@@ -48,7 +48,7 @@ class CircleTouchTrackerDemo extends Demo
   init: ->
     @css_helper = new CSSHelper()
     @circle_touch_tracker = new CircleTouchTracker( @container[0], @container.width(), @container.height(), @touchUpdated, 'div img', @inner_rad_factor )
-    @circle_touch_tracker.drawDebug( @canvas[0].getContext("2d"), @radius, @radius * @inner_rad_factor, '#0000ff', '#ffffff' )
+    @circle_touch_tracker.drawDebug( @canvas[0].getContext("2d"), '#0000ff', '#ffffff' )
     @cursor = new CursorHand()
 
     @css_helper.update2DPosition @dial_div[0], 200, 200, 1, 0, false

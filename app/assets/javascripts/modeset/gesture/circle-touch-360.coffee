@@ -1,8 +1,10 @@
 class CircleTouch360Gesture
 
-  constructor: (el, width, height, callback) ->
+  constructor: (el, width, height, callback, showDebugEl) ->
     @callback = callback
-    @circleTouchTracker = new CircleTouchTracker( el, width, height, @touchUpdated )
+    radInner = 0.1
+    @circleTouchTracker = new CircleTouchTracker( el, width, height, @touchUpdated, '', radInner )
+    @circleTouchTracker.drawDebug( showDebugEl.getContext('2d'), '#ffffff', '#00ff00' )
     @circleDragAngleTotal = -1
     @circleDragLastAngle = 0
     @circleTouchOutOfBounds = false

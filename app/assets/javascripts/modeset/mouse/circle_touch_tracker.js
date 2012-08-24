@@ -29,7 +29,7 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
 
   // fire up the touch tracker and set the initial size
   var init = function() {
-    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, true, disabledElements || '' );
+    _touch_tracker = new MouseAndTouchTracker( _element, touchUpdated, false, disabledElements || '' );
     setSize( width, height );
   };
 
@@ -105,14 +105,14 @@ var CircleTouchTracker = function ( element, width, height, callback, disabledEl
 
   // Public interface & initialization -----------------------
 
-  var drawDebug = function( canvasContext, radOuter, radInner, hexBg, hexCircle ) {
+  var drawDebug = function( canvasContext, hexBg, hexCircle ) {
     canvasContext.strokeStyle = CanvasUtil.hexToCanvasColor(hexCircle, 0);
     canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexBg, 1);
-    canvasContext.fillRect(0, 0, radOuter*2, radOuter*2);
+    canvasContext.fillRect(0, 0, _width, _width);
     canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexCircle, 1);
-    CanvasUtil.drawArc(canvasContext, radOuter, radOuter, radOuter, 0, 360);
+    CanvasUtil.drawArc(canvasContext, _width/2, _width/2, _width/2, 0, 360);
     canvasContext.fillStyle = CanvasUtil.hexToCanvasColor(hexBg, 1);
-    CanvasUtil.drawArc(canvasContext, radOuter, radOuter, radInner, 0, 360);
+    CanvasUtil.drawArc(canvasContext, _width/2, _width/2, _width/2*_radiusInnerFactor, 0, 360);
   };
 
   var is_touching = function() {
