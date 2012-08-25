@@ -8,6 +8,7 @@ class TouchScrollerDemo extends Demo
     @gui_free = null
 
     @config =
+      mobileLocked: false
       isActive: true
       isVertical: true
       orientation: TouchScroller.HORIZONTAL
