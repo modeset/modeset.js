@@ -1,4 +1,4 @@
-function GestureCallback( element, endCallback, changeCallback ) {
+function PinchRotateCallback( element, endCallback, changeCallback ) {
   this.element = element;
   this.end_callback = endCallback;
   this.change_callback = changeCallback;
@@ -7,7 +7,7 @@ function GestureCallback( element, endCallback, changeCallback ) {
   this.init();
 }
 
-GestureCallback.prototype.init = function() {
+PinchRotateCallback.prototype.init = function() {
   // scope functions for listener removal
   var self = this;
   this.gestureStart = function(e){ self.onGestureStart(e) };
@@ -19,18 +19,18 @@ GestureCallback.prototype.init = function() {
   if( this.element.attachEvent ) this.element.attachEvent( "gesturestart", this.gestureStart ); else this.element.addEventListener( "gesturestart", this.gestureStart, false );
 };
 
-GestureCallback.prototype.onGestureStart = function ( e ) {
+PinchRotateCallback.prototype.onGestureStart = function ( e ) {
   if( this.element.attachEvent ) this.element.attachEvent( "gesturechange", this.gestureChange ); else this.element.addEventListener( "gesturechange", this.gestureChange, false );
   if( this.element.attachEvent ) this.element.attachEvent( "gestureend", this.gestureEnd ); else this.element.addEventListener( "gestureend", this.gestureEnd, false );
 };
 
-GestureCallback.prototype.onGestureChange = function ( e ) {
+PinchRotateCallback.prototype.onGestureChange = function ( e ) {
   this.scale = e.scale;
   this.rotation = e.rotation;
   if( this.change_callback ) this.change_callback( this.scale, this.rotation );
 };
 
-GestureCallback.prototype.onGestureEnd = function ( e ) {
+PinchRotateCallback.prototype.onGestureEnd = function ( e ) {
   if( this.element.detachEvent ) this.element.detachEvent( "gesturechange", this.gestureChange ); else this.element.removeEventListener( "gesturechange", this.gestureChange, false );
   if( this.element.detachEvent ) this.element.detachEvent( "gestureend", this.gestureEnd ); else this.element.removeEventListener( "gestureend", this.gestureEnd, false );
 
@@ -39,7 +39,7 @@ GestureCallback.prototype.onGestureEnd = function ( e ) {
   if( this.end_callback ) this.end_callback( this.scale, this.rotation );
 };
 
-GestureCallback.prototype.dispose = function() {
+PinchRotateCallback.prototype.dispose = function() {
   if( this.element.attachEvent ) this.element.detachEvent( "touchstart", this.gestureStart ); else this.element.removeEventListener( "touchstart", this.gestureStart, false );
   if( this.element.attachEvent ) this.element.detachEvent( "gesturestart", this.gestureStart ); else this.element.removeEventListener( "gesturestart", this.gestureStart, false );
   
