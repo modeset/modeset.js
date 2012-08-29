@@ -4,6 +4,13 @@
 //= require vendor/lib/underscore
 //= require vendor/lib/dat.gui.min
 
+/* SYSTEM */
+//= require modeset/system/cookie
+
+/* DEBUG */
+//= require modeset/debug/stats
+//= require modeset/debug/debug
+
 /* BASE */
 //= require modeset/lib/bindable
 //= require modeset/lib/bindable_init
@@ -56,3 +63,7 @@
 
 /* DEMO BINDABLES */
 //= require_tree ./demos/
+
+
+
+var debug = new Debug();
