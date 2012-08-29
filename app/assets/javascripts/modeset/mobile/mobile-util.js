@@ -49,6 +49,7 @@ MobileUtil.lockTouchScreen = function( lock ) {
       event.preventDefault();
     };
   }
+  
 };
 
 MobileUtil.hideSoftKeyboard = function() {
