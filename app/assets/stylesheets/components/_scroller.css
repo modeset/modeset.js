@@ -1,13 +1,9 @@
 /* Outer container - progressively enhance */
 .scroll_outer {
   position:relative;
-  overflow:scroll;
-}
-
-.scroll_outer.horizontal,
-.scroll_outer.vertical {
   overflow:hidden;
 }
+
 
 /* Inner content */
 .scroll_inner {
@@ -23,20 +19,20 @@
 }
 
 /* Scroll bar holder */
-.scroll_outer div.scroll_bar {
+.scroll_outer .scroll_bar {
   position:absolute;
   overflow:hidden;
   z-index:10;
 }
 
-.scroll_outer.horizontal div.scroll_bar {
+.scroll_outer .scroll_bar.horizontal {
   height:5px;
   left:0;
   bottom:4px;
   padding:0 4px;
 }
 
-.scroll_outer.vertical div.scroll_bar {
+.scroll_outer .scroll_bar.vertical {
   width:5px;
   right:4px;
   top:0;
@@ -44,7 +40,7 @@
 }
 
 /* Scroll bar indicator */
-.scroll_outer div.scroll_bar_pill {
+.scroll_outer .scroll_bar_pill {
   position:absolute;
   left:0px;
   top:0px;
@@ -57,18 +53,18 @@
   border-radius:6px;
 }
 
-.no-android .scroll_outer div.scroll_bar_pill {
+.no-android .scroll_outer .scroll_bar_pill {
   -webkit-transition: opacity 0.2s ease-in-out;
   -o-transition: opacity 0.2s ease-in-out;
   -moz-transition: opacity 0.2s ease-in-out;
   transition: opacity 0.2s ease-in-out;
 }
 
-.scroll_outer.horizontal div.scroll_bar_pill {
+.scroll_outer .scroll_bar.horizontal .scroll_bar_pill {
   height:5px;
 }
 
-.scroll_outer.vertical div.scroll_bar_pill {
+.scroll_outer .scroll_bar.vertical .scroll_bar_pill {
   width:5px;
 }
 

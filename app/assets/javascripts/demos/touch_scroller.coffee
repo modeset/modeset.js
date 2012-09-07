@@ -11,10 +11,13 @@ class TouchScrollerDemo extends Demo
       mobileLocked: false
       isActive: true
       isVertical: true
+      isAxisLocked: true
       orientation: TouchScroller.HORIZONTAL
       isPaged: false
       bounces: true
       addContent: @addContent
+      resizeSmall: @resizeSmall
+      resizeLarge: @resizeLarge
       prevPage: =>
         @scroller.prevPage()
       nextPage: =>
@@ -38,7 +41,8 @@ class TouchScrollerDemo extends Demo
 
   prepContainers: ->
     @status = @el.find(".demo_console .status")
-    $("div.scroll_outer").css
+    @scrollOuter = $("div.scroll_outer")
+    @scrollOuter.css
       position: "relative"
       height: "400px"
       width: "400px"
@@ -86,6 +90,13 @@ class TouchScrollerDemo extends Demo
     @scroller.setOrientation @config.orientation
     @updateControlsStatus()
 
+  toggleAxisLock: ->
+    @config.axisLockCheck = (if (@config.isAxisLocked is true) then false else true)
+    if @config.isAxisLocked
+      @scroller.setOrientation @config.orientation
+    else
+      @scroller.setOrientation null
+
   swapPaged: ->
     @scroller.setIsPaged @config.isPaged
     @updateControlsStatus()
@@ -99,6 +110,16 @@ class TouchScrollerDemo extends Demo
   swapBounces: ->
     @scroller.setBounces @config.bounces
 
+  resizeSmall: =>
+    @scrollOuter.css
+      width: 250
+      height: 250
+
+  resizeLarge: =>
+    @scrollOuter.css
+      width: 400
+      height: 400
+
   updateGUIFolders: ->
     if @config.isPaged is true
       @gui_free.close()
@@ -108,6 +129,7 @@ class TouchScrollerDemo extends Demo
       @gui_paged.close()
 
   updateControlsStatus: ->
+    return if !@scroller
     page = @scroller.getPage()
     page += 1  unless page is -1
     @status.html "Orientation = " + @config.orientation + "<br/>" + "isPaged = " + @config.isPaged + "<br/>" + "Page = " + page + "/" + @scroller.getNumPages() + "<br/>" + "Cur scroll position = " + @scroller.getCurScrollPosition() + "<br/>" + "Cur scroll percent = " + @scroller.getCurScrollPercent()
@@ -126,6 +148,10 @@ class TouchScrollerDemo extends Demo
     verticalCheck.onChange (value) =>
       @toggleOrientation()
 
+    axisLockCheck = @gui.add(@config, "isAxisLocked")
+    axisLockCheck.onChange (value) =>
+      @toggleAxisLock()
+
     pagedCheck = @gui.add(@config, "isPaged")
     pagedCheck.onChange (value) =>
       @swapPaged()
@@ -135,6 +161,8 @@ class TouchScrollerDemo extends Demo
       @swapBounces()
 
     @gui.add @config, "addContent"
+    @gui.add @config, "resizeSmall"
+    @gui.add @config, "resizeLarge"
     @gui.add @config, "dispose"
     @gui_paged = @gui.addFolder("Paged Controls")
     @gui_paged.add @config, "prevPage"
