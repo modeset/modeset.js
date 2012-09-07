@@ -84,12 +84,13 @@ class window.CarouselBase
     @panels.width((100 / @num_panels) + '%')
 
   updateIndicators: ->
-    indicator_index = @index % @num_panels  # mod page index in case of infinite scrolling
-    for indicator, i in @indicators
-      if i == indicator_index
-        $(indicator).addClass 'active'
-      else
-        $(indicator).removeClass 'active'
+    if @indication.length
+      indicator_index = @index % @num_panels  # mod page index in case of infinite scrolling
+      for indicator, i in @indicators
+        if i == indicator_index
+          $(indicator).addClass 'active'
+        else
+          $(indicator).removeClass 'active'
 
   startTimer: ->
     # stop auto-play after 2 full cycles
