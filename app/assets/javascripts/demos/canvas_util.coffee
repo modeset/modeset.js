@@ -33,7 +33,7 @@ class CanvasUtilDemo extends Demo
     @context.fillStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 1) else CanvasUtil.hexToCanvasColor('#000000', 0)
     @context.strokeStyle = if fill then CanvasUtil.hexToCanvasColor('#000000', 0) else CanvasUtil.hexToCanvasColor('#000000', 1)
 
-    CanvasUtil.drawPoint( @context, x, y, radius )
+    CanvasUtil.drawCircle( @context, x, y, radius )
 
   prepContainers: ->
     $("div.container").css
