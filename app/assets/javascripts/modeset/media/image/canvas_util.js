@@ -25,10 +25,11 @@ CanvasUtil.hexToCanvasColor = function( hexColor, opacity ) {
 
 /**
  *  Draws a filled circle. Original code from Robin W. Spencer (http://scaledinnovation.com).
- *  @use    {@code CanvasUtil.drawPoint( context, 50, 50, 40 );}
+ *  @use    {@code CanvasUtil.drawCircle( context, 50, 50, 40 );}
  */
-CanvasUtil.drawPoint = function( ctx, x, y, radius ) {
+CanvasUtil.drawCircle = function( ctx, x, y, radius, extraSetup ) {
   ctx.save();
+  if( extraSetup ) extraSetup( ctx );
   ctx.beginPath();
   ctx.arc( x, y, radius, 0.0, 2 * Math.PI, false );
   ctx.closePath();
