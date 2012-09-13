@@ -1,5 +1,7 @@
 var CanvasUtil = CanvasUtil || {};
 
+CanvasUtil.clearColor = 'rgba(0,0,0,0)';
+
 /**
  *  Lets a developer know if the canvas element is supported.
  *  @return A boolean indicating canvas support.
