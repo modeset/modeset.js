@@ -17,6 +17,7 @@ function MouseAndTouchTracker ( element, callback, isMouseUpTracking, disabledEl
 	this.container = element;
 	this.callback = callback;
 	this.is_mouseup_tracking = isMouseUpTracking;
+	disabledElements = disabledElements || '';
 	this.disabled_elements = disabledElements.split(' ') || [];
 
 	// add touch event listeners with scope for removal
