@@ -22,8 +22,8 @@ GetImageSize.prototype.requestImageSize = function () {
 };
 
 GetImageSize.prototype.cleanup = function() {
-  delete this.image.onload;
-  delete this.image.onerror;
+  this.image.onload = null;
+  this.image.onerror = null;
   delete this.image;
   delete this.src;
   delete this.callback;
