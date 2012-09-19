@@ -26,6 +26,33 @@ CanvasUtil.hexToCanvasColor = function( hexColor, opacity ) {
 };
 
 /**
+ *  Converts r, g, b, a values to canvas-friendly rgba string.
+ *  @return An rgba color string.
+ *  @use    {@code CanvasUtil.rgbToCanvasColor(0, 0, 0, 0.5);}
+ */
+CanvasUtil.rgbToCanvasColor = function( r, g, b, opacity ) {
+  return "rgba("+r+","+g+","+b+","+opacity+")";
+};
+
+/**
+ *  Converts r, g, b, to a brightness between 0-1.
+ *  @return A brightness percentage.
+ *  @use    {@code CanvasUtil.rgbToBrightness(0, 255, 0);}
+ */
+CanvasUtil.rgbToBrightness = function( r, g, b ) {
+  return (r + g + b) / 768; // 768 is r,g,b: 256*3
+};
+
+/**
+ *  Returns the percent difference between 2 colors.
+ *  @return A difference percentage.
+ *  @use    {@code CanvasUtil.rgbDifference(0, 0, 0, 255, 255, 255);}
+ */
+CanvasUtil.rgbDifference = function( r1, g1, b1, r2, g2, b2 ) {
+  return Math.abs((r1 + g1 + b1) - (r2 + g2 + b2)) / 765;
+};
+
+/**
  *  Draws a filled circle. Original code from Robin W. Spencer (http://scaledinnovation.com).
  *  @use    {@code CanvasUtil.drawCircle( context, 50, 50, 40 );}
  */
