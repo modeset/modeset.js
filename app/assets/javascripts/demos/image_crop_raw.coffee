@@ -1,13 +1,17 @@
-class ImageCropDemo extends Demo
+class ImageCropRawDemo extends Demo
 
   constructor: (@el) ->
     @crop = null
     @crop_div = $("div.crop")
+    @crop_img = $("div.crop img")
 
     @config =
       containerW: 200
       containerH: 200
       cropType: ImageUtil.CROP
+
+    @imageOrigW = 1
+    @imageOrigH = 1
 
     @prepContainers()
     @initCrop()
@@ -24,9 +28,15 @@ class ImageCropDemo extends Demo
 
 
   initCrop: ->
+    # get original image size for cropping maths
     ImageUtil.getImageSizeWithCallback "/images/demo/haters.jpg", (w,h) =>
-      @crop = new ImageCrop( @crop_div[0], @config.containerW, @config.containerH, w, h, @config.cropType )
+      @imageOrigW = w
+      @imageOrigH = h
       @setUpControls()
+      @runCrop()
+
+  runCrop: ->
+    ImageUtil.cropImage( @crop_div[0], @config.containerW, @config.containerH, @crop_img[0], @imageOrigW, @imageOrigH, @config.cropType )
 
   setUpControls: ->
     super()
@@ -36,19 +46,19 @@ class ImageCropDemo extends Demo
     containerW.onChange (value) =>
       @crop_div.css
         width: value
-      @crop.updateContainerSize @config.containerW, @config.containerH
+      @runCrop()
 
     containerH = @gui.add(@config, "containerH", 50, 400)
     containerH.listen()
     containerH.onChange (value) =>
       @crop_div.css
         height: value
-      @crop.updateContainerSize @config.containerW, @config.containerH
+      @runCrop()
 
     cropType = @gui.add(@config, 'cropType', { CROP: ImageUtil.CROP, CROP_TOP: ImageUtil.CROP_TOP, CROP_BOTTOM: ImageUtil.CROP_BOTTOM, LETTERBOX: ImageUtil.LETTERBOX } );
     cropType.listen()
     cropType.onChange (value) =>
-      @crop.setScaleType value
+      @runCrop()
 
 
-Bindable.register('image-crop-demo', ImageCropDemo)
+Bindable.register('image-crop-raw-demo', ImageCropRawDemo)
