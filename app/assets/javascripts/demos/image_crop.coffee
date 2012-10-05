@@ -24,7 +24,7 @@ class ImageCropDemo extends Demo
 
 
   initCrop: ->
-    new GetImageSize "/images/demo/haters.jpg", (w,h) =>
+    ImageUtil.getImageSizeWithCallback "/images/demo/haters.jpg", (w,h) =>
       @crop = new ImageCrop( @crop_div[0], @config.containerW, @config.containerH, w, h, @config.cropType )
       @setUpControls()
 
