@@ -46,6 +46,7 @@ class window.CarouselTouch extends CarouselBase
       @index = @scroller.getPage()
       @updateIndicators() if @indicators
       @scrollerPageUpdated @scroller.getPage()
+      @slide()
     closestIndexChanged: (closestIndex) =>
       @index = closestIndex
       @updateIndicators() if @indicators
