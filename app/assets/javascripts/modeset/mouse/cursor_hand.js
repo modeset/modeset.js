@@ -1,4 +1,5 @@
 /*
+ * Requires: _cursor-grab.css
  * Adds grabby-hand cursor functionality on-demand, and handles cases for different browsers
  * Absolute paths to .cur files are needed for IE. Chrome likes the cursor files too
  * TODO: IE might only want the .cur style def, and not want the plain css class

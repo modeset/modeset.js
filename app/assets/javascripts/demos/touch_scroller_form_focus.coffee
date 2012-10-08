@@ -30,7 +30,11 @@ class TouchScrollerFormFocusDemo extends Demo
       background: "#ddd"
 
   initDemo: ->
-    @scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), false, TouchScroller.VERTICAL, {}, "")
+    scrollOptions = 
+      isPaged: false, 
+      defaultOrientation: TouchScroller.VERTICAL,
+      disabledElements: "",
+    @scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], scrollOptions)
     @scrollerFormFocus = new TouchScrollerFormFocus(@scroller, $(".scroll_outer")[0])
     @scrollerFormFocus.init()
     @scroller.setScrollerDelegate @scrollerFormFocus

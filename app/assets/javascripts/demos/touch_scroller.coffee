@@ -12,7 +12,8 @@ class TouchScrollerDemo extends Demo
       isActive: true
       isVertical: true
       isAxisLocked: true
-      orientation: TouchScroller.HORIZONTAL
+      # orientation: TouchScroller.UNLOCKED
+      orientation: TouchScroller.VERTICAL
       isPaged: false
       bounces: true
       addContent: @addContent
@@ -64,9 +65,22 @@ class TouchScrollerDemo extends Demo
 
   initDemo: ->
     MobileUtil.addAndroidClasses();
-    @scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], true, new CursorHand(), @config.isPaged, @config.orientation, @createScrollDelegate(), "div")
+    scrollOptions = 
+      isPaged: @config.isPaged, 
+      defaultOrientation: @config.orientation,
+      scrollerDelegate: @createScrollDelegate(),
+      disabledElements: "div",
+      pagedEasingFactor: 4
+    @scroller = new TouchScroller($(".scroll_outer")[0], $(".scroll_inner")[0], scrollOptions)
     @buttonCallback = new ButtonTouchCallback( $("div.scroll_inner button")[0], @buttonClicked, "active" );
-    @toggleOrientation()
+
+    # auto-positioning on init
+    # set the @config.orientation above to UNLOCKED
+    # @addContent()
+    # @addContent()
+    # @scroller.calculateDimensions()
+    # @scroller.scrollToPercent 0.5, true, 'x'
+    # @scroller.scrollToPercent 0.5, true, 'y'
 
   buttonClicked: ->
     alert 'click!'

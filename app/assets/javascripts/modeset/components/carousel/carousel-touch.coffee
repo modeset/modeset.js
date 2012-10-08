@@ -9,18 +9,23 @@ class window.CarouselTouch extends CarouselBase
 
   initialize: ->
     super()
-    @setSliderWidth()
-    @setPanelWidths()
 
   buildControls: ->
     super()
+    @setSliderWidth()
+    @setPanelWidths()
     @buildScroller()
   
   buildScroller: ->
-    disable_elements = 'img'
-    @scroller = new TouchScroller( @el[0], @slider[0], true, new CursorHand(), true, TouchScroller.HORIZONTAL, @createScrollDelegate(), disable_elements )
+    scrollOptions = 
+      isPaged: true, 
+      defaultOrientation: TouchScroller.HORIZONTAL,
+      scrollerDelegate: @createScrollDelegate(),
+      disabledElements: "img",
+      pagedEasingFactor: 4
+    @scroller = new TouchScroller( @el[0], @slider[0], scrollOptions )
 
-  createScrollDelegate: ->
+  createScrollDelegate: =>
     updatePosition: ( positionX, positionY, isTouching ) =>
       @pressed_and_didnt_move = false
     touchStart: =>
@@ -38,19 +43,20 @@ class window.CarouselTouch extends CarouselBase
       @scrollerPageUpdated @scroller.getPage()
       @handleTransitionEnd()
     pageChanged: =>
-      @updateIndicators() if @indicators
       @index = @scroller.getPage()
+      @updateIndicators() if @indicators
       @scrollerPageUpdated @scroller.getPage()
     closestIndexChanged: (closestIndex) =>
+      @index = closestIndex
       @updateIndicators() if @indicators
       @scrollerPageUpdated closestIndex
 
   scrollerPageUpdated: (index) ->
     # do nothing - used in infinite scroller
 
-  slide: ->
+  slide: =>
     super()
-    @scroller.setPage(@index)
+    @scroller.setPage(@index, false)
 
 
 
