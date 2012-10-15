@@ -9,6 +9,13 @@ ArrayUtil.randomize_array = function( array ) {
   array.sort(function() {return 0.5 - Math.random()}) //Array elements now scrambled
 }
 
+ArrayUtil.shuffle = function()
+{
+  var that = this.slice();
+  for(var j, x, i = that.length; i; j = Math.floor(Math.random() * i), x = that[--i], that[i] = that[j], that[j] = x);
+  return that;
+}
+
 /**
  * Find an object in an array, or returns -1 if not found
  * @param {array} Array to search.
