@@ -41,15 +41,14 @@ MobileUtil.orientationUpdated = function() {
   }
 };
 
-MobileUtil.lockTouchScreen = function( lock ) {
-  if( lock == false ) {
+MobileUtil.lockTouchScreen = function( isLocked ) {
+  if( isLocked == false ) {
     document.ontouchmove = null;
   } else {
     document.ontouchmove = function( event ) {
       event.preventDefault();
     };
   }
-  
 };
 
 MobileUtil.hideSoftKeyboard = function() {
