@@ -26,7 +26,7 @@ ColorUtil.hexToRGB = function( hex ) {
   var grnBlu = hex - ( red << 16 );
   var grn = grnBlu >> 8;
   var blu = grnBlu - ( grn << 8 );
-  
+
   // return the new object
   return( { r:red, g:grn, b:blu } );
 };
@@ -82,6 +82,14 @@ ColorUtil.toHex=function(decimalValue,places){
     return hexidecimal;
 };
 
+
+ColorUtil.interpolate = function(from, to, ratio) {
+  var res = from.clone();
+  res.red = (to.red - from.red) * ratio + from.red;
+  res.green = (to.green - from.green) * ratio + from.green;
+  res.blue = (to.blue - from.blue) * ratio + from.blue;
+  return res;
+};
 
 
 
