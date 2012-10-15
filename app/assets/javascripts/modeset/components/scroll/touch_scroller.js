@@ -684,10 +684,12 @@ var TouchScroller = function( scrollOuterEl, scrollInnerEl, options ) {
     var setIsHardwareAcceleratedCSS = function( isAccelerated ) {
         if( isAccelerated ) {
             _cssHelper.convertToWebkitPositioning( _scrollInnerEl );
-            _cssHelper.convertToWebkitPositioning( _scroll_bar_pill );
+            _scrollbars.x.setIsHardwareAcceleratedCSS( isAccelerated );
+            _scrollbars.y.setIsHardwareAcceleratedCSS( isAccelerated );
         } else {
             _cssHelper.convertToNativePositioning( _scrollInnerEl );
-            _cssHelper.convertToNativePositioning( _scroll_bar_pill );
+            _scrollbars.x.setIsHardwareAcceleratedCSS( isAccelerated );
+            _scrollbars.y.setIsHardwareAcceleratedCSS( isAccelerated );
         }
         redraw();
     };
@@ -858,13 +860,22 @@ var TouchScroller = function( scrollOuterEl, scrollInnerEl, options ) {
             removeClassName( _scroll_bar_pill, 'showing' );
         };
 
+        var setIsHardwareAcceleratedCSS = function( isAccelerated ) {
+            if( isAccelerated ) {
+                _cssHelper.convertToWebkitPositioning( _scroll_bar_pill );
+            } else {
+                _cssHelper.convertToNativePositioning( _scroll_bar_pill );
+            }
+        };
+
         init();
 
         return {
             resizeScrollbar: resizeScrollbar,
             updateScrollbarPosition: updateScrollbarPosition,
             showScrollbar: showScrollbar,
-            hideScrollbar: hideScrollbar
+            hideScrollbar: hideScrollbar,
+            setIsHardwareAcceleratedCSS: setIsHardwareAcceleratedCSS
         }
     };
 
