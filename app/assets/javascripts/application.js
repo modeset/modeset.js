@@ -1,7 +1,6 @@
 
 /* VENDOR ASSETS */
 //= require vendor/lib/jquery-1.7.1.min
-//= require vendor/lib/underscore
 //= require vendor/lib/dat.gui.min
 
 /* SYSTEM */
@@ -26,7 +25,6 @@
 //= require modeset/math/easing_float
 //= require modeset/math/elastic_point
 //= require modeset/math/displacement_point
-//= require modeset/math/random
 
 /* MEDIA */
 //= require modeset/media/image/image_crop
