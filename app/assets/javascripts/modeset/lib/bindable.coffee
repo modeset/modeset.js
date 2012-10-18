@@ -1,3 +1,12 @@
+#~
+# Light weight Dependency Injection for client side components.
+#
+# Looks for all DOM elements with the `data-bindable` attribute,
+# stores references within a registry and instantiates their
+# respective classes.
+#
+# Examples:
+#    Bindable.register 'carousel', namespace.Carousel
 
 class window.Bindable
   constructor: (context=$('body'), @dataKey='bindable')->
@@ -7,6 +16,7 @@ class window.Bindable
 
   bindAll: ->
     @bind(el) for el in @bindables
+    @
 
 
   getRefs: ->
@@ -28,7 +38,7 @@ class window.Bindable
     el = $(el)
     key = el.data(dataKey)
     if _class = @constructor.getClass(key)
-      el.data( @instanceKey, new _class(el) )
+      el.data( @instanceKey, new _class(el) ) unless el.data(@instanceKey)
     else
       console?.error "Bindable for key: #{key} not found in Bindable.registry for instance", el
 
@@ -41,4 +51,5 @@ class window.Bindable
     @registry ?= {}
     @registry[key] = { class: klass }
     return null
+
 
