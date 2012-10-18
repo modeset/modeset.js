@@ -1,0 +1,17 @@
+%section.demo(data-bindable="slider-demo")
+  %div.demo_info
+    %h6 Slider demo
+    %div Slide the slider to slide while you slide. Set default min/max/current values in data attributes, or leave them blank to have 0-1 range values.
+    %p.classes Demos the following classes
+    %div modeset/form/slider.js
+    %div modeset/mouse/cursor_hand.js
+    %div modeset/mouse/touch_tracker.js
+  %div.demo_holder
+    %div.controls_ui.right_side
+    %div.container
+      .slider-control(data-initial-value="500" data-min="0" data-max="1000")
+        .slider-progress
+        .slider-handle
+  %div.demo_console
+    %h6 Console
+    %div.status

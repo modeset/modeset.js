@@ -58,6 +58,7 @@
 //= require modeset/components/scroll/touch_scroller_form_focus
 //= require modeset/components/logo/mode-set-logo
 //= require modeset/form/signature
+//= require modeset/form/slider
 
 /* DEMO BINDABLES */
 //= require_tree ./demos/
