@@ -57,6 +57,8 @@ ImageUtil.cropImage = function ( containerEl, containerW, containerH, imageEl, i
   // resize image
   imageEl.width = offsetAndSize[2];
   imageEl.height = offsetAndSize[3];
+  imageEl.style.width = offsetAndSize[2]+'px';
+  imageEl.style.height = offsetAndSize[3]+'px';
 
   // position image
   imageEl.style.left = offsetAndSize[0]+'px';

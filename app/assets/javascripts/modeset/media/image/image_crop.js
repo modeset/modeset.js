@@ -54,6 +54,7 @@ ImageCrop = function ( container, width, height, origW, origH, scaleType, imgInd
   return {
     updateContainerSize : updateContainerSize,
     setScaleType : setScaleType,
+    resize : resize,
     dispose: dispose
   };
 };
