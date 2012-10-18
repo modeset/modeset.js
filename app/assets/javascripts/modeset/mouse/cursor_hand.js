@@ -60,3 +60,27 @@ CursorHand.prototype.dispose = function(){
   delete this.is_iphone;
   delete this.element;
 };
+
+// static helper for raw MouseAndTouchTracker usage
+CursorHand.setCursorFromTouchTrackerState = function( touchTracker, cursor, state ) {
+  switch( state ) {
+    case MouseAndTouchTracker.state_start :
+      cursor.setGrabHand();
+      break;
+    case MouseAndTouchTracker.state_move :
+      break;
+    case MouseAndTouchTracker.state_end :
+      if( touchTracker.touch_is_inside ) cursor.setHand();
+      else cursor.setDefault();
+      break;
+    case MouseAndTouchTracker.state_enter :
+      if( !touchTracker.is_touching ) cursor.setHand();
+      break;
+    case MouseAndTouchTracker.state_leave :
+      if(touchTracker.is_touching) cursor.setGrabHand();
+      else cursor.setDefault();
+      break;
+  }
+
+};
+
