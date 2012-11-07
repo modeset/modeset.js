@@ -25,6 +25,7 @@
 //= require modeset/math/easing_float
 //= require modeset/math/elastic_point
 //= require modeset/math/displacement_point
+//= require modeset/math/random
 
 /* MEDIA */
 //= require modeset/media/image/image_crop
