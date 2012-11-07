@@ -76,7 +76,9 @@ CanvasUtil.drawCircle = function( ctx, x, y, radius, extraSetup ) {
 CanvasUtil.drawArc = function( ctx, x, y, radius, startAngle, endAngle ) {
   ctx.save();
   ctx.beginPath();
+  ctx.moveTo( x, y );
   ctx.arc( x, y, radius, (Math.PI / 180) * (startAngle - 90), (Math.PI / 180) * (endAngle - 90), false );
+  ctx.lineTo( x, y );
   ctx.closePath();
   ctx.stroke();
   ctx.fill();
