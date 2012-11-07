@@ -100,7 +100,7 @@ CanvasUtil.loadImageToContext = function( imagePath, callback ) {
         canvasSource.height = image.height;
         var context = canvasSource.getContext("2d");
         context.drawImage( image, 0, 0 );
-        callback( context );
+        callback( context, image );
     };
     image.src = imagePath;
 };
