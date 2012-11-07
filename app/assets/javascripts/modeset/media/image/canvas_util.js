@@ -118,11 +118,11 @@ CanvasUtil.copyPixels = function( source, destination, sourceX, sourceY, sourceW
 };
 
 // canvas saving
-CanvasUtil.saveCanvas = function(){
-  // save canvas image as data url (png format by default)
-  var dataURL = canvas.toDataURL();
-
+CanvasUtil.saveCanvas = function( ctx ){
   // set canvasImg image src to dataURL
   // so it can be saved as an image
-  document.getElementById("save").src = dataURL;
+  var saveDiv = document.createElement('img');
+  saveDiv.id = 'save';
+  document.body.appendChild(saveDiv);
+  document.getElementById("save").src = ctx.canvas.toDataURL();
 };
