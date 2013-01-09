@@ -19,6 +19,7 @@
 //= require modeset/anim/fps_time_factor
 //= require modeset/anim/sprite_animation
 //= require modeset/anim/transition-callback
+//= require modeset/anim/ease_to_value_callback
 
 /* MATH */
 //= require modeset/math/math_util
@@ -26,6 +27,7 @@
 //= require modeset/math/elastic_point
 //= require modeset/math/displacement_point
 //= require modeset/math/random
+//= require modeset/math/realtime_sampling_value
 
 /* MEDIA */
 //= require modeset/media/image/image_crop
