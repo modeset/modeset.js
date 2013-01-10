@@ -33,6 +33,7 @@
 //= require modeset/media/image/image_crop
 //= require modeset/media/image/image_util
 //= require modeset/media/image/canvas_util
+//= require modeset/media/audio/sound_player
 
 /* STRING */
 //= require modeset/string/formatter

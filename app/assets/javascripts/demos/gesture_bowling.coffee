@@ -10,6 +10,7 @@ class GestureBowlingDemo extends Demo
     @setUpControls()
     @setUpPhysics()
     @setUpTimer()
+    @setUpSound()
     # $('.status').html 'yo bowling'
 
   prepContainers: ->
@@ -55,6 +56,18 @@ class GestureBowlingDemo extends Demo
       @runTimer()
     , 20
 
+  setUpSound: ->
+    @audioContext = null #new webkitAudioContext()
+    @sound = new SoundPlayer('/sounds/8hit.mp3', @audioContext, @audioLoaded)
+    @sound2 = new SoundPlayer('/sounds/porta-note.mp3', @audioContext, @audioLoaded)
+
+    $(document).on('touchend mouseup', (e) =>
+      @sound.playSound()
+    )
+
+  audioLoaded: (file) =>
+    console.log('loaded '+file)
+
   bowlingSwing: (accelZ, tiltX) =>
     # if(accelZ > 10) 
     #   debug.log('RELEASE')
@@ -63,9 +76,8 @@ class GestureBowlingDemo extends Demo
     # debug.log('tiltX = '+Math.round(tiltX)+'   accelZ = '+Math.round(accelZ))
     # @ball.css('top',tiltX)
 
-  bowlingRelease: (speed, rotationZ) =>
+  bowlingRelease: (speed, rotationZ, underhand) =>
     debug.log('RELEASE = '+speed+'  '+rotationZ)
-    @ball.css('left',rotationZ)
     @rotation = rotationZ / 10
     
     @x = 0
@@ -74,9 +86,12 @@ class GestureBowlingDemo extends Demo
     @speedY = -speed / 100
     @speedX = @rotation
 
-    $('.status').html 'RELEASE = '+speed+'  '+rotationZ
-    # animY = new EaseToValueCallback( 100, 20, @bowlingAnimateSpeed )
-    # animY.setTarget(0)
+    # $('.status').html 'RELEASE = '+speed+'  '+rotationZ+'  underhand = '+underhand
+
+    if underhand
+      @sound.playSound()
+    else
+      @sound2.playSound()
 
   runTimer: =>
     @x += @speedX
